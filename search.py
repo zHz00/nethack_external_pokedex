@@ -1015,13 +1015,15 @@ def main(s):
             if ver_idx>=len(ver_list):
                 ver_idx=0
             read_monsters(ver_list[ver_idx])
-            reloaded=True
+            if mon_name!="":
+                reloaded=True
         if key=="KEY_PPAGE":
             ver_idx-=1
             if ver_idx<0:
                 ver_idx=len(ver_list)-1
             read_monsters(ver_list[ver_idx])
-            reloaded=True
+            if mon_name!="":
+                reloaded=True
 
 
 
