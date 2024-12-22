@@ -2,6 +2,7 @@ import csv
 from math import floor
 from operator import itemgetter
 import curses as c
+import os
 
 from nhconstants import *
 
@@ -32,6 +33,9 @@ max_len_atk=0
 table=dict()
 table_temp=[]
 disable_sorting=False
+data_folder="data/"
+ver_list=[]
+ver_idx=-1
 
 MAX_SEARCH=50
 
@@ -43,11 +47,23 @@ def max_val_len(d:dict())->int:
             max=l
     return max
 
+def make_ver_list():
+    global ver_list,ver_idx
+    ver_list=os.listdir(data_folder)
+    if len(ver_list)==0:
+        print("No data files found. Exiting...")
+        exit(1)
+    ver_idx=0
 
-def read_monsters():
+def get_ver()->str:
+    return ver_list[ver_idx].split(".")[0]
+
+def read_monsters(file):
     global table,table_temp
     global disable_sorting
-    monfile=open("mondump370.csv","r")
+    table=dict()
+    table_temp=[]
+    monfile=open(data_folder+file,"r")
     reader=csv.reader(monfile)
     for x, mon in enumerate(reader):
         if x==0:#skip header
@@ -690,9 +706,30 @@ def make_card(mon,format_length=0):
     out_line_s="".join(out_line)
     return out_line_s
 
+def show_hello_msg(card_win):
+    hello_msg=["=== Nethack external Pokedex ===",
+    "Enter monster name to see its properties. Keys:",
+    "LEFT, RIGHT: Scroll search results",
+    "UP, DOWN: Change output format",
+    "ESC: Clear search; F10: Exit"]
+    card_win.chgat(-1,c.color_pair(BK_CARD))
+    card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
+    for i in range(len(hello_msg)):
+        if i==0:
+            continue
+        card_win.addstr(i,15,hello_msg[i])
+    card_win.refresh()
+
+def show_not_found_msg(card_win,mon_name):
+    msg=[f"'{mon_name}' does not extist in current version.","Try another search or switch version."]
+    card_win.chgat(-1,c.color_pair(BK_CARD))
+    card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
+    card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
+    card_win.refresh()
 
 def main(s):
     global bold
+    global ver_idx
     if c.COLORS<16:
         bold=1
     else:
@@ -728,6 +765,7 @@ def main(s):
     max_sel=0
     tries=0
     format_length=0
+    reloaded=False
     search_win=c.newwin(2,c.COLS,0,0)
     search_win.keypad(1)
     search_win.bkgd(' ',c.color_pair(BK))
@@ -736,12 +774,27 @@ def main(s):
     card_win=c.newwin(c.LINES-2,c.COLS,2,0)
     card_win.bkgd(' ',c.color_pair(BK_CARD))
     card_win.clear()
-    card_win.refresh()    
+    card_win.refresh()
+    not_found_after_reload=False
     while True:
         results=[]
+        not_found_after_reload=False
         for mon in table.keys():
             if mon.lower().find(in_str.lower())!=-1:
                 results.append(mon)
+        if reloaded:
+            if mon_name not in results:
+                not_found_after_reload=True
+            else:
+                idx=results.index(mon_name)
+                skip=idx
+                sel=0
+        else:
+            if sel+skip<len(results):
+                mon_name=results[sel+skip]
+            else:
+                mon_name=""
+
         card_win.clear()
         card_win.refresh()
         if len(results)>0 and len(in_str)>0:
@@ -756,13 +809,13 @@ def main(s):
                 card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR))
                 card_win.move(1,0)
                 card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR))
-                out_symbol(card_win,table[results[sel+skip]])
+                out_symbol(card_win,table[mon_name])
                 card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR))
                 card_win.move(2,0)
                 card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR))
                 card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR))
                 card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR))
-            card=make_card(table[results[sel+skip]],format_length)
+            card=make_card(table[mon_name],format_length)
             card=card.split("\n")
             cur_pair=BK_CARD
             line_n=0
@@ -812,19 +865,10 @@ def main(s):
                 card_win.chgat(-1,c.color_pair(cur_pair))
             card_win.refresh()
         else:
-            hello_msg=["=== Nethack external Pokedex ===",
-            "Enter monster name to see its properties. Keys:",
-            "LEFT, RIGHT: Scroll search results",
-            "UP, DOWN: Change output format",
-            "ESC: Clear search; F10: Exit"]
-            card_win.chgat(-1,c.color_pair(BK_CARD))
-            card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
-            for i in range(len(hello_msg)):
-                if i==0:
-                    continue
-                card_win.addstr(i,15,hello_msg[i])
-            card_win.refresh()
-            
+            if not_found_after_reload:
+                show_not_found_msg(card_win,mon_name)
+            else:
+                show_hello_msg(card_win)
 
         out_input(search_win,in_str)
         if len(in_str)>0:
@@ -840,12 +884,13 @@ def main(s):
         tries=0
         out_mode=""
         if format_length==0:
-            out_mode="Format: mini"
+            out_mode="Format:mini"
         if format_length==1:
-            out_mode="Format: full"
+            out_mode="Format:full"
         if format_length==2:
-            out_mode="Format: extended"
-        search_win.addstr(0,60,out_mode)
+            out_mode="Format:ext"
+        search_win.addstr(0,65,out_mode)
+        search_win.addstr(0,55,"Ver:"+get_ver())
         move_to_in(search_win,in_str)
         search_win.refresh()
         ch=search_win.getch()
@@ -856,6 +901,7 @@ def main(s):
                 pass
             search_win.nodelay(False)
             in_str=""
+            reloaded=False
         if key=="KEY_F(10)":
             break
         if key=="KEY_F(1)":
@@ -934,6 +980,7 @@ def main(s):
                 in_str+=key
                 sel=0
                 skip=0
+                reloaded=False
             else:
                 s.addch(0x7)
         if key=="KEY_RIGHT":
@@ -942,12 +989,14 @@ def main(s):
                 sel=max_sel-1
                 if sel+skip<len(results)-1:
                     skip+=1
+            reloaded=False
         if key=="KEY_LEFT":
             sel-=1
             if sel<0:
                 if skip>0:
                     skip-=1
                 sel=0
+            reloaded=False
         if key=="KEY_UP" :
             format_length-=1
             if format_length<=0:
@@ -960,6 +1009,21 @@ def main(s):
             in_str=in_str[:-1]
             sel=0
             skip=0
+            reloaded=False
+        if key=="KEY_NPAGE":
+            ver_idx+=1
+            if ver_idx>=len(ver_list):
+                ver_idx=0
+            read_monsters(ver_list[ver_idx])
+            reloaded=True
+        if key=="KEY_PPAGE":
+            ver_idx-=1
+            if ver_idx<0:
+                ver_idx=len(ver_list)-1
+            read_monsters(ver_list[ver_idx])
+            reloaded=True
+
+
 
 
 
@@ -967,5 +1031,6 @@ def main(s):
 
 
 if __name__=="__main__":
-    read_monsters()
+    make_ver_list()
+    read_monsters(ver_list[ver_idx])
     c.wrapper(main)
