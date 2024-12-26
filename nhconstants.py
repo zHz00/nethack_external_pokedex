@@ -58,6 +58,9 @@ monsym= {'S_ANT':'a',
 'S_INVISIBLE':'I',
 'S_WORM_TAIL':'~',
 'S_MIMIC_DEF':']',
+'S_ELF':'Q',
+'S_ABERRATION':'U',
+"S_STATUE":'`'
 }
 
 at={'AT_CLAW':'Claw',
@@ -74,6 +77,7 @@ at={'AT_CLAW':'Claw',
 'AT_BOOM':'Explode',
 'AT_GAZE':'Gaze',
 'AT_TENT':'Suck',
+'AT_SCRE':'Scream',
 'AT_WEAP':'Weapon',
 'AT_MAGC':'Spell',
 'AT_NONE':"Passive"}
@@ -127,7 +131,18 @@ ad={'AD_PHYS':'',
 'AD_SAMU':' -Artifact',
 'AD_CURS':' -Intrinsic',
 'AD_CNCL':' Cancel',
-'AD_POLY':' Polymorph'}
+'AD_POLY':' Polymorph',
+"AD_PITS":' Pits',
+"AD_WTHR":' Wither',
+"AD_LAVA":' Lava',
+"AD_LUCK":' -Luck',
+"AD_FREZ":' Freeze',
+"AD_HEAD":' Decapitate',
+"AD_PUNI":' Punish',
+"AD_LVLT":' Levelport',
+"AD_BLNK":' Blink',
+"AD_SPOR":' Spore',
+}
 
 resists_mon={'MR_FIRE':'Fire',
 'MR_COLD':'Cold',
@@ -197,6 +212,8 @@ szs={
 
 genf={
     "G_UNIQ","Unique",
+    "G_SHEOL","Sheol Only",
+    "G_NOSHEOL","No Sheol",
     "G_NOHELL","No Gehennom",
     "G_HELL","Only Gehennom",
     "G_NOGEN","No",
@@ -263,6 +280,7 @@ flags2_str={
 "M2_DWARF":"M2_DWARF",#+
 "M2_GNOME":"M2_GNOME",#+
 "M2_ORC":"M2_ORC",#+
+"M2_VAMPIRE":"M2_VAMPIRE",
 "M2_DEMON":"M2_DEMON",#+
 "M2_MERC":"M2_MERC",#+
 "M2_LORD":"M2_LORD",#+
@@ -286,6 +304,7 @@ flags2_str={
 "M2_JEWELS":"M2_JEWELS",#+
 "M2_COLLECT":"M2_COLLECT",#+
 "M2_MAGIC":"M2_MAGIC",#+
+"M2_SHAPESHIFTER":"M2_SHAPESHIFTER",
 
 }
 
@@ -303,6 +322,10 @@ flags3_str={
 "M3_INFRAVISION":"M3_INFRAVISION",#+
 "M3_INFRAVISIBLE":"M3_INFRAVISIBLE",#+
 "M3_DISPLACES":"M3_DISPLACES",#+
+"M3_GROUPATTACK":"M3_GROUPATTACK",
+"M3_BLINKER":"M3_BLINKER",
+"M3_NOREGEN":"M3_NOREGEN",
+"M3_STATIONARY":"M3_STATIONARY",
 
 }
 
@@ -320,6 +343,7 @@ flags_category={
 "M2_PRINCE":"Prince",
 "M2_MINION":"Minion",
 "M2_GIANT":"Giant",
+"M2_VAMPIRE":"Vampire"
 }
 
 flags_gender={
@@ -340,6 +364,7 @@ flags_body={
 "M1_ANIMAL":"Animal",
 "M1_SLITHY":"Serpent",
 "M1_UNSOLID":"Whirly",
+"M3_NONCORPOREAL":"Ghost"
 }
 
 flags_parts_have={

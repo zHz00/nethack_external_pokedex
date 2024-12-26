@@ -578,7 +578,7 @@ def card_flags(mon,format_length):
         cat_len=max_val_len(flags_body)
         found=False
         for flag in flags_body.keys():
-            if flag in flags1:
+            if flag in flags1 or flag in flags3:
                 found=True
                 flag_str=f"{flags_body[flag]:{cat_len}}|"
         if found==False:
@@ -797,7 +797,7 @@ def main(s):
 
         card_win.clear()
         card_win.refresh()
-        if len(results)>0 and len(in_str)>0:
+        if len(results)>0 and len(in_str)>0 and not_found_after_reload==False:
             card_win.chgat(-1,c.color_pair(BK_CARD))
             if format_length!=2:
                 card_win.move(0,0)
@@ -840,6 +840,8 @@ def main(s):
                     attrib=c.A_BOLD
                 else:
                     attrib=0
+                if len(line)>=SCR_WIDTH:
+                    line=line[:SCR_WIDTH-1]+"!"
                 for i in range(len(line)):
                     if format_length!=2:
                         if line_n==0:
