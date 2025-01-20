@@ -329,16 +329,17 @@ def card_resistances(mon,format_length):
     #Resistances
     out_line=["#"]
     ress=""
-    resn=0
     for res in mon[rows["res"]].split("|"):
         res=res.strip()
         if len(res)==0:
             break
-        resn+=1
-        if resn>4:
-            resn=0
-            #ress+="\n"
         ress+=resists_mon[res.strip()]+", "
+    for res in mon[rows["flags4"]].split("|"):
+        res=res.strip()
+        if len(res)==0:
+            break
+        ress+=resists_mon[res.strip()]+", "
+
 
     for flag in mon[rows["flags1"]].split("|"):
         flag=flag.strip()
@@ -523,6 +524,8 @@ def card_flags(mon,format_length):
     flags1=mon[rows["flags1"]].split("|")
     flags2=mon[rows["flags2"]].split("|")
     flags3=mon[rows["flags3"]].split("|")
+    flags4=mon[rows["flags4"]].split("|")
+    mh_flags=mon[rows["race"]].split("|")
     gen_flags=mon[rows["geno"]].split("|")
     if format_length>0:#flags
         flags_all=""
@@ -549,13 +552,20 @@ def card_flags(mon,format_length):
 
         prefix="Catetory:"
         cat_len=max_val_len(flags_category)
-        found=False
+        cat_list=[]
         for flag in flags_category.keys():
             if flag in flags2:
-                found=True
-                flag_str=f"{flags_category[flag]:{cat_len}}|"
-        if found==False:
+                cat_list.append(flags_category[flag])
+            if flag in mh_flags:
+                cat_list.append(flags_category[flag])
+        if len(cat_list)==0:
             flag_str=f"{'Ordinary':{cat_len}}|"
+        else:
+            for c in cat_list:
+                flag_str+=c+", "
+            flag_str=flag_str[:-2]
+            flag_str=f"{flag_str:{cat_len}}|"
+
         line+=prefix+flag_str
 
         prefix="Gender:"
@@ -649,15 +659,19 @@ def card_flags(mon,format_length):
         flag_str=""
         found=False
         for flag in flags_move.keys():
-            if flag in flags1:
+            if flag in flags1 or flag in flags3:
                 if flag=="M1_NEEDPICK":
                     flag_str=flag_str[:-2]+" "#remove "," from "Tunnel"
                 flag_str+=flags_move[flag]+", "
         for flag in flags_move_type.keys():
             if flag in flags1:
                 found=True
-        if found==False:
+            if flag in flags3:
+                found=True
+        if found==False and int(mon[rows["speed"]])>0:
             flag_str="Walk, "+flag_str
+        if found==False and int(mon[rows["speed"]])==0:
+            flag_str="Sessile, "+flag_str
         flag_str=flag_str[:-2]+"|"
         line+=prefix+flag_str
 

@@ -158,7 +158,12 @@ resists_mon={'MR_FIRE':'Fire',
 'MR_POISON':'Poison',
 'MR_ACID':'Acid',
 'MR_STONE':'Stoning',
-"MR_PSYCHIC":"Psychic"}
+"MR_PSYCHIC":"Psychic",
+"M4_VULNERABLE_FIRE":"Hates fire",
+"M4_VULNERABLE_COLD":"Hates cold",
+"M4_VULNERABLE_ELEC":"Hates shock",
+"M4_VULNERABLE_ACID":"Hates acid",
+}
 
 resists_conv={'MR_FIRE':'Fire',
 'MR_COLD':'Cold',
@@ -328,8 +333,6 @@ flags2_str={
 "M2_JEWELS":"M2_JEWELS",#+
 "M2_COLLECT":"M2_COLLECT",#+
 "M2_MAGIC":"M2_MAGIC",#+
-"M2_SHAPESHIFTER":"M2_SHAPESHIFTER",
-
 }
 
 flags3_str={
@@ -346,10 +349,10 @@ flags3_str={
 "M3_INFRAVISION":"M3_INFRAVISION",#+
 "M3_INFRAVISIBLE":"M3_INFRAVISIBLE",#+
 "M3_DISPLACES":"M3_DISPLACES",#+
-"M3_GROUPATTACK":"M3_GROUPATTACK",
-"M3_BLINKER":"M3_BLINKER",
-"M3_NOREGEN":"M3_NOREGEN",
-"M3_STATIONARY":"M3_STATIONARY",
+"M3_GROUPATTACK":"M3_GROUPATTACK",#+
+"M3_BLINKER":"M3_BLINKER",#+
+"M3_NOREGEN":"M3_NOREGEN",#+
+"M3_STATIONARY":"M3_STATIONARY",#+
 
 }
 
@@ -440,7 +443,8 @@ flags_demeanor={
 "M2_NASTY":"Nasty",
 "M3_WAITFORU":"Wait",
 "M3_CLOSE":"Let close",
-
+"M3_GROUPATTACK":"Group Attack",
+"M3_BLINKER":"Blinker",
 }
 flags_demeanor_ext={
     "M2_HOSTILE":"Hostile",
@@ -451,7 +455,8 @@ flags_demeanor_ext={
 "M2_NASTY":"Nasty",
 "M3_WAITFORU":"Wait for you",
 "M3_CLOSE":"Let you close",
-
+"M3_GROUPATTACK":"Group Attack",
+"M3_BLINKER":"Teleports away to heal",
 }
 
 flags_covet={
@@ -474,12 +479,14 @@ flags_move={
 "M1_HIDE":"Hide (ceil)",
 "M1_AMPHIBIOUS":"Amphibious",
 "M1_BREATHLESS":"No breath",
+"M3_STATIONARY":"Sessile",
 }
 
 flags_move_type={
     "M1_FLY":"Fly",
 "M1_SWIM":"Swim",
 "M1_CLING":"Ceiling",
+"M3_STATIONARY":"Sessile",
 }
 
 flags_pick={
@@ -500,4 +507,5 @@ flags_perks={
 "M2_ROCKTHROW":"Throws rocks",
 "M3_INFRAVISION":"Infravision",
 "M3_DISPLACES":"Displaces",
+"M3_NOREGEN":"No regen",
 }
