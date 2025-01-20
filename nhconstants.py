@@ -92,7 +92,7 @@ ad={'AD_PHYS':'',
 'AD_DRST':' Poison (St)',
 'AD_ACID':' Acid',
 'AD_SPC1':' SPC1',
-'AD_SPC2':' SPC2',
+'AD_SPC2':' Stun',
 'AD_BLND':' Blind',
 'AD_STUN':' Stun',
 'AD_SLOW':' Slow',
@@ -138,10 +138,16 @@ ad={'AD_PHYS':'',
 "AD_LUCK":' -Luck',
 "AD_FREZ":' Freeze',
 "AD_HEAD":' Decapitate',
+"AD_BHED":' Decapitate',
 "AD_PUNI":' Punish',
 "AD_LVLT":' Levelport',
 "AD_BLNK":' Blink',
 "AD_SPOR":' Spore',
+"AD_PSYC":' Psy',
+"AD_WEBS":' Web',
+"AD_FUSE":' Fused damage',
+"AD_LOUD":' Sound',
+"AD_CLOB":' Knock-back',
 }
 
 resists_mon={'MR_FIRE':'Fire',
@@ -151,7 +157,8 @@ resists_mon={'MR_FIRE':'Fire',
 'MR_ELEC':'Shock',
 'MR_POISON':'Poison',
 'MR_ACID':'Acid',
-'MR_STONE':'Stoning',}
+'MR_STONE':'Stoning',
+"MR_PSYCHIC":"Psychic"}
 
 resists_conv={'MR_FIRE':'Fire',
 'MR_COLD':'Cold',
@@ -197,7 +204,9 @@ rows={"index":0,
 "difficulty":30,
 "difficulty2":31,
 "exp":32,
-"prob":33
+"prob":33,
+"flags4":34,
+"race":35
 
 }
 
@@ -220,7 +229,22 @@ genf={
     "G_SGROUP","Small groups",
     "G_LGROUP","Large groups",
     "G_GENO","Yes",
+    "G_TALG","Kill Tal'Gath first",
+    "G_VLAD","Kill Vlad first",
+    "G_VECNA","Kill Vecna first",
     "G_NOCORPSE","No corpse",
+}
+
+genocide_f={
+    "G_VECNA": "Yes*",
+    "G_VLAD": "Yes*",
+    "G_TALG":"Yes*"
+}
+
+genocide_f_ext={
+    "G_VECNA": "Kill Vecna first",
+    "G_VLAD": "Kill Vlad first",
+    "G_TALG":"Kill Tal'Gath first"
 }
 
 freq_str={
@@ -343,7 +367,31 @@ flags_category={
 "M2_PRINCE":"Prince",
 "M2_MINION":"Minion",
 "M2_GIANT":"Giant",
-"M2_VAMPIRE":"Vampire"
+"M2_VAMPIRE":"Vampire",
+#=== evil hack
+"MH_HUMAN":"Human",
+"MH_ELF":"Elf",
+"MH_DWARF":"Dwarf",
+"MH_GNOME":"Gnome",
+"MH_ORC":"Orc",
+"MH_GIANT":"Giant",
+"MH_HOBBIT":"Hobbit",
+"MH_CENTAUR":"Centaur",
+"MH_ILLITHID":"Illithid",
+"MH_TORTLE":"Tortle",
+"MH_DROW":"Drow",
+"MH_ZOMBIE":"Zombie",
+"MH_UNZOMBIE":"Unzombie",
+"MH_WERE":"Werecreature",
+"MH_DEMON":"Demon",
+"MH_DRAGON":"Dragon",
+"MH_ANGEL":"Angel",
+"MH_OGRE":"Ogre",
+"MH_TROLL":"Troll",
+"MH_GNOLL":"Gnoll",
+"MH_SPIDER":"Spider",
+"MH_JABBERWOCK":"Jabberwock",
+"MH_WRAITH":"Wraith",
 }
 
 flags_gender={

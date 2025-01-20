@@ -69,6 +69,8 @@ def read_monsters(file):
         if x==0:#skip header
             continue
         mon_copy=None
+        if len(mon)<len(rows):
+            mon.extend([""]*(len(rows)-len(mon)))
         if len(mon[rows["namef"]])>0 and len(mon[rows["namef"]])>0:#two-gender monster
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_NEUTER"
@@ -226,9 +228,15 @@ def card_gen(mon,format_length):
             freq_s+="Large Groups, "
         if "G_NOHELL" in gen_flags:
             freq_s+="No Gehennom, "
-        if "G_HELL" in gen_flags:
+        if "G_HELL" in gen_flags and "G_SHEOL" not in gen_flags:
             freq_s+="Gehennom only, "
-        if "G_NOHELL" not in gen_flags and "G_HELL" not in gen_flags:
+        if "G_NOSHEOL" in gen_flags:
+            freq_s+="No Sheol, "
+        if "G_SHEOL" in gen_flags and "G_HELL" not in gen_flags:
+            freq_s+="Sheol only, "
+        if "G_SHEOL" in gen_flags and "G_HELL" in gen_flags:
+            freq_s+="Gehennom and Sheol only, "
+        if "G_NOHELL" not in gen_flags and "G_HELL" not in gen_flags and "G_NOSHEOL" not in gen_flags and "G_SHEOL" not in gen_flags:
             freq_s+="Everywhere, "
         if freq_s.endswith(", "):
             freq_s=freq_s[:-2]
@@ -238,9 +246,21 @@ def card_gen(mon,format_length):
             freq_s="Generation:"+freq_s+"|"
         out_line.append(freq_s)
         if "G_GENO" in gen_flags:
-            out_line.append(f"Genocide: Yes|")
+            g="Genocide: "
+            found=False
+            for k in genocide_f.keys():
+                if k in gen_flags:
+                    found=True
+                    if format_length<2:
+                        g+=genocide_f[k]+"|"
+                    else:
+                        g+=genocide_f_ext[k]+"|"
+                    break
+            if not found:
+                g+="Yes |"
+            out_line.append(g)
         else:
-            out_line.append(f"Genocide: No |")
+            out_line.append(f"Genocide: No  |")
         if "M2_NOPOLY" in flags2:
             out_line.append(f"Poly to: No ")
         else:
