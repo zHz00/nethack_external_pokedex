@@ -3,6 +3,7 @@ from math import floor
 from operator import itemgetter
 import curses as c
 import os
+import itertools
 
 from nhconstants import *
 
@@ -57,6 +58,74 @@ def make_ver_list():
 
 def get_ver()->str:
     return ver_list[ver_idx].split(".")[0]
+
+def check_monster(mon):
+    flags1=mon[rows["flags1"]].split("|")
+    flags2=mon[rows["flags2"]].split("|")
+    flags3=mon[rows["flags3"]].split("|")
+    flags4=mon[rows["flags4"]].split("|")
+    gen_flags=mon[rows["geno"]].split("|")
+    if gen_flags[-1].isnumeric():
+        gen_flags=gen_flags[:-1]#remove frequency
+    mres=mon[rows["res"]].split("|")
+    mh_flags=mon[rows["race"]].split("|")
+    report=[]
+    all_ok=True
+
+    for f in flags1:
+        if f not in flags1_str:
+            report.append("Not found flag 1. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in flags2:
+        if f not in flags2_str:
+            report.append("Not found flag 2: Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in flags3:
+        if f not in flags3_str:
+            report.append("Not found flag 3. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in flags4:
+        if f not in flags4_str:
+            report.append("Not found flag 4. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in gen_flags:
+        if f not in geno_str:
+            report.append("Not found gen flags. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in mh_flags:
+        if f not in flags_cat_str:
+            report.append("Not found MH flags. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+    for f in mres:
+        if f not in resists_mon_str:
+            report.append("Not found resists flags. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
+            all_ok=False
+
+    for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
+        attack=mon[attack_n]
+        attack=attack[5:]
+        attack=attack[:-1]
+        attack=attack.split(",")
+
+        if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
+            break
+        if attack[0].strip() not in at:
+            all_ok=False
+            report.append("Not found at. Monster: "+mon[rows["name"]]+"; at: "+attack[0].strip()+"\n")
+        if attack[1].strip() not in ad:
+            all_ok=False
+            report.append("Not found ad. Monster: "+mon[rows["name"]]+"; at: "+attack[1].strip()+"\n")
+
+    if len(report)>0:
+        report_file=open("errors.log","a",encoding="utf-8")
+        report_file.write("=== FILE: "+ver_list[ver_idx]+"\n")
+        report_file.writelines(report)
+        report_file.close()
+    return all_ok
+
+
+
+
 
 def read_monsters(file):
     global table,table_temp
@@ -275,12 +344,11 @@ def card_atk(mon,format_length):
     #Attacks
     attacks=""
     interrupted=0
-    for attack_n in range(rows["attack1"],rows["attack6"]+1):
+    for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
         attack=mon[attack_n]
-        attack_raw=mon[attack_n]
         attack_s=""
 
-        if mon[attack_n]==NO_ATTK:
+        if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
             attacks=attacks[:-2]
             interrupted=1
             break
@@ -329,11 +397,10 @@ def card_resistances(mon,format_length):
     #Resistances
     out_line=["#"]
     ress=""
-    for res in mon[rows["res"]].split("|"):
-        res=res.strip()
-        if len(res)==0:
-            break
-        ress+=resists_mon[res.strip()]+", "
+    ress_list=mon[rows["res"]].split("|")
+    for res in resists_mon.keys():
+        if res in ress_list:
+            ress+=resists_mon[res]+", "
     for res in mon[rows["flags4"]].split("|"):
         res=res.strip()
         if len(res)==0:
@@ -525,6 +592,7 @@ def card_flags(mon,format_length):
     flags2=mon[rows["flags2"]].split("|")
     flags3=mon[rows["flags3"]].split("|")
     flags4=mon[rows["flags4"]].split("|")
+    mres=mon[rows["res"]].split("|")
     mh_flags=mon[rows["race"]].split("|")
     gen_flags=mon[rows["geno"]].split("|")
     if format_length>0:#flags
@@ -548,16 +616,16 @@ def card_flags(mon,format_length):
     if format_length>0:
         line=""
         flag_str=""
-        cat_len=max_val_len(flags_category)
+        cat_len=max_val_len(flags_cat_str)
 
         prefix="Catetory:"
-        cat_len=max_val_len(flags_category)
+        cat_len=max_val_len(flags_cat_str)
         cat_list=[]
-        for flag in flags_category.keys():
+        for flag in flags_cat_str.keys():
             if flag in flags2:
-                cat_list.append(flags_category[flag])
+                cat_list.append(flags_cat_str[flag])
             if flag in mh_flags:
-                cat_list.append(flags_category[flag])
+                cat_list.append(flags_cat_str[flag])
         if len(cat_list)==0:
             flag_str=f"{'Ordinary':{cat_len}}|"
         else:
@@ -711,7 +779,7 @@ def card_flags(mon,format_length):
         flag_str=""
         found=False
         for flag in flags_perks.keys():
-            if flag in flags1 or flag in flags2 or flag in flags3:
+            if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres:
                 found=True
                 flag_str+=flags_perks[flag]+", "
         if found==False:
@@ -849,7 +917,10 @@ def main(s):
                 card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR))
                 card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR))
                 card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR))
-            card=make_card(table[mon_name],format_length)
+            if check_monster(table[mon_name])==True:
+                card=make_card(table[mon_name],format_length)
+            else:
+                card="Eror making card: "+mon_name
             card=card.split("\n")
             cur_pair=BK_CARD
             line_n=0
@@ -951,6 +1022,9 @@ def main(s):
                 report=open("report-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
                 for mon in table.keys():
                     total+=1
+                    if check_monster(table[mon])==False:
+                        report.write("Error making card: "+mon)
+                        continue
                     test=make_card(table[mon],format_length=f_length)
                     test=test.split("\n")
                     for i in range(len(test)):

@@ -60,7 +60,9 @@ monsym= {'S_ANT':'a',
 'S_MIMIC_DEF':']',
 'S_ELF':'Q',
 'S_ABERRATION':'U',
-"S_STATUE":'`'
+"S_STATUE":'`',
+"S_BAD_FOOD":"%",
+"S_BAD_COINS":"$",
 }
 
 at={'AT_CLAW':'Claw',
@@ -80,7 +82,9 @@ at={'AT_CLAW':'Claw',
 'AT_SCRE':'Scream',
 'AT_WEAP':'Weapon',
 'AT_MAGC':'Spell',
-'AT_NONE':"Passive"}
+'AT_NONE':"Passive",
+"AT_MULTIPLY":"Multiply",
+}
 
 ad={'AD_PHYS':'',
 'AD_MAGM':' M. Missile',
@@ -148,6 +152,34 @@ ad={'AD_PHYS':'',
 "AD_FUSE":' Fused damage',
 "AD_LOUD":' Sound',
 "AD_CLOB":' Knock-back',
+"AD_CALM":' Calm',
+"AD_TCKL":' Tickle',
+}
+
+resists_mon_str={'MR_FIRE':'Fire',
+'MR_COLD':'Cold',
+'MR_SLEEP':'Sleep',
+'MR_DISINT':'Disint.',
+'MR_ELEC':'Shock',
+'MR_POISON':'Poison',
+'MR_ACID':'Acid',
+'MR_STONE':'Stoning',
+"MR_PSYCHIC":"Psychic",
+"M4_VULNERABLE_FIRE":"Hates fire",#+
+"M4_VULNERABLE_COLD":"Hates cold",#+
+"M4_VULNERABLE_ELEC":"Hates shock",#+
+"M4_VULNERABLE_ACID":"Hates acid",#+
+"MR_DEATH": "Death",
+"MR_DRAIN": "Drain",
+"MR_PLUSONE": "Need +1",#+
+"MR_PLUSTWO": "Need +2",#+
+"MR_PLUSTHREE": "Need +3",#+
+"MR_PLUSFOUR": "Need +4",#+
+"MR_HITASONE":"MR_HITASONE",#+
+"MR_HITASTWO":"MR_HITASTWO",#+
+"MR_HITASTHREE":"MR_HITASTHREE",#+
+"MR_HITASFOUR":"MR_HITASFOUR",#+
+"":""
 }
 
 resists_mon={'MR_FIRE':'Fire',
@@ -159,10 +191,17 @@ resists_mon={'MR_FIRE':'Fire',
 'MR_ACID':'Acid',
 'MR_STONE':'Stoning',
 "MR_PSYCHIC":"Psychic",
-"M4_VULNERABLE_FIRE":"Hates fire",
-"M4_VULNERABLE_COLD":"Hates cold",
-"M4_VULNERABLE_ELEC":"Hates shock",
-"M4_VULNERABLE_ACID":"Hates acid",
+"M4_VULNERABLE_FIRE":"Hates fire",#+
+"M4_VULNERABLE_COLD":"Hates cold",#+
+"M4_VULNERABLE_ELEC":"Hates shock",#+
+"M4_VULNERABLE_ACID":"Hates acid",#+
+"MR_DEATH": "Death",
+"MR_DRAIN": "Drain",
+"MR_PLUSONE": "Need +1",#+
+"MR_PLUSTWO": "Need +2",#+
+"MR_PLUSTHREE": "Need +3",#+
+"MR_PLUSFOUR": "Need +4",#+
+"":""
 }
 
 resists_conv={'MR_FIRE':'Fire',
@@ -211,8 +250,28 @@ rows={"index":0,
 "exp":32,
 "prob":33,
 "flags4":34,
-"race":35
+"race":35,
 
+"attack7":36,
+"attack8":37,
+"attack9":38,
+"attack10":39,
+
+"nac":40,
+"dac":41,
+"pac":42,
+
+"hdr":43,
+"bdr":44,
+"gdr":45,
+"ldr":46,
+"fdr":47,
+
+"spe_hdr":48,
+"spe_bdr":49,
+"spe_gdr":50,
+"spe_ldr":51,
+"spe_fdr":52,
 }
 
 szs={
@@ -224,7 +283,7 @@ szs={
     "MZ_GIGANTIC":"Gigantic"
 }
 
-genf={
+geno_str={
     "G_UNIQ","Unique",
     "G_SHEOL","Sheol Only",
     "G_NOSHEOL","No Sheol",
@@ -233,6 +292,7 @@ genf={
     "G_NOGEN","No",
     "G_SGROUP","Small groups",
     "G_LGROUP","Large groups",
+    "G_VLGROUP","Huge groups",
     "G_GENO","Yes",
     "G_TALG","Kill Tal'Gath first",
     "G_VLAD","Kill Vlad first",
@@ -297,6 +357,7 @@ flags1_str={
 "M1_HERBIVORE":"M1_HERBIVORE",#+
 "M1_OMNIVORE":"M1_OMNIVORE",#+
 "M1_METALLIVORE":"M1_METALLIVORE",#+
+"":""
 
 }
 
@@ -333,6 +394,8 @@ flags2_str={
 "M2_JEWELS":"M2_JEWELS",#+
 "M2_COLLECT":"M2_COLLECT",#+
 "M2_MAGIC":"M2_MAGIC",#+
+"M2_HOBBIT":"M2_HOBBIT",#+
+"":""
 }
 
 flags3_str={
@@ -353,10 +416,26 @@ flags3_str={
 "M3_BLINKER":"M3_BLINKER",#+
 "M3_NOREGEN":"M3_NOREGEN",#+
 "M3_STATIONARY":"M3_STATIONARY",#+
+"M3_ACCURATE":"M3_ACCURATE",#+
+"M3_BERSERK":"M3_BERSERK",#+
+"M3_SKITTISH":"M3_SKITTISH",#+
+"M3_ULTRAVISION":"M3_ULTRAVISION",#+
+"M3_TRAITOR":"M3_TRAITOR",#+
+"M3_NOTAME":"M3_NOTAME",#+
+"M3_NONCORPOREAL":"M3_NONCORPOREAL",#+
+"":""
 
 }
 
-flags_category={
+flags4_str={
+    "M4_VULNERABLE_FIRE":"Hates fire",#+
+"M4_VULNERABLE_COLD":"Hates cold",#+
+"M4_VULNERABLE_ELEC":"Hates shock",#+
+"M4_VULNERABLE_ACID":"Hates acid",#+
+"":""
+}
+
+flags_cat_str={
     "M2_UNDEAD":"Undead",
 "M2_WERE":"Werecreature",
 "M2_HUMAN":"Human",
@@ -371,6 +450,7 @@ flags_category={
 "M2_MINION":"Minion",
 "M2_GIANT":"Giant",
 "M2_VAMPIRE":"Vampire",
+"M2_HOBBIT":"Hobbit",#Slash'EM
 #=== evil hack
 "MH_HUMAN":"Human",
 "MH_ELF":"Elf",
@@ -395,6 +475,7 @@ flags_category={
 "MH_SPIDER":"Spider",
 "MH_JABBERWOCK":"Jabberwock",
 "MH_WRAITH":"Wraith",
+"":""
 }
 
 flags_gender={
@@ -445,6 +526,7 @@ flags_demeanor={
 "M3_CLOSE":"Let close",
 "M3_GROUPATTACK":"Group Attack",
 "M3_BLINKER":"Blinker",
+"M3_SKITTISH":"Skittish",
 }
 flags_demeanor_ext={
     "M2_HOSTILE":"Hostile",
@@ -457,6 +539,7 @@ flags_demeanor_ext={
 "M3_CLOSE":"Let you close",
 "M3_GROUPATTACK":"Group Attack",
 "M3_BLINKER":"Teleports away to heal",
+"M3_SKITTISH":"Stays at distance"
 }
 
 flags_covet={
@@ -508,4 +591,13 @@ flags_perks={
 "M3_INFRAVISION":"Infravision",
 "M3_DISPLACES":"Displaces",
 "M3_NOREGEN":"No regen",
+"MR_HITASONE":"Hit as +1",
+"MR_HITASTWO":"Hit as +2",
+"MR_HITASTHREE":"Hit as +3",
+"MR_HITASFOUR":"Hit as +4",
+"M3_TRAITOR":"Traitor",
+"M3_NOTAME":"Cannot be tamed",
+"M3_ACCURATE":"+5 to-hit",
+"M3_BERSERK":"Can go berserk",
+"M3_ULTRAVISION":"Ultravision"
 }
