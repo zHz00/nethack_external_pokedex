@@ -4,6 +4,7 @@ from operator import itemgetter
 import curses as c
 import os
 import itertools
+import datetime
 
 from nhconstants import *
 
@@ -351,7 +352,7 @@ def card_gen(mon,format_length):
             freq_s="Generation:"+freq_s+"|"
         out_line.append(freq_s)
         if "G_GENO" in gen_flags:
-            g="Genocide: "
+            g="Genocide:"
             found=False
             for k in genocide_f.keys():
                 if k in gen_flags:
@@ -365,11 +366,11 @@ def card_gen(mon,format_length):
                 g+="Yes |"
             out_line.append(g)
         else:
-            out_line.append(f"Genocide: No  |")
+            out_line.append(f"Genocide:No  |")
         if "M2_NOPOLY" in flags2:
-            out_line.append(f"Poly to: No ")
+            out_line.append(f"Poly to:No ")
         else:
-            out_line.append(f"Poly to: Yes")
+            out_line.append(f"Poly to:Yes")
     out_line.append("\n")
 
     return out_line
@@ -659,6 +660,7 @@ def card_eat(mon,format_length):
     return out_line
 
 def card_flags(mon,format_length):
+    infravisible_to_perks=False
     out_line=["#"]
     flags1=mon[rows["flags1"]].split("|")
     flags2=mon[rows["flags2"]].split("|")
@@ -733,13 +735,21 @@ def card_flags(mon,format_length):
         if found==False:
             flag_str=f"{'Inediate':{cat_len}}|"
         line+=prefix+flag_str
-        prefix="Infravisible: "
+        prefix="Infravisible:"
         if "M3_INFRAVISIBLE" in flags3:
             flag_str="Yes"
         else:
             flag_str="No"
-        line+=prefix+flag_str+"\n"
-
+        line+=prefix+flag_str
+        if len(line.strip())>SCR_WIDTH:
+            line=" ".join(line.split())
+            line=line.replace(" |","|")
+        if len(line)>SCR_WIDTH:
+            line=line.replace(", ",",")
+        if len(line)>SCR_WIDTH:#still too long, removing infravisible
+            line=line.split("|Infravisible")[0]
+            infravisible_to_perks=True
+        line+="\n"
         out_line.append(line)
         line=""
     #LINE 2. BODY PLAN
@@ -850,6 +860,9 @@ def card_flags(mon,format_length):
         prefix="Perks:"
         flag_str=""
         found=False
+        if infravisible_to_perks and "M3_INFRAVISIBLE" in flags3:
+            found=True
+            flag_str+="Infravisible, "#for too long lines
         for flag in flags_perks.keys():
             if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres:
                 found=True
@@ -857,12 +870,26 @@ def card_flags(mon,format_length):
         if found==False:
             flag_str="None, "
         flag_str=flag_str[:-2]
-        line+=prefix+flag_str+"\n"
+        line+=split_line2(prefix+flag_str,SCR_WIDTH)+"\n"
 
         out_line.append(line)
         line=""
 
     return out_line
+
+def card_dnethack(mon,format_length):
+    if format_length!=2:
+        return ""
+    if len(mon[rows["insight"]])==0:#empty field, exteded while reading. so, this is not dnethack file
+        return ""
+    out_line=["$"]
+    out_line.append(f'Natural AC:{mon[rows["nac"]]:4}|Dodge AC:{mon[rows["dac"]]:4}|Protection AC:{mon[rows["pac"]]:4}|Total AC:10-{mon[rows["nac"]]}-{mon[rows["dac"]]}-{mon[rows["pac"]]}={mon[rows["ac"]]:4}\n')
+    out_line.append("Damage reduction|Head|Body|Arms|Legs|Feet|\n")
+    out_line.append(f'Base            |{mon[rows["hdr"]]:4}|{mon[rows["bdr"]]:4}|{mon[rows["gdr"]]:4}|{mon[rows["ldr"]]:4}|{mon[rows["fdr"]]:4}|\n')
+    out_line.append(f'Special         |{mon[rows["spe_hdr"]]:4}|{mon[rows["spe_bdr"]]:4}|{mon[rows["spe_gdr"]]:4}|{mon[rows["spe_ldr"]]:4}|{mon[rows["spe_fdr"]]:4}|\n')
+    out_line.append(f"Insight required:{mon[rows['insight']]}")
+    return out_line
+
 
 
 def make_card(mon,format_length=0):
@@ -874,6 +901,7 @@ def make_card(mon,format_length=0):
     out_line.extend(card_resistances(mon,format_length))
     out_line.extend(card_eat(mon,format_length))
     out_line.extend(card_flags(mon,format_length))
+    out_line.extend(card_dnethack(mon,format_length))
 
    
     #Preparing string
@@ -1091,7 +1119,11 @@ def main(s):
                 failed_monsters=0
                 total=0
                 failed_current_monster=False
-                report=open("report-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
+                report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
+                report_summary=open("report.log","a",encoding="utf-8")
+                report_summary.write("==========\n")
+                report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+                report_summary.write("File: "+ver_list[ver_idx]+"\n")
                 for mon in table.keys():
                     total+=1
                     if check_monster(table[mon])==False:
@@ -1124,7 +1156,10 @@ def main(s):
                         failed_monsters+=1
                         failed_current_monster=False
                 report.close()
-                s.addstr("DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}\n")
+                result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}\n"
+                report_summary.write(result_str)
+                report_summary.close()
+                s.addstr(result_str)
             for x in range(1,17):
                 s.addstr(f"TEST:{x-1} ",c.color_pair(x))
             s.addstr("\n")        
