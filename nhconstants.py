@@ -63,6 +63,12 @@ monsym= {'S_ANT':'a',
 "S_STATUE":'`',
 "S_BAD_FOOD":"%",
 "S_BAD_COINS":"$",
+"S_LAW_ANGEL":"7",
+"S_NEU_ANGEL":"9",
+"S_CHA_ANGEL":"A",
+"S_PLANT":"{",
+"S_NEU_OUTSIDER":"\"",
+"S_SHADE":" ",
 }
 
 at={'AT_CLAW':'Claw',
@@ -84,6 +90,37 @@ at={'AT_CLAW':'Claw',
 'AT_MAGC':'Spell',
 'AT_NONE':"Passive",
 "AT_MULTIPLY":"Multiply",
+"AT_ARRW":"Shoot",
+"AT_WHIP":"Whip",
+"AT_LRCH":"2-Reach",
+"AT_HODS":"Mirror",
+"AT_LNCK":"2-Reach Bite",
+"AT_MMGC":"Spell",
+"AT_ILUR":"Swallow",
+"AT_HITS":"Autohit",
+"AT_WISP":"Mist",
+"AT_TNKR":"Tinker",
+"AT_SRPR":"Spiritual Rapier",
+"AT_BEAM":"Beam",
+"AT_DEVA":"Million arm",
+"AT_5SQR":"5-Reach Touch",
+"AT_5SBT":"5-Reach Bite",
+"AT_WDGZ":"Wide gaze",
+"AT_REND":"Combo",
+"AT_VINE":"Vines",
+"AT_BKGT":"Goat Random",
+"AT_BKG2":"Goat Random",
+"AT_XSPR":"Spiritual rapier offhand",
+"AT_MSPR":"Spiritual rapier extra hand",
+"AT_DSPR":"Spiritual rapier million-arm",
+"AT_ESPR":"Spiritual rapier floating",
+"AT_OBIT":"Unusual Bite",
+"AT_WBIT":"Wolf Head Bite",
+"AT_TAIL":"Tail",
+"AT_TONG":"Tongue",
+"AT_XWEP":"Offhand Weapon",
+"AT_MARI":"Extra Weapon",
+"AT_BRSH":"Splash",
 }
 
 ad={'AD_PHYS':'',
@@ -93,7 +130,7 @@ ad={'AD_PHYS':'',
 'AD_SLEE':' Sleep',
 'AD_DISN':' Disint.',
 'AD_ELEC':' Shock',
-'AD_DRST':' Poison (St)',
+'AD_DRST':' Poison -St',
 'AD_ACID':' Acid',
 'AD_SPC1':' SPC1',
 'AD_SPC2':' Stun',
@@ -108,7 +145,7 @@ ad={'AD_PHYS':'',
 'AD_STCK':' Sticky',
 'AD_SGLD':' Steal gold',
 'AD_SITM':' Steal',
-'AD_SEDU':' Steal',#сейчас работают идентично
+'AD_SEDU':' Steal',#now works similar
 'AD_TLPT':' Teleport',
 'AD_RUST':' Rust',
 'AD_CONF':' Conf',
@@ -116,8 +153,8 @@ ad={'AD_PHYS':'',
 'AD_HEAL':' Heal',
 'AD_WRAP':' Drowning',
 'AD_WERE':' Lycantropy',
-'AD_DRDX':' Poison (Dx)',
-'AD_DRCO':' Poison (Co)',
+'AD_DRDX':' Poison -Dx',
+'AD_DRCO':' Poison -Co',
 'AD_DRIN':' -In',
 'AD_DISE':' Disease',
 'AD_DCAY':' Decay organics',
@@ -145,7 +182,7 @@ ad={'AD_PHYS':'',
 "AD_BHED":' Decapitate',
 "AD_PUNI":' Punish',
 "AD_LVLT":' Levelport',
-"AD_BLNK":' Blink',
+"AD_BLNK":' Mental invasion',
 "AD_SPOR":' Spore',
 "AD_PSYC":' Psy',
 "AD_WEBS":' Web',
@@ -154,23 +191,136 @@ ad={'AD_PHYS':'',
 "AD_CLOB":' Knock-back',
 "AD_CALM":' Calm',
 "AD_TCKL":' Tickle',
+
+"AD_POSN":" Poison",
+"AD_WISD":" -Wi",
+"AD_VORP":" Vorpal",
+"AD_SHRD":" Shred armor",
+"AD_SLVR":" Silver arrow",
+"AD_BALL":" Iron ball",
+"AD_BLDR":" Boulder",
+"AD_VBLD":" Boulder volley",
+"AD_WET":" Splash water",
+"AD_LETHE":" Splash Lethe water",
+"AD_BIST":" Bisecting beak",
+"AD_DEAD":" Deadly",
+"AD_SUCK":" Suck",
+"AD_MALK":" Paralyze&destroy wands",
+"AD_UVUU":" Brainspike",
+"AD_ABDC":" Abduction",
+"AD_KAOS":" Spawn Chaos",
+"AD_LSEX":" Plus seduce",
+"AD_HLBD":" Call demons",
+"AD_SPNL":" Spawn Leviathan/Levistus",
+"AD_MIST":" Mist",
+"AD_TELE":" Self-teleport",
+"AD_PSON":" Psyonic",
+"AD_GROW":" Boost autons on death",
+"AD_SOUL":" Boost Deep Ones on death",
+"AD_TENT":" Plus tentacles",
+"AD_JAILER":" Spawn Lucifer",
+"AD_AXUS":" Fire-Shock-Drain-Cold combo",
+"AD_UNKNWN":" Unknown",
+"AD_SOLR":" Silver arrow",
+"AD_CHKH":" Grow with number of Chokhmah",
+"AD_HODS":" Your weapon",
+"AD_CHRN":" Cursed horn",
+"AD_LOAD":" Loadstone",
+"AD_GARO":" Rumor",
+"AD_GARO_MASTER":" Major consultation",
+"AD_WEEP":" Levelport+drain",
+"AD_FNEX":" Fern",
+"AD_SSUN":" Blind+fire",
+"AD_MAND":" Deadly shriek",
+"AD_BARB":" Retalitate",
+"AD_VAMP":" Drain blood",
+"AD_ILUR":" Amnesia+rust",
+"AD_TNKR":" Spawn gizmo",
+"AD_FRWK":" Explode several",
+"AD_STDY":" Study",
+"AD_OONA":" Fire/Cold/Shock",
+"AD_NTZC":" Anti-equipment",
+"AD_WTCH":" Spawn tentacles",
+"AD_SHDW":" Shadow (poison)",
+"AD_STTP":" Teleport armor",
+"AD_HDRG":" Random at creation",
+"AD_STAR":" Silver",
+"AD_EELC":" Elem. Shock",
+"AD_EFIR":" Elem. Fire",
+"AD_EDRC":" Elem. Poison -Co",
+"AD_ECLD":" Elem. Cold",
+"AD_EACD":" Elem. Acid",
+"AD_CNFT":" Plus Conflict",
+"AD_BLUD":" Blood",
+"AD_SURY":" +50 Silver",
+"AD_NPDC":" -Co",
+"AD_GLSS":" Silver shards",#silver
+"AD_MERC":" Mercury cold+abuse",
+"AD_GOLD":" Goldify",
+"AD_ACFR":" Holy fire",
+"AD_DESC":" Suck water",
+"AD_BLAS":" Anger god",
+"AD_SESN":" Four seasons (cold/shred/pollen/-Life)",
+"AD_POLN":" Pollen paralyze",
+"AD_BDFN":" Bloody spears",
+"AD_SPHR":" Spawn spheres",
+"AD_DARK":" Dark",
+"AD_LRVA":" Implant larva+poison -Co",
+"AD_NPDS":" -St",
+"AD_NPDD":" -Dx",
+"AD_NPDR":" -Ch",
+"AD_NPDA":" -all stats",
+"AD_HOOK":" Flesh hook immobilize",
+"AD_MDWP":" Mindwipe drain+amnesia",
+"AD_SSTN":" Petrify",
+"AD_DOBT":" Doubt",
+"AD_APCS":" Revelatory whispers",
+"AD_PULL":" Pull closer",
+"AD_PAIN":" Pain scream+Poison -St",
+"AD_MROT":" Mummy curse",
+"AD_PYCL":" Fire/poison/phys/blind",
+"AD_MOON":" Silver (moon phase dependent)",#silver
+"AD_HOLY":" Holy",
+"AD_UNHY":" Unholy",
+"AD_PERH":" Mul. by monster level",
+"AD_SVPN":" Severe posion",
+"AD_HLUH":" Holy+Unholy",
+"AD_TSMI":" Steal magic items",
+"AD_BYAK":" Implant egg to armor",
+"AD_BSTR":" Unholy+curse",
+"AD_UNRV":" Unnerving",
+"AD_MADF":" Madness fire",#player only?
+"AD_FATK":" Force to attack",#player only?
+"AD_DUNSTAN":" Stones throw themselves at target",#player only?
+"AD_IRIS":" Iridescent tentacles",#player only?
+"AD_NABERIUS":" Tarnished bloody fangs",#player only?
+"AD_OTIAX":" Mist tendrils",#player only?
+"AD_SIMURGH":" Thirty-colored feathers",#player only?
+"AD_CMSL":" Cold missile",
+"AD_FMSL":" Fire missile",
+"AD_EMSL":" Shock missile",
+"AD_SMSL":" Physical missile",
+"AD_WMTG":" War Machine targeting gaze",
+"AD_SQUE":" Steal Quest Artifact or Amulet",
+"AD_RGAZ":" Random",
+"AD_RETR":" Random (fire/cold/shock)",
 }
 
 resists_mon_str={'MR_FIRE':'Fire',
-'MR_COLD':'Cold',
-'MR_SLEEP':'Sleep',
-'MR_DISINT':'Disint.',
-'MR_ELEC':'Shock',
-'MR_POISON':'Poison',
-'MR_ACID':'Acid',
-'MR_STONE':'Stoning',
-"MR_PSYCHIC":"Psychic",
+'MR_COLD':'Cold',#+
+'MR_SLEEP':'Sleep',#+
+'MR_DISINT':'Disint.',#+
+'MR_ELEC':'Shock',#+
+'MR_POISON':'Poison',#+
+'MR_ACID':'Acid',#+
+'MR_STONE':'Stoning',#+
+"MR_PSYCHIC":"Psychic",#+
 "M4_VULNERABLE_FIRE":"Hates fire",#+
 "M4_VULNERABLE_COLD":"Hates cold",#+
 "M4_VULNERABLE_ELEC":"Hates shock",#+
 "M4_VULNERABLE_ACID":"Hates acid",#+
-"MR_DEATH": "Death",
-"MR_DRAIN": "Drain",
+"MR_DEATH": "Death",#+
+"MR_DRAIN": "Drain",#+
 "MR_PLUSONE": "Need +1",#+
 "MR_PLUSTWO": "Need +2",#+
 "MR_PLUSTHREE": "Need +3",#+
@@ -179,6 +329,15 @@ resists_mon_str={'MR_FIRE':'Fire',
 "MR_HITASTWO":"MR_HITASTWO",#+
 "MR_HITASTHREE":"MR_HITASTHREE",#+
 "MR_HITASFOUR":"MR_HITASFOUR",#+
+"MR_DRAIN":"MR_DRAIN",#+
+"MR_SICK":"MR_SICK",#+
+"MR_MAGIC":"MR_MAGIC",#+
+"MR_REFLECT":"MR_REFLECT",#+
+"M4_ELDER_SIGN":"Elder Sign",
+"M4_EYE_OF_YGG":"Eye of Ygg",
+"M4_ELDER_EYE_ELEM":"Elder Eye (1)",
+"M4_ELDER_EYE_ENERGY":"Elder Eye (4)",
+"M4_ELDER_EYE_PLANES":"Elder Eye (7)",
 "":""
 }
 
@@ -201,6 +360,11 @@ resists_mon={'MR_FIRE':'Fire',
 "MR_PLUSTWO": "Need +2",#+
 "MR_PLUSTHREE": "Need +3",#+
 "MR_PLUSFOUR": "Need +4",#+
+"MR_DRAIN":"Drain",
+"MR_SICK":"Sickness",
+"MR_MAGIC":"Magic",
+"MR_REFLECT":"Reflection",
+
 "":""
 }
 
@@ -272,6 +436,7 @@ rows={"index":0,
 "spe_gdr":50,
 "spe_ldr":51,
 "spe_fdr":52,
+"insight":53,
 }
 
 szs={
@@ -284,20 +449,23 @@ szs={
 }
 
 geno_str={
-    "G_UNIQ","Unique",
-    "G_SHEOL","Sheol Only",
-    "G_NOSHEOL","No Sheol",
-    "G_NOHELL","No Gehennom",
-    "G_HELL","Only Gehennom",
-    "G_NOGEN","No",
-    "G_SGROUP","Small groups",
-    "G_LGROUP","Large groups",
-    "G_VLGROUP","Huge groups",
-    "G_GENO","Yes",
-    "G_TALG","Kill Tal'Gath first",
-    "G_VLAD","Kill Vlad first",
-    "G_VECNA","Kill Vecna first",
-    "G_NOCORPSE","No corpse",
+    "G_UNIQ":"Unique",
+    "G_SHEOL":"Sheol Only",
+    "G_NOSHEOL":"No Sheol",
+    "G_NOHELL":"No Gehennom",
+    "G_HELL":"Only Gehennom",
+    "G_DEPTHS":"Depths only",
+    "G_PLANES":"Planes only",
+    "G_NOGEN":"No",
+    "G_SGROUP":"Small groups",
+    "G_LGROUP":"Large groups",
+    "G_VLGROUP":"Huge groups",
+    "G_GENO":"Yes",
+    "G_TALG":"Kill Tal'Gath first",
+    "G_VLAD":"Kill Vlad first",
+    "G_VECNA":"Kill Vecna first",
+    "G_NOCORPSE":"No corpse",
+    "G_SPCORPSE":"Special corpse"
 }
 
 genocide_f={
@@ -357,6 +525,30 @@ flags1_str={
 "M1_HERBIVORE":"M1_HERBIVORE",#+
 "M1_OMNIVORE":"M1_OMNIVORE",#+
 "M1_METALLIVORE":"M1_METALLIVORE",#+
+"M1_MAGIVORE":"M1_MAGIVORE",
+
+"M1_TENGTPORT":"M1_TENGTPORT",
+"M1_FLOAT":"M1_FLOAT",
+"M1_NOTONL":"M1_NOTONL",
+"M1_FLEETFLEE":"M1_FLEETFLEE",
+"M1_WEBRIP":"M1_WEBRIP",
+"M1_DOORBUST":"M1_DOORBUST",
+
+"M1_CHILL":"M1_CHILL",
+"M1_TOSTY":"M1_TOSTY",
+"M1_HALUC":"M1_HALUC",
+
+"M1_WINGS":"M1_WINGS",
+"M1_LONGHEAD":"M1_LONGHEAD",
+"M1_LONGNECK":"M1_LONGNECK",
+"M1_NOFEET":"M1_NOFEET",
+"M1_HAS_FEET":"M1_HAS_FEET",
+"M1_CAN_AMULET":"M1_CAN_AMULET",
+"M1_INDIGESTIBLE":"M1_INDIGESTIBLE",
+"M1_INSUBSTANTIAL":"M1_INSUBSTANTIAL",
+"M1_NOGLOVES":"M1_NOGLOVES",
+"M1_NOHAT":"M1_NOHAT",
+
 "":""
 
 }
@@ -395,6 +587,9 @@ flags2_str={
 "M2_COLLECT":"M2_COLLECT",#+
 "M2_MAGIC":"M2_MAGIC",#+
 "M2_HOBBIT":"M2_HOBBIT",#+
+
+
+
 "":""
 }
 
@@ -423,6 +618,39 @@ flags3_str={
 "M3_TRAITOR":"M3_TRAITOR",#+
 "M3_NOTAME":"M3_NOTAME",#+
 "M3_NONCORPOREAL":"M3_NONCORPOREAL",#+
+
+"M3_NORMAL":"M3_NORMAL",
+"M3_DARKSIGHT":"M3_DARKSIGHT",
+"M3_LOWLIGHT2":"M3_LOWLIGHT2",
+"M3_LOWLIGHT3":"M3_LOWLIGHT3",
+"M3_CATSIGHT":"M3_CATSIGHT",
+"M3_ECHOLOCATE":"M3_ECHOLOCATE",
+"M3_BLOODSENSE":"M3_BLOODSENSE",
+"M3_LIFESENSE":"M3_LIFESENSE",
+"M3_EXTRAMISSION":"M3_EXTRAMISSION",
+"M3_TELEPATHIC":"M3_TELEPATHIC",
+"M3_RLYEHIAN":"M3_RLYEHIAN",
+"M3_DETECTION":"M3_DETECTION",
+"M3_OMNI":"M3_OMNI",
+"M3_SCENT":"M3_SCENT",
+"M3_EARTHSENSE":"M3_EARTHSENSE",
+
+"M3_OPAQUE":"M3_OPAQUE",
+"M3_RIDER":"M3_RIDER",
+"M3_DEADLY":"M3_DEADLY",
+"M3_TRACKER":"M3_TRACKER",
+"M3_NOSPELLCOOLDOWN":"M3_NOSPELLCOOLDOWN",
+
+"M3_NOWISH":"M3_NOWISH",
+"M3_BACKSTAB":"M3_BACKSTAB",
+"M3_COMMANDER":"M3_COMMANDER",
+"M3_SANLOSS":"M3_SANLOSS",
+"M3_INSIGHT":"M3_INSIGHT",
+"M3_RIDER_HP":"M3_RIDER_HP",
+"M3_FUTURE_WISH":"M3_FUTURE_WISH",
+"M3_BOLD":"M3_BOLD",
+"M3_DETACHED":"M3_DETACHED",
+"M3_DUMMY":"M3_DUMMY",
 "":""
 
 }
@@ -432,6 +660,28 @@ flags4_str={
 "M4_VULNERABLE_COLD":"Hates cold",#+
 "M4_VULNERABLE_ELEC":"Hates shock",#+
 "M4_VULNERABLE_ACID":"Hates acid",#+
+"M4_MARTIAL_B":"M4_MARTIAL_B",
+"M4_MARTIAL_S":"M4_MARTIAL_S",
+"M4_MARTIAL_E":"M4_MARTIAL_E",
+"M4_BAB_FULL":"M4_BAB_FULL",
+"M4_BAB_HALF":"M4_BAB_HALF",
+"M4_LEVEL_30":"M4_LEVEL_30",
+"M4_LEVEL_45":"M4_LEVEL_45",
+"M4_PHYS_SCALING":"M4_PHYS_SCALING",
+"M4_ELDER_SIGN":"M4_ELDER_SIGN",
+"M4_EYE_OF_YGG":"M4_EYE_OF_YGG",
+"M4_ELDER_EYE_ELEM":"M4_ELDER_EYE_ELEM",
+"M4_ELDER_EYE_ENERGY":"M4_ELDER_EYE_ENERGY",
+"M4_ELDER_EYE_PLANES":"M4_ELDER_EYE_PLANES",
+"M4_HATESSILVER":"M4_HATESSILVER",
+"M4_HATESIRON":"M4_HATESIRON",
+"M4_HATESUNHOLY":"M4_HATESUNHOLY",
+"M4_HATESHOLY":"M4_HATESHOLY",
+"M4_RBLUNT":"M4_RBLUNT",
+"M4_RSLASH":"M4_RSLASH",
+"M4_RPIERCE":"M4_RPIERCE",
+"M4_WRESIST":"M4_WRESIST",
+"M4_HATESUNBLESSED":"M4_HATESUNBLESSED",
 "":""
 }
 
@@ -475,6 +725,25 @@ flags_cat_str={
 "MH_SPIDER":"Spider",
 "MH_JABBERWOCK":"Jabberwock",
 "MH_WRAITH":"Wraith",
+#dNetHack
+"MH_VAMPIRE":"Vampire",
+"MH_UNDEAD":"Undead",
+"MH_CLOCK":"Clockwork",
+"MH_UNLIVING":"Unliving",
+"MH_PLANT":"Plant",
+"MH_INSECTOID":"Insectoid",
+"MH_AVIAN":"Bird",
+"MH_REPTILIAN":"Reptilioid",
+"MH_ANIMAL":"Animnal",
+"MH_AQUATIC":"Aquatic",
+"MH_DEMIHUMAN":"Demihuman",
+"MH_FEY":"Fairy",
+"MH_ELEMENTAL":"Elemental",
+"MH_MINION":"Minion",
+"MH_PRIMORDIAL":"Primordial",
+"MH_ET":"Alien",
+"MH_G_O_O":"Great Old One",
+"MH_XORN":"Xorn",
 "":""
 }
 

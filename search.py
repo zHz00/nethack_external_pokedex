@@ -72,6 +72,10 @@ def check_monster(mon):
     report=[]
     all_ok=True
 
+    if mon[rows["symbol"]] not in monsym:
+        report.append("Symbol absent:"+mon[rows["symbol"]])
+        all_ok=False
+
     for f in flags1:
         if f not in flags1_str:
             report.append("Not found flag 1. Monster: "+mon[rows["name"]]+"; flag: "+f+"\n")
@@ -114,7 +118,7 @@ def check_monster(mon):
             report.append("Not found at. Monster: "+mon[rows["name"]]+"; at: "+attack[0].strip()+"\n")
         if attack[1].strip() not in ad:
             all_ok=False
-            report.append("Not found ad. Monster: "+mon[rows["name"]]+"; at: "+attack[1].strip()+"\n")
+            report.append("Not found ad. Monster: "+mon[rows["name"]]+"; ad: "+attack[1].strip()+"\n")
 
     if len(report)>0:
         report_file=open("errors.log","a",encoding="utf-8")
@@ -161,7 +165,7 @@ BK_CARD=22
 INV_CARD=23
 SEPARATOR=24
 SCR_WIDTH=80
-LIST_WIDTH=SCR_WIDTH-7
+LIST_WIDTH=SCR_WIDTH-8
 
 def out_input(s,in_str):
 
@@ -179,21 +183,37 @@ def out_results(s,results,sel,skip):
         selected_appeared=True#actually false, but we don't want to check selection in empty results
     start_ch=0
     cur=0
+    out_str=""
     for mon in results:
         if cur<skip:
             cur+=1
             continue
         if(start_ch+len(mon)>LIST_WIDTH):
-            s.addstr(f"(+{len(results)-cur})")
+            out_str+=f"(+{len(results)-cur})"
             break
         start_ch+=len(mon)+1#for "|"
         if cur-skip==sel:
-            s.addstr(mon,c.color_pair(INV))
+            out_str+="*"+mon
             selected_appeared=True
         else:
-            s.addstr(mon,c.color_pair(BK))
-        s.addstr("|")
+            out_str+=mon
+        out_str+="|"
         cur+=1
+    attr=c.color_pair(BK)
+    ch_prev=""
+    idx=0
+    for ch in out_str:
+        if ch_prev=="|":
+            attr=c.color_pair(BK)
+        if ch=="*":
+            attr=c.color_pair(INV)
+        if ch=="|":
+            attr=c.color_pair(BK)|c.A_BOLD
+        ch_prev=ch
+        if ch!="*" and idx<SCR_WIDTH-1:
+            s.addstr(ch,attr)
+            idx+=1
+        
     s.chgat(c.color_pair(BK))
     s.refresh()
     return (cur-skip,selected_appeared)
@@ -222,6 +242,22 @@ def split_line(line:str,mid:int)->str:
     if(pos2-mid<mid-pos1):
         return insert_after
     return insert_before
+
+def split_line2(line:str,width:int)-> str:
+    splitted=line.split(",")
+    cur_line=""
+    res_line=""
+    for s in splitted:
+        if len(cur_line)==0:
+            cur_line=s
+        else:
+            if len(cur_line+","+s)>=width:
+                res_line+=cur_line+",\n"
+                cur_line=s[1:]
+            else:
+                cur_line+=","+s
+    res_line+=cur_line
+    return res_line
 
 def out_symbol(s,mon):
     color=colors_table[int(mon[rows["color"]])&0x7]
@@ -356,10 +392,37 @@ def card_atk(mon,format_length):
         attack=attack[5:]
         attack=attack[:-1]
         attack=attack.split(",")
-        if(attack[2].strip()=="0" and attack[3].strip()=="0"):
-            attack_s+=at[attack[0].strip()]+ad[attack[1].strip()]+", "#0d0 смотреть бесполезно
+        for x in range(len(attack)):
+            attack[x]=attack[x].strip()
+        if(attack[2]=="0" and attack[3]=="0"):
+            if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
+                attack_s+=at[attack[0]]+ad[attack[1]]+" Spawn v/e, "#Oona special
+            else:
+                attack_s+=at[attack[0]]+ad[attack[1]]+", "#0d0 is ignored
         else:
-            attack_s+=at[attack[0].strip()]+" "+attack[2].strip()+"d"+attack[3].strip()+ad[attack[1].strip()]+", "
+            attack_s+=at[attack[0]]+" "+attack[2]+"d"+attack[3]+ad[attack[1]]+", "
+
+        if len(attack)==8:#dNetHack
+            lev=0 if len(attack[4])==0 else int(attack[4])
+            off=0 if len(attack[5])==0 else int(attack[5])
+            poly=0 if len(attack[6])==0 else int(attack[6])
+            ins=0 if len(attack[7])==0 else int(attack[7])
+            if format_length==2:#extended info
+                ext=""
+                if lev>0:
+                    ext+=f"Lv{lev}+, "
+                if off!=0:
+                    ext+="Offhand, "
+                if poly!=0:
+                    ext+="Polyself weap, "
+                if ins>0:
+                    ext+=f"Insight>={ins}, "
+                if len(ext)>0:
+                    ext=ext[:-2]
+                    ext="["+ext+"]"
+                    attack_s=attack_s[:-2]
+                    attack_s+=ext+", "
+
         attacks+=attack_s
     
     if interrupted==0:#используются все шесть атак, значит надо убрать последнюю запятую
@@ -389,7 +452,9 @@ def card_atk(mon,format_length):
         out_line.append("Atk:"+attacks_condensed+"\n")
     else:
         attacks_list="Attacks:"+", ".join(attacks_list)+"\n"
-        out_line.append(split_line(attacks_list,SCR_WIDTH-3))
+        sl=split_line(attacks_list,SCR_WIDTH)
+        sl2=split_line2(attacks_list,SCR_WIDTH)
+        out_line.append(sl2)
 
     return out_line
 
@@ -405,7 +470,9 @@ def card_resistances(mon,format_length):
         res=res.strip()
         if len(res)==0:
             break
-        ress+=resists_mon[res.strip()]+", "
+        res=res.strip()
+        if res in resists_mon:
+            ress+=resists_mon[res.strip()]+", "
 
 
     for flag in mon[rows["flags1"]].split("|"):
@@ -418,6 +485,8 @@ def card_resistances(mon,format_length):
         ress="Resistances:None\n"
     else:
         ress="Resistances:"+ress+"\n"
+    if format_length==2:
+        ress=split_line2(ress,SCR_WIDTH)
     out_line.append(ress)
 
     return out_line
@@ -432,16 +501,19 @@ def card_eat(mon,format_length):
     ress_conv=""
     resn=0
     nocorpse=False
+    scorpse=False
     for geno in mon[rows["geno"]].split("|"):
         geno=geno.strip()
         if(len(geno)==0):
             break
         if geno=="G_NOCORPSE":
             nocorpse=True
+        if geno=="G_SCORPSE":
+            scorpse=True
 
     prefix="Conveyed:"
     if mon[rows["name"]]=="Chromatic Dragon":
-        prefix=prefix#degub; Chromatic Dragon is most difficult monster in terms of formatting
+        prefix=prefix#debug; Chromatic Dragon is most difficult monster in terms of formatting
     ress_final_line=""
     if nocorpse:
         ress_final_line+="("
@@ -512,7 +584,7 @@ def card_eat(mon,format_length):
         ress_final_line=prefix+ress_final_line
 
     if format_length==2:
-        ress_final_line=split_line(ress_final_line,SCR_WIDTH)
+        ress_final_line=split_line2(ress_final_line,SCR_WIDTH)
     
     if len(ress_final_line)>SCR_WIDTH and format_length!=2:
         ress_final_line=ress_final_line.replace(", ",",")#remove spaces for shorter line
@@ -844,7 +916,7 @@ def main(s):
     c.init_pair(BK,c.COLOR_WHITE,c.COLOR_BLUE)
     c.init_pair(INV,c.COLOR_BLUE,c.COLOR_WHITE)
     c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
-    c.init_pair(INV_CARD,c.COLOR_CYAN,c.COLOR_BLACK)
+    c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     if bold==1:
         for x in range(1,9):
             c.init_pair(x,x-1,c.COLOR_BLACK)
@@ -945,7 +1017,7 @@ def main(s):
                     attrib=c.A_BOLD
                 else:
                     attrib=0
-                if len(line)>=SCR_WIDTH:
+                if len(line.strip())>SCR_WIDTH:
                     line=line[:SCR_WIDTH-1]+"!"
                 for i in range(len(line)):
                     if format_length!=2:
