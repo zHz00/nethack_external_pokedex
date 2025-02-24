@@ -854,6 +854,7 @@ flags_perks={
 "M1_REGEN":"Regenerates",
 "M1_SEE_INVIS":"Sees Invisible",
 "M1_TPORT":"Teleports",
+"M1_TENGTPORT":"Teleports to you",
 "M1_TPORT_CNTRL":"T. control",
 "M2_SHAPESHIFTER":"Changes form",
 "M2_ROCKTHROW":"Throws rocks",
