@@ -340,9 +340,18 @@ def card_gen(mon,format_length):
             freq_s+="No Sheol, "
         if "G_SHEOL" in gen_flags and "G_HELL" not in gen_flags:
             freq_s+="Sheol only, "
+        if "G_PLANES" in gen_flags and "G_HELL" not in gen_flags:
+            freq_s+="Planes only, "
+        if "G_DEPTHS" in gen_flags and "G_HELL" not in gen_flags:
+            freq_s+="Depths only, "
         if "G_SHEOL" in gen_flags and "G_HELL" in gen_flags:
-            freq_s+="Gehennom and Sheol only, "
-        if "G_NOHELL" not in gen_flags and "G_HELL" not in gen_flags and "G_NOSHEOL" not in gen_flags and "G_SHEOL" not in gen_flags:
+            freq_s+="Gehennom&Sheol only, "
+        if "G_NOHELL" not in gen_flags and \
+            "G_HELL" not in gen_flags and \
+            "G_NOSHEOL" not in gen_flags and \
+            "G_SHEOL" not in gen_flags and\
+            "G_DEPTHS" not in gen_flags and\
+            "G_PLANES" not in gen_flags:
             freq_s+="Everywhere, "
         if freq_s.endswith(", "):
             freq_s=freq_s[:-2]
@@ -350,27 +359,43 @@ def card_gen(mon,format_length):
             freq_s="Generation:"+freq_s+"\n"
         else:
             freq_s="Generation:"+freq_s+"|"
-        out_line.append(freq_s)
         if "G_GENO" in gen_flags:
-            g="Genocide:"
+            freq_s+="Genocide:"
             found=False
             for k in genocide_f.keys():
                 if k in gen_flags:
                     found=True
                     if format_length<2:
-                        g+=genocide_f[k]+"|"
+                        freq_s+=genocide_f[k]+"|"
                     else:
-                        g+=genocide_f_ext[k]+"|"
+                        freq_s+=genocide_f_ext[k]+"|"
                     break
             if not found:
-                g+="Yes |"
-            out_line.append(g)
+                freq_s+="Yes |"
         else:
-            out_line.append(f"Genocide:No  |")
+            freq_s+=f"Genocide:No  |"
         if "M2_NOPOLY" in flags2:
-            out_line.append(f"Poly to:No ")
+            freq_s+=f"Poly to:No "
         else:
-            out_line.append(f"Poly to:Yes")
+            freq_s+=f"Poly to:Yes"
+        if mon[rows['insight']]!="":#dNetHack
+            ins=int(mon[rows['insight']])
+            if ins>0:
+                freq_s+=f"|Insight:>={mon[rows['insight']]}"
+            else:
+                freq_s+=f"|Insight:0"
+        if format_length!=2:#in ext format we have two lines instead of one, so we don't have to split or condense
+            if len(freq_s)>SCR_WIDTH:
+                freq_s=" ".join(freq_s.split())
+                freq_s=freq_s.replace(" |","|")
+            if len(freq_s)>SCR_WIDTH:
+                freq_s=freq_s.replace(", ",",")
+            if len(freq_s)>SCR_WIDTH:
+                freq_s=freq_s.replace("Generation:","Gen:")
+            if len(freq_s)>SCR_WIDTH:
+                freq_s=freq_s.replace(":Yes",":Y")
+                freq_s=freq_s.replace(":Np",":N")
+        out_line.append(freq_s)
     out_line.append("\n")
 
     return out_line
@@ -395,13 +420,19 @@ def card_atk(mon,format_length):
         attack=attack.split(",")
         for x in range(len(attack)):
             attack[x]=attack[x].strip()
+        if format_length==-1:
+            at_actual=at_short
+            ad_actual=ad_short
+        else:
+            at_actual=at
+            ad_actual=ad
         if(attack[2]=="0" and attack[3]=="0"):
             if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
-                attack_s+=at[attack[0]]+ad[attack[1]]+" Spawn v/e, "#Oona special
+                attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e, "#Oona special
             else:
-                attack_s+=at[attack[0]]+ad[attack[1]]+", "#0d0 is ignored
+                attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+", "#0d0 is ignored
         else:
-            attack_s+=at[attack[0]]+" "+attack[2]+"d"+attack[3]+ad[attack[1]]+", "
+            attack_s+=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+", "
 
         if len(attack)==8:#dNetHack
             lev=0 if len(attack[4])==0 else int(attack[4])
@@ -447,10 +478,26 @@ def card_atk(mon,format_length):
                     if cnt==0:
                         attacks_list_condensed.append(attacks_list[x-1])
                     else:
-                        attacks_list_condensed.append(attacks_list[x-1]+f" (x{cnt+1})")
+                        if format_length!=-1:
+                            attacks_list_condensed.append(attacks_list[x-1]+f" (x{cnt+1})")
+                        else:
+                            attacks_list_condensed.append(attacks_list[x-1]+f" x{cnt+1}")
                         cnt=0
         attacks_condensed=", ".join(attacks_list_condensed)
-        out_line.append("Atk:"+attacks_condensed+"\n")
+        attacks_list="Atk:"+attacks_condensed+"\n"
+        if format_length==-1:#extra short
+            if len(attacks_list)>SCR_WIDTH:
+                attacks_list=attacks_list.replace(", ",",")
+        if format_length==0:
+            if len(attacks_list)>SCR_WIDTH:
+                attacks_list=attacks_list.replace(", ",",")
+            if len(attacks_list)>SCR_WIDTH:
+                return card_atk(mon,-1)#swirth to extra short
+        if format_length==1:
+            sl2=split_line2(attacks_list,SCR_WIDTH)
+        else:
+            sl2=attacks_list
+        out_line.append(sl2)
     else:
         attacks_list="Attacks:"+", ".join(attacks_list)+"\n"
         sl=split_line(attacks_list,SCR_WIDTH)
@@ -486,6 +533,10 @@ def card_resistances(mon,format_length):
         ress="Resistances:None\n"
     else:
         ress="Resistances:"+ress+"\n"
+    if len(ress)>SCR_WIDTH:
+        ress=ress.replace("Resistances:","Res:")
+    if len(ress)>SCR_WIDTH:
+        ress=ress.replace(", ",",")
     if format_length==2:
         ress=split_line2(ress,SCR_WIDTH)
     out_line.append(ress)
@@ -607,6 +658,10 @@ def card_eat(mon,format_length):
             bad+="POISON, "
         if flag=="M1_ACID":
             bad+="ACID, "
+        if flag=="M1_CHILL":
+            bad+="CHILL, "
+        if flag=="M1_TOSTY":
+            bad+="HOT, "
 
     for flag in mon[rows["flags2"]].split("|"):
         flag=flag.strip()
@@ -631,7 +686,7 @@ def card_eat(mon,format_length):
         attack=attack[5:]
         attack=attack[:-1]
         attack=attack.split(",")
-        if attack[1]=="AD_STUN" or mon[rows["name"]]=="violet fungus":
+        if attack[1]=="AD_STUN" or mon[rows["name"]]=="violet fungus" or "M1_HALUC" in flags1:
             bad+="HALLU, "
             break
 
@@ -640,7 +695,7 @@ def card_eat(mon,format_length):
         bad+="Aggravate, "
     if mon[rows["name"]] in ["cockatrice","chickatrice","Medusa"]:
         bad+="PETRIFY, "
-    if mon[rows["name"]] in ["Death","Pestilence","Famine"]:
+    if mon[rows["name"]] in ["Death","Pestilence","Famine"] or "M3_DEADLY" in flags3:
         bad+="FATAL, "
     if mon[rows["name"]] in ["green slime"]:
         bad+="SLIME, "
@@ -692,7 +747,7 @@ def card_flags(mon,format_length):
         flag_str=""
         cat_len=max_val_len(flags_cat_str)
 
-        prefix="Catetory:"
+        prefix="Category:"
         cat_len=max_val_len(flags_cat_str)
         cat_list=[]
         for flag in flags_cat_str.keys():
@@ -726,7 +781,10 @@ def card_flags(mon,format_length):
         found=False
         if "M1_CARNIVORE" in flags1 and "M1_HERBIVORE" in flags1:
             found=True
-            flag_str=f"{'Omnivore':{cat_len}}|"
+            if "M1_METALLIVORE" in flags1:
+                flag_str=f"{'Omni+metallivore':{cat_len}}|"
+            else:
+                flag_str=f"{'Omnivore':{cat_len}}|"
         else:
             for flag in flags_diet.keys():
                 if flag in flags1:
@@ -746,42 +804,81 @@ def card_flags(mon,format_length):
             line=line.replace(" |","|")
         if len(line)>SCR_WIDTH:
             line=line.replace(", ",",")
-        if len(line)>SCR_WIDTH:#still too long, removing infravisible
-            line=line.split("|Infravisible")[0]
-            infravisible_to_perks=True
+        if len(line)>SCR_WIDTH:#still too long
+            line=line.replace("Gender:Male","Sex:M")
+            line=line.replace("Gender:Female","Sex:F")
+            line=line.replace("Gender:None","Sex:-")
+            line=line.replace("Gender:Neuter","Sex:N")
+            line=line.replace("Category:","Cat:")
+            line=line.replace("Infravisible:Yes","IR-vis:Y")
+            line=line.replace("Infravisible:No","IR-vis:N")
         line+="\n"
         out_line.append(line)
         line=""
     #LINE 2. BODY PLAN
         flag_str=""
-        prefix="Body type:"
+        prefix="Body:"
         cat_len=max_val_len(flags_body)
         found=False
-        for flag in flags_body.keys():
-            if flag in flags1 or flag in flags3:
+        for d in flags_body.keys():
+            if set(d).issubset(set(flags1).union(set(flags3))):
                 found=True
-                flag_str=f"{flags_body[flag]:{cat_len}}|"
+                flag_str=f"{flags_body[d]:{cat_len}}|"
+                break
         if found==False:
             flag_str=f"{'Unusual':{cat_len}}|"
 
         line+=prefix+flag_str
 
-        prefix="Body parts:"
+        tmpf=open("tmp.txt","a",encoding="utf-8")
+        """if "M1_NOFEET" not in flags1 and "M1_HAS_FEET" not in flags1 and ("M1_NOLIMBS" in flags1 or "M1_SLITHY" in flags1):
+            f1=str("M1_NOLIMBS" in flags1)
+            f2=str("M1_NOFEET" in flags1)
+            f3=str("M1_HAS_FEET" in flags1)
+            f4=str("M1_SLITHY" in flags1)
+            tmpf.write(mon[rows["name"]]+f":animal feet: {f1},{f2},{f3},{f4}\n")"""
+        if "M1_NOFEET" in flags1 and "M1_NOLIMBS" in flags1:
+            tmpf.write(mon[rows["name"]]+f":no limbs duplicated by no feet")
+        if "M1_HAS_FEET" in flags1 and "M1_NOLIMBS" in flags1:
+            tmpf.write(mon[rows["name"]]+f":no limbs, but has feet")
+        tmpf.close()
+        """
+        if "M1_HUMANOID" in flags1 and "M1_NOFEET" in flags1:
+            tmpf.write(mon[rows["name"]]+":Humanoid, but no feet\n")
+        if "M1_HUMANOID" not in flags1 and "M1_HAS_FEET" in flags1:
+            tmpf.write(mon[rows["name"]]+":Not Humanoid, but has feet\n")
+        if "M1_HUMANOID" in flags1 and "M1_NOLIMBS" in flags1:
+            tmpf.write(mon[rows["name"]]+":Humanoid, but no limbs\n")
+        if "M1_HUMANOID" in flags1 and "M1_NOHANDS" in flags1:
+            tmpf.write(mon[rows["name"]]+":Humanoid, but no hands\n")
+#       if "M1_NOHANDS" not in flags1 and "M1_NOLIMBS" in flags1 and "M1_HUMANOID" not in flags1:
+#            tmpf.write(mon[rows["name"]]+":Hands, but no limbs (not humanoid)\n")
+        if "M1_NOHANDS" not in flags1 and "M1_NOLIMBS" in flags1 and "M1_HUMANOID" in flags1:
+            tmpf.write(mon[rows["name"]]+":Hands, but no limbs (HUMANOID!)\n")
+        if "M1_NOHANDS" in flags1 and "M1_NOLIMBS" in flags1:
+            tmpf.write(mon[rows["name"]]+":No hands duplicated by no limbs\n")
+        if "M1_NOFEET" in flags1 and "M1_NOLIMBS" in flags1:
+            tmpf.write(mon[rows["name"]]+":Humanoid, but no feet\n")
+        tmpf.close()"""
+
+        prefix="Parts:"
         flag_str=""
         no_limbs=False
         if "M1_NOLIMBS" in flags_parts_no.keys() and "M1_NOHANDS" not in flags_parts_no.keys():
             no_limbs=no_limbs
-        for flag in flags_parts_no.keys():
-            if flag in flags1:
+        for d in flags_parts_no.keys():
+            if set(d).issubset(set(flags1)):
                 if flag=="M1_NOLIMBS":
                     no_limbs=True
-                if flag=="M1_NOHANDS" and no_limbs:
+                if d==("M1_NOHANDS",) and no_limbs:
                     continue
-                flag_str+=flags_parts_no[flag]+", "
+                flag_str+=flags_parts_no[d]+", "
             else:
-                flag_str+=flags_parts_have[flag]+", "
+                flag_str+=flags_parts_have[d]+", "
         flag_str=flag_str[:-2]
         line+=prefix+flag_str+"\n"
+        if len(line)>SCR_WIDTH:
+            line=line.replace(", ",",")
         out_line.append(line)
         line=""
 
@@ -790,7 +887,7 @@ def card_flags(mon,format_length):
         found=False
         flag_str=""
         for flag in flags_demeanor.keys():
-            if flag in flags2 or flag in flags3:
+            if flag in flags2 or flag in flags3 or flag in flags1:
                 found=True
                 if format_length==2:
                     flag_str+=flags_demeanor_ext[flag]+", "
@@ -812,6 +909,9 @@ def card_flags(mon,format_length):
             if flag in flags1 or flag in flags3:
                 if flag=="M1_NEEDPICK":
                     flag_str=flag_str[:-2]+" "#remove "," from "Tunnel"
+                if flag=="M1_FLY":
+                    if "M1_FLOAT" in flags1:
+                        continue#float always have fly flag, so it can be skipped, for string shortening
                 flag_str+=flags_move[flag]+", "
         for flag in flags_move_type.keys():
             if flag in flags1:
@@ -839,8 +939,13 @@ def card_flags(mon,format_length):
                 flag_str+="None, "
         flag_str=flag_str[:-2]+"\n"
         line+=prefix+flag_str
+        remainder=""
         if len(line)>SCR_WIDTH and format_length!=2:
             line=line.replace(", ",",")#remove spaces for shorter line
+            if len(line)>SCR_WIDTH:#picks goes to next line
+                halves=line.split(prefix)
+                line=halves[0][:-1]+"\n"
+                remainder=prefix+halves[1].strip()+"|"#remove new line
 
         prefix="Wants:"
         flag_str=""
@@ -852,7 +957,9 @@ def card_flags(mon,format_length):
         if found==False:
             flag_str="None, "
         flag_str=flag_str[:-2]
-        line+=prefix+flag_str+"\n"
+        line+=remainder+prefix+flag_str+"\n"
+        if len(line)>SCR_WIDTH:
+            line=line.replace(", ",",")
 
         out_line.append(line)
         line=""
@@ -860,9 +967,6 @@ def card_flags(mon,format_length):
         prefix="Perks:"
         flag_str=""
         found=False
-        if infravisible_to_perks and "M3_INFRAVISIBLE" in flags3:
-            found=True
-            flag_str+="Infravisible, "#for too long lines
         for flag in flags_perks.keys():
             if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres:
                 found=True
@@ -884,10 +988,9 @@ def card_dnethack(mon,format_length):
         return ""
     out_line=["$"]
     out_line.append(f'Natural AC:{mon[rows["nac"]]:4}|Dodge AC:{mon[rows["dac"]]:4}|Protection AC:{mon[rows["pac"]]:4}|Total AC:10-{mon[rows["nac"]]}-{mon[rows["dac"]]}-{mon[rows["pac"]]}={mon[rows["ac"]]:4}\n')
-    out_line.append("Damage reduction|Head|Body|Arms|Legs|Feet|\n")
+    out_line.append(f"Damage reduction|Head|Body|Arms|Legs|Feet|\n")
     out_line.append(f'Base            |{mon[rows["hdr"]]:4}|{mon[rows["bdr"]]:4}|{mon[rows["gdr"]]:4}|{mon[rows["ldr"]]:4}|{mon[rows["fdr"]]:4}|\n')
     out_line.append(f'Special         |{mon[rows["spe_hdr"]]:4}|{mon[rows["spe_bdr"]]:4}|{mon[rows["spe_gdr"]]:4}|{mon[rows["spe_ldr"]]:4}|{mon[rows["spe_fdr"]]:4}|\n')
-    out_line.append(f"Insight required:{mon[rows['insight']]}")
     return out_line
 
 
@@ -1058,10 +1161,11 @@ def main(s):
                             pos=i+3
                         else:
                             pos=i
-                    if line[i]=="|":
-                        card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR)|c.A_BOLD)
-                    else:
-                        card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+                    if line_n<c.LINES-2:
+                        if line[i]=="|":
+                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR)|c.A_BOLD)
+                        else:
+                            card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
                     if line[i]==":":
                         attrib=0
                     if line[i]=="|":
@@ -1131,6 +1235,9 @@ def main(s):
                         continue
                     test=make_card(table[mon],format_length=f_length)
                     test=test.split("\n")
+                    if len(test)>c.LINES-2:
+                        report.write(f"MANY LINES({len(test)}):{mon}\n")
+                        report.write(ln[:test_len]+"\n===\n")
                     for i in range(len(test)):
                         ln=test[i]
                         if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
