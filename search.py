@@ -525,7 +525,7 @@ def card_resistances(mon,format_length):
 
     for flag in mon[rows["flags1"]].split("|"):
         flag=flag.strip()
-        if(flag=="M1_SEE_INVIS"):
+        if(flag=="M1_SEE_INVIS") and format_length==0:#in mini format we add see invisible to resistances bc it is important
             ress+="SeeInvis, "
     if ress.endswith(", "):
         ress=ress[:-2]
@@ -866,15 +866,33 @@ def card_flags(mon,format_length):
         no_limbs=False
         if "M1_NOLIMBS" in flags_parts_no.keys() and "M1_NOHANDS" not in flags_parts_no.keys():
             no_limbs=no_limbs
+        if "M1_NOLIMBS" in flags1:
+            no_limbs=True
         for d in flags_parts_no.keys():
             if set(d).issubset(set(flags1)):
-                if flag=="M1_NOLIMBS":
-                    no_limbs=True
-                if d==("M1_NOHANDS",) and no_limbs:
-                    continue
+                #if flag=="M1_NOLIMBS":
+                #    no_limbs=True
+                #if d==("M1_NOHANDS",) and no_limbs:
+                #    continue
                 flag_str+=flags_parts_no[d]+", "
             else:
+                if d==("M1_NOHANDS",) and no_limbs:
+                    flag_str+=flags_parts_no[d]+", "
+                    continue#we have no "no hands" flag but we have "no limgs" flag, so we stil have no hands
                 flag_str+=flags_parts_have[d]+", "
+        #everything but feet. no we have to decide what feet have monster
+        feet_flag_found=False
+        for d in flags_feet_no.keys():
+            if set(d).issubset(set(flags1)):
+                if feet_flag_found:
+                    feet_flag_found=feet_flag_found                
+                feet_flag_found=True
+                flag_str+=flags_feet_no[d]+", "
+                break
+
+        if feet_flag_found==False:
+            flag_str+="feet:Y, "
+        
         flag_str=flag_str[:-2]
         line+=prefix+flag_str+"\n"
         if len(line)>SCR_WIDTH:
@@ -883,19 +901,38 @@ def card_flags(mon,format_length):
         line=""
 
         #LINE 3. BEHAVIOR: DEMEANOR, MOVEMENT, WANTS, PICK
+
         prefix="Demeanor:"
         found=False
         flag_str=""
+        flag_str_ext=""
+        flag_str_short=""
+        if mon[3]=="ball of light":
+            found=found
         for flag in flags_demeanor.keys():
             if flag in flags2 or flag in flags3 or flag in flags1:
                 found=True
-                if format_length==2:
-                    flag_str+=flags_demeanor_ext[flag]+", "
+                flag_str_ext+=flags_demeanor_ext[flag]+", "
+                flag_str_short+=flags_demeanor[flag]+", "
+        if format_length!=2:
+            flag_str=flag_str_short
+        else:
+            if len(prefix+flag_str_ext)-2>SCR_WIDTH:#-2 is for finalizing ", "
+                flag_str_ext=flag_str_ext.replace(", ",",")
+                if len(prefix+flag_str_ext)-1>SCR_WIDTH:#still longer than we want
+                    flag_str=flag_str_short
                 else:
-                    flag_str+=flags_demeanor[flag]+", "
+                    flag_str=flag_str_ext
+            else:
+                flag_str=flag_str_ext
+        if len(flag_str)>SCR_WIDTH:
+            flag_str=flag_str.replace(", ",",")
         if found==False:
             flag_str="None, "
-        flag_str=flag_str[:-2]
+        if flag_str.endswith(","):
+            flag_str=flag_str[:-1]
+        if flag_str.endswith(", "):
+            flag_str=flag_str[:-2]
         if format_length==2:
             flag_str+="\n"
         else:

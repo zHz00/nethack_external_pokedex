@@ -1009,32 +1009,31 @@ flags_parts_have={
 ("M1_NOHANDS",):"hands:Y",
 ("M1_NOHEAD",):"head:Y",
 ("M1_MINDLESS",):"brain:Y",
-("M1_WINGS",):"wings:N",
-("M1_NOLIMBS",):"limbs:Y",
+("M1_WINGS",):"wings:N"
+}
 
+flags_feet={
 ("M1_NOLIMBS",):"feet:N",
 ("M1_HAS_FEET",):"feet:human",
 
 ("M1_NOFEET",):"feet:Y",
 ("M1_SLITHY",):"feet:animal",
+("M1_SLITHY","M1_NOLIMBS"):"feet:N",
 }
 
 flags_parts_no={
 ("M1_NOEYES",):"eyes:N",
 ("M1_NOHANDS",):"hands:N",
-("M1_NOFEET",):"feet:N",
 ("M1_NOHEAD",):"head:N",
 ("M1_MINDLESS",):"brain:N",
 ("M1_WINGS",):"wings:Y",
-("M1_NOLIMBS",):"limbs:N",
-
+}
+flags_feet_no={
 ("M1_NOLIMBS",):"feet:N",
 ("M1_HAS_FEET",):"feet:human",
-("M1_NOFEET",):"feet:Y",
+("M1_NOFEET",):"feet:N",
 
 ("M1_SLITHY",):"feet:animal",
-
-
 }
 
 flags_demeanor={
@@ -1073,7 +1072,7 @@ flags_covet={
 "M3_WANTSBELL":"Bell",
 "M3_WANTSBOOK":"Book",
 "M3_WANTSCAND":"Candelabrum",
-"M3_WANTSARTI":"artifacts",
+"M3_WANTSARTI":"Artifacts",
 }
 
 flags_move={
