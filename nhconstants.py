@@ -118,6 +118,7 @@ at={'AT_CLAW':'Claw',
 "AT_WBIT":"Wolf Head Bite",
 "AT_TAIL":"Tail",
 "AT_TONG":"Tongue",
+"AT_VOMT":"Vomit",
 "AT_XWEP":"Offhand Weapon",
 "AT_MARI":"Extra Weapon",
 "AT_BRSH":"Splash",
@@ -170,6 +171,7 @@ at_short={'AT_CLAW':'Claw',
 "AT_WBIT":"Wolf Head Bite",
 "AT_TAIL":"Tail",
 "AT_TONG":"Tongue",
+"AT_VOMT":"Vomit",
 "AT_XWEP":"Offh Weap",
 "AT_MARI":"Xtra Weap",
 "AT_BRSH":"Splash",
@@ -342,6 +344,11 @@ ad={'AD_PHYS':'',
 "AD_UNRV":" Unnerving",
 "AD_MADF":" Madness fire",#player only?
 "AD_FATK":" Force to attack",#player only?
+"AD_DRHP":" Drain bonus HP",
+"AD_PUSH":" Push",
+"AD_LICK":" Pull&Immobilize&Cold+Acid",
+"AD_PFBT":" Rot+Poison",
+"AD_OMUD":" Acid+bone daggers",
 "AD_DUNSTAN":" Stones throw themselves at target",#player only?
 "AD_IRIS":" Iridescent tentacles",#player only?
 "AD_NABERIUS":" Tarnished bloody fangs",#player only?
@@ -524,6 +531,11 @@ ad_short={'AD_PHYS':'',
 "AD_UNRV":" Unnerving",
 "AD_MADF":" Madness fire",#player only?
 "AD_FATK":" Force to attack",#player only?
+"AD_DRHP":" Drain bonus HP",
+"AD_PUSH":" Push",
+"AD_LICK":" Pull&Immobilize&Cold+Acid",
+"AD_PFBT":" Rot+Poison",
+"AD_OMUD":" Acid+bone daggers",
 "AD_DUNSTAN":" Stones throw themselves at target",#player only?
 "AD_IRIS":" Iridescent tentacles",#player only?
 "AD_NABERIUS":" Tarnished bloody fangs",#player only?
@@ -766,6 +778,7 @@ flags1_str={
 "M1_FLEETFLEE":"M1_FLEETFLEE",#+
 "M1_WEBRIP":"M1_WEBRIP",#+
 "M1_DOORBUST":"M1_DOORBUST",#+
+"M1_AQUATIC":"M1_AQUATIC",
 
 "M1_CHILL":"M1_CHILL",#+
 "M1_TOSTY":"M1_TOSTY",#+
@@ -781,6 +794,7 @@ flags1_str={
 "M1_INSUBSTANTIAL":"M1_INSUBSTANTIAL",#like shades
 "M1_NOGLOVES":"M1_NOGLOVES",
 "M1_NOHAT":"M1_NOHAT",
+"M1_SKELETAL":"M1_SKELETAL",
 
 "":""
 
@@ -820,7 +834,10 @@ flags2_str={
 "M2_COLLECT":"M2_COLLECT",#+
 "M2_MAGIC":"M2_MAGIC",#+
 "M2_HOBBIT":"M2_HOBBIT",#+
-
+"M2_DRUID_FORM_A":"Druid Form A",
+"M2_DRUID_FORM_B":"Druid Form B",
+"M2_DRUID_FORM_C":"Druid Form C",
+"M2_DRUID_FORM_D":"Druid Form D",
 
 
 "":""
@@ -1097,6 +1114,7 @@ flags_move_type={
 "M1_CLING":"Ceiling",
 "M3_STATIONARY":"Sessile",
 "M1_FLOAT":"Float",
+"M1_AQUQTIC":"Aquatic only",
 }
 
 flags_pick={
@@ -1104,6 +1122,13 @@ flags_pick={
 "M2_JEWELS":"Gems",
 "M2_COLLECT":"Food, Weapons",
 "M2_MAGIC":"Magic",
+}
+
+flags_druid_forms={
+    "M2_DRUID_FORM_A":"Druid Form A",
+    "M2_DRUID_FORM_B":"Druid Form B",
+    "M2_DRUID_FORM_C":"Druid Form C",
+    "M2_DRUID_FORM_D":"Druid Form D",
 }
 
 flags_perks={

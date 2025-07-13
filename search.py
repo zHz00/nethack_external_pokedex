@@ -378,6 +378,9 @@ def card_gen(mon,format_length):
             freq_s+=f"Poly to:No "
         else:
             freq_s+=f"Poly to:Yes"
+        for form in flags_druid_forms.keys():#evil hack 0.9
+            if form in flags2:
+                freq_s=freq_s.strip()+", "+flags_druid_forms[form]
         if mon[rows['insight']]!="":#dNetHack
             ins=int(mon[rows['insight']])
             if ins>0:
@@ -576,15 +579,38 @@ def card_eat(mon,format_length):
     if len(ress[0])>0:
         for r in ress:
             r_name,r_prob=r.split("=")
+            prob_parts=r_prob.split(";")
+            r_prob=prob_parts[0]
+            if len(prob_parts)>1:
+                r_t=prob_parts[1]
+            else:
+                r_t=""
+            #displacement in dnethack have both probabity and duration
             if r_name in resists_conv.keys():
                 ress_final_line+=resists_conv[r_name]
             else:
                 ress_final_line+=r_name
-            prob_normalized=int(int(r_prob)/ress_n)
-            if format_length==2:
-                ress_final_line+="("+str(prob_normalized)+"%), "
-            else:
+            if format_length!=2:
                 ress_final_line+=", "
+            else:#show probabilities
+                prob_str=""
+                if r_prob[0]=="+":#partial resistances from EvilHack
+                    prob_str=f"({r_prob}%), "
+                if r_prob[0]=="!":#special case for EvilHack, we don't need to normalize teleport, t. control and telepathy
+                    prob_str=f"({r_prob[1:]}%), "
+                if r_prob[0]=="T":#timeouts for dNetHack
+                    prob_str=f"(+{r_prob[1:]}T), "
+                    ress_n-=1#don't count these resistances for normalization
+                if r_prob[0]=="#":#special case for permanent resist for dNetHack
+                    prob_str=f"(permanent), "
+                    ress_n-=1#don't count these resistances for normalization
+                if len(r_t)>0:#special case for displacement for dnethack
+                    prob_str=f"({r_prob})%,{r_t}T), "
+
+                if len(prob_str)==0:#not special case
+                    prob_normalized=int(int(r_prob)/ress_n)
+                    prob_str="("+str(prob_normalized)+"%), "
+                ress_final_line+=prob_str
     if "M2_GIANT" in flags2:
         if ress_n==1:
             prob=int(50)
@@ -1255,9 +1281,12 @@ def main(s):
         if key=="KEY_F(1)":
             s.clear()
             file_suffixes=["short","long","ext"]
+            name_longest=0
+            name_longest_name=""
             for f_length in range(3):
                 failed_lines=0
                 failed_monsters=0
+                error_cards=0
                 total=0
                 failed_current_monster=False
                 report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
@@ -1267,8 +1296,14 @@ def main(s):
                 report_summary.write("File: "+ver_list[ver_idx]+"\n")
                 for mon in table.keys():
                     total+=1
+                    if len(mon)>20:
+                        report_summary.write(f"long name({len(mon)}):{mon}\n")
+                    if len(mon)>name_longest:
+                        name_longest=len(mon)
+                        name_longest_name=mon
                     if check_monster(table[mon])==False:
-                        report.write("Error making card: "+mon)
+                        report.write("Error making card: "+mon+"\n")
+                        error_cards+=1
                         continue
                     test=make_card(table[mon],format_length=f_length)
                     test=test.split("\n")
@@ -1300,8 +1335,9 @@ def main(s):
                         failed_monsters+=1
                         failed_current_monster=False
                 report.close()
-                result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}\n"
+                result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
                 report_summary.write(result_str)
+                report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
                 report_summary.close()
                 s.addstr(result_str)
             for x in range(1,17):
