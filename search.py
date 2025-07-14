@@ -605,7 +605,7 @@ def card_eat(mon,format_length):
                     prob_str=f"(permanent), "
                     ress_n-=1#don't count these resistances for normalization
                 if len(r_t)>0:#special case for displacement for dnethack
-                    prob_str=f"({r_prob})%,{r_t}T), "
+                    prob_str=f"({r_prob}%,{r_t[1:]}T), "
 
                 if len(prob_str)==0:#not special case
                     prob_normalized=int(int(r_prob)/ress_n)
