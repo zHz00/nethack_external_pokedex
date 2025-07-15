@@ -34,6 +34,7 @@ max_len_atk=0
 
 table=dict()
 table_temp=[]
+wingy=False
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
@@ -129,12 +130,24 @@ def check_monster(mon):
     return all_ok
 
 
-
-
+def table_insert(table:dict(),mon):
+    if mon[rows["name"]] not in table:
+        table[mon[rows["name"]]]=mon
+    else:
+        temp_mon=table[mon[rows["name"]]]
+        name1=temp_mon[rows["name"]]+" ("+monsym[temp_mon[rows["symbol"]]]+")"
+        name2=mon[rows["name"]]+" ("+monsym[mon[rows["symbol"]]]+")"
+        if name1 in table or name2 in table:
+            raise
+        table[name1]=temp_mon
+        table[name2]=mon
+        table.pop(mon[rows["name"]])
 
 def read_monsters(file):
     global table,table_temp
     global disable_sorting
+    global wingy
+    wingy=False
     table=dict()
     table_temp=[]
     monfile=open(data_folder+file,"r")
@@ -145,20 +158,22 @@ def read_monsters(file):
         mon_copy=None
         if len(mon)<len(rows):
             mon.extend([""]*(len(rows)-len(mon)))
-        if len(mon[rows["namef"]])>0 and len(mon[rows["namef"]])>0:#two-gender monster
+        if len(mon[rows["namef"]])>0 and len(mon[rows["namem"]])>0:#two-gender monster
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_NEUTER"
-            table[mon[rows["name"]]]=mon_copy
+            table_insert(table,mon_copy)
         else:
-            table[mon[rows["name"]]]=mon
+            table_insert(table,mon)
         if len(mon[rows["namef"]])>0:
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_FEMALE"
-            table[mon[rows["namef"]]]=mon_copy
+            table_insert(table,mon_copy)
         if len(mon[rows["namem"]])>0:
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_MALE"
-            table[mon[rows["namem"]]]=mon_copy
+            table_insert(table,mon_copy)
+        if "M1_WINGS" in mon[rows["flags1"]]:
+            wingy=True
 
 BK=20
 INV=21
@@ -777,6 +792,8 @@ def card_flags(mon,format_length):
         cat_len=max_val_len(flags_cat_str)
         cat_list=[]
         for flag in flags_cat_str.keys():
+            if len(flag)==0:
+                continue#don't check empty flags mh_flags can contain empty strings and this leads to empt entries in cat_list
             if flag in flags2:
                 cat_list.append(flags_cat_str[flag])
             if flag in mh_flags:
@@ -895,6 +912,8 @@ def card_flags(mon,format_length):
         if "M1_NOLIMBS" in flags1:
             no_limbs=True
         for d in flags_parts_no.keys():
+            if wingy==False and set(["M1_WINGS"]).issubset(set(d)):
+                continue#skip wings in body list if no wingy monters present in current variant
             if set(d).issubset(set(flags1)):
                 #if flag=="M1_NOLIMBS":
                 #    no_limbs=True
@@ -1109,8 +1128,14 @@ def main(s):
     s.clear()
     c.init_pair(BK,c.COLOR_WHITE,c.COLOR_BLUE)
     c.init_pair(INV,c.COLOR_BLUE,c.COLOR_WHITE)
-    c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
-    c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
+    cur_color1=c.COLOR_GREEN
+    cur_color2=c.COLOR_YELLOW
+    cur_color_bk1=c.COLOR_BLACK
+    cur_color_bk2=c.COLOR_BLACK
+    c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+    c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+    #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
+    #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     if bold==1:
         for x in range(1,9):
             c.init_pair(x,x-1,c.COLOR_BLACK)
@@ -1276,6 +1301,30 @@ def main(s):
             search_win.nodelay(False)
             in_str=""
             reloaded=False
+        if key=="=":
+            cur_color1+=1
+            if cur_color1>7:
+                cur_color1=0
+            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        if key=="-":
+            cur_color2+=1
+            if cur_color2>7:
+                cur_color2=0
+            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        if key=="]":
+            cur_color_bk1+=1
+            if cur_color_bk1>7:
+                cur_color_bk1=0
+            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        if key=="[":
+            cur_color_bk2+=1
+            if cur_color_bk2>7:
+                cur_color_bk2=0
+            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
         if key=="KEY_F(10)":
             break
         if key=="KEY_F(1)":
@@ -1372,7 +1421,7 @@ def main(s):
             s.refresh()
             s.getch()
 
-        if len(key)==1:
+        if len(key)==1 and key not in ["=","-","[","]"]:
             if len(in_str)<MAX_SEARCH:
                 in_str+=key
                 sel=0
