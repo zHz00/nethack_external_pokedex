@@ -179,7 +179,8 @@ BK=20
 INV=21
 BK_CARD=22
 INV_CARD=23
-SEPARATOR=24
+SEPARATOR_BK=24
+SEPARATOR_INV=25
 SCR_WIDTH=80
 LIST_WIDTH=SCR_WIDTH-8
 
@@ -1129,11 +1130,13 @@ def main(s):
     c.init_pair(BK,c.COLOR_WHITE,c.COLOR_BLUE)
     c.init_pair(INV,c.COLOR_BLUE,c.COLOR_WHITE)
     cur_color1=c.COLOR_GREEN
-    cur_color2=c.COLOR_YELLOW
+    cur_color2=c.COLOR_CYAN
     cur_color_bk1=c.COLOR_BLACK
     cur_color_bk2=c.COLOR_BLACK
     c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
     c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+    c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+    c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
     #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
     #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     if bold==1:
@@ -1197,17 +1200,17 @@ def main(s):
                 out_symbol(card_win,table[results[sel+skip]])
             else:#extended
                 card_win.move(0,0)
-                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR))
-                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR))
+                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BK))
                 card_win.move(1,0)
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR))
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BK))
                 out_symbol(card_win,table[mon_name])
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR))
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BK))
                 card_win.move(2,0)
-                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR))
-                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR))
+                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BK))
             if check_monster(table[mon_name])==True:
                 card=make_card(table[mon_name],format_length)
             else:
@@ -1251,7 +1254,10 @@ def main(s):
                             pos=i
                     if line_n<c.LINES-2:
                         if line[i]=="|":
-                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR)|c.A_BOLD)
+                            if cur_pair==BK_CARD:
+                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+                            else:
+                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
                         else:
                             card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
                     if line[i]==":":
@@ -1312,19 +1318,23 @@ def main(s):
             if cur_color2>7:
                 cur_color2=0
             c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
         if key=="]":
             cur_color_bk1+=1
             if cur_color_bk1>7:
                 cur_color_bk1=0
             c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
             c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+            c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+            c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
         if key=="[":
             cur_color_bk2+=1
             if cur_color_bk2>7:
                 cur_color_bk2=0
             c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
             c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+            c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+            c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
         if key=="KEY_F(10)":
             break
         if key=="KEY_F(1)":
