@@ -131,6 +131,20 @@ def check_monster(mon):
 
 
 def table_insert(table:dict(),mon):
+    namef=mon[rows["namef"]]
+    namem=mon[rows["namem"]]
+    if mon[rows["flags2"]].find("M2_FEMALE")!=-1 and len(namef)>0:
+        name=namef+"("+mon[rows["name"]]+")"
+        if name in table:
+            raise#why?
+        table[name]=mon
+        return
+    if mon[rows["flags2"]].find("M2_MALE")!=-1 and len(namem)>0:
+        name=namem+"("+mon[rows["name"]]+")"
+        if name in table:
+            raise#why?
+        table[name]=mon
+        return
     if mon[rows["name"]] not in table:
         table[mon[rows["name"]]]=mon
     else:
@@ -138,7 +152,7 @@ def table_insert(table:dict(),mon):
         name1=temp_mon[rows["name"]]+" ("+monsym[temp_mon[rows["symbol"]]]+")"
         name2=mon[rows["name"]]+" ("+monsym[mon[rows["symbol"]]]+")"
         if name1 in table or name2 in table:
-            raise
+            raise#monsters with equal names and letters? nonsense!
         table[name1]=temp_mon
         table[name2]=mon
         table.pop(mon[rows["name"]])
@@ -181,6 +195,7 @@ BK_CARD=22
 INV_CARD=23
 SEPARATOR_BK=24
 SEPARATOR_INV=25
+SEPARATOR_BLACK=26
 SCR_WIDTH=80
 LIST_WIDTH=SCR_WIDTH-8
 
@@ -413,7 +428,7 @@ def card_gen(mon,format_length):
                 freq_s=freq_s.replace("Generation:","Gen:")
             if len(freq_s)>SCR_WIDTH:
                 freq_s=freq_s.replace(":Yes",":Y")
-                freq_s=freq_s.replace(":Np",":N")
+                freq_s=freq_s.replace(":No",":N")
         out_line.append(freq_s)
     out_line.append("\n")
 
@@ -453,11 +468,12 @@ def card_atk(mon,format_length):
         else:
             attack_s+=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+", "
 
-        if len(attack)==8:#dNetHack
+        if len(attack)>8:#dNetHack
             lev=0 if len(attack[4])==0 else int(attack[4])
             off=0 if len(attack[5])==0 else int(attack[5])
             poly=0 if len(attack[6])==0 else int(attack[6])
             ins=0 if len(attack[7])==0 else int(attack[7])
+            san=0 if len(attack[8])==0 else int(attack[8])
             if format_length==2:#extended info
                 ext=""
                 if lev>0:
@@ -468,6 +484,10 @@ def card_atk(mon,format_length):
                     ext+="Polyself weap, "
                 if ins>0:
                     ext+=f"Insight>={ins}, "
+                if san<0:
+                    ext+=f"Sanity<{-san}, "
+                if san>0:
+                    ext+=f"Sanity>{san}, "
                 if len(ext)>0:
                     ext=ext[:-2]
                     ext="["+ext+"]"
@@ -476,7 +496,7 @@ def card_atk(mon,format_length):
 
         attacks+=attack_s
     
-    if interrupted==0:#используются все шесть атак, значит надо убрать последнюю запятую
+    if interrupted==0:#all six attacks present so we need to delete finilizing comma
         attacks=attacks[:-2]
     if len(attacks)>max_len_atk:
         max_len_atk=len(attacks)
@@ -585,12 +605,18 @@ def card_eat(mon,format_length):
     prefix="Conveyed:"
     if mon[rows["name"]]=="Chromatic Dragon":
         prefix=prefix#debug; Chromatic Dragon is most difficult monster in terms of formatting
+    gain_st_ordinary=True
+    conv_special=mon[rows["conv_special"]]
+    if conv_special.find("GAIN_ST")!=-1:
+        gain_st_ordinary=False
+    conv_special=conv_special.split("|")
+
     ress_final_line=""
     if nocorpse:
         ress_final_line+="("
     ress=mon[rows['prob']].split('|')
     ress_n=len(ress)
-    if "M2_GIANT" in flags2:
+    if "M2_GIANT" in flags2 and gain_st_ordinary:
         ress_n+=1
     if len(ress[0])>0:
         for r in ress:
@@ -627,45 +653,26 @@ def card_eat(mon,format_length):
                     prob_normalized=int(int(r_prob)/ress_n)
                     prob_str="("+str(prob_normalized)+"%), "
                 ress_final_line+=prob_str
-    if "M2_GIANT" in flags2:
+    if "M2_GIANT" in flags2 and gain_st_ordinary:
         if ress_n==1:
             prob=int(50)
         else:
             prob=int(100/ress_n)
         ress_final_line+="Gain St"+(f"({prob}%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["newt"]:
-        ress_final_line+="Pw"+("(66% restore, 22% +1 MAX), " if format_length==2 else ", ")
-    attacks=""
-    for attack_n in range(rows["attack1"],rows["attack6"]+1):
-        if mon[attack_n]=="NO_ATTK":
-            attacks=attacks[:-2]
-            interrupted=1
-            break
-        attack=mon[attack_n]
-        attack=attack[5:]
-        attack=attack[:-1]
-        attack=attack.split(",")
-        if attack[0]=="AT_MAGC":
-            ress_final_line+="Pw"+("(66% restore, 22% +1), " if format_length==2 else ", ")
-            break
-    if mon[rows["name"]] in ["wraith"]:
-        ress_final_line+="Gain level"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["nurse"]:
-        ress_final_line+="Heal"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["stalker"]:
-        ress_final_line+="Invisibility"+("(100%), " if format_length==2 else ", ")+"See invisible"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["quantum mechanic"]:
-        ress_final_line+="Toggle speed"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["lizard"]:
-        ress_final_line+="Reduce conf/stun"+("(100%), " if format_length==2 else ", ")+"Stop petrification"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["chameleon","doppelganger","sandestin","genetic engineer"]:
-        ress_final_line+="Polymorph"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["disenchanter"]:
-        ress_final_line+="Steal intrinsic"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["displacer beast"]:
-        ress_final_line+="Displacement (temp)"+("(100%), " if format_length==2 else ", ")
-    if mon[rows["name"]] in ["mind flayer","master mind flayer"]:
-        ress_final_line+="Gain In"+("(50%), " if format_length==2 else ", ")
+
+    #special conveys
+    for conv in conv_special:
+        if conv.find("=")==-1:
+            continue
+        name,prob=conv.split("=")
+        ress_final_line+=conv_special_str[name]
+        if format_length==2:
+            if name!="PW": 
+                ress_final_line+="("+prob+"%)"
+            else:
+                prob1,prob2,n=prob.split(";")
+                ress_final_line+=f"({prob1}% restore, {prob2}% +{n} MAX)"
+        ress_final_line+=", "
     ress_final_line=ress_final_line[:-2]
     if nocorpse:
         ress_final_line+=")"
@@ -684,76 +691,30 @@ def card_eat(mon,format_length):
         ress_final_line=ress_final_line.replace(", ",",")#remove spaces for shorter line
     out_line.append(ress_final_line+"\n")
 
-
+    food_line=""
     #Wt
-    out_line.append(f"Weight:{mon[rows['weight']]:4}")
+    food_line+=f"Weight:{mon[rows['weight']]:4}"
     #Nutrition
-    out_line.append(f"|Nutrition:{mon[rows['nutrition']]:4}")
+    food_line+=f"|Nutrition:{mon[rows['nutrition']]:4}"
 
-    #вредные эффекты при еде
     #Eat Danger
     bad=""
-    badn=0
-    for flag in mon[rows["flags1"]].split("|"):
-        flag=flag.strip()
-        if flag=="M1_POIS":
-            bad+="POISON, "
-        if flag=="M1_ACID":
-            bad+="ACID, "
-        if flag=="M1_CHILL":
-            bad+="CHILL, "
-        if flag=="M1_TOSTY":
-            bad+="HOT, "
-
-    for flag in mon[rows["flags2"]].split("|"):
-        flag=flag.strip()
-        if flag=="M2_HUMAN":
-            bad+="human, "
-        if flag=="M2_DWARF":
-            bad+="dwarf, "
-        #if flag=="M2_ORC":#орки едят орков -- им разрешён каннибализм
-        #    bad+="orc\n"
-        if flag=="M2_ELF":
-            bad+="elf, "
-        if flag=="M2_GNOME":
-            bad+="gnome, "
-
-    attacks=""
-    for attack_n in range(rows["attack1"],rows["attack6"]+1):
-        if mon[attack_n]=="NO_ATTK":
-            attacks=attacks[:-2]
-            interrupted=1
-            break
-        attack=mon[attack_n]
-        attack=attack[5:]
-        attack=attack[:-1]
-        attack=attack.split(",")
-        if attack[1]=="AD_STUN" or mon[rows["name"]]=="violet fungus" or "M1_HALUC" in flags1:
-            bad+="HALLU, "
-            break
-
-
-    if mon[rows["name"]] in ["kitten","housecat","large cat","little dog","dog","large dog"]:
-        bad+="Aggravate, "
-    if mon[rows["name"]] in ["cockatrice","chickatrice","Medusa"]:
-        bad+="PETRIFY, "
-    if mon[rows["name"]] in ["Death","Pestilence","Famine"] or "M3_DEADLY" in flags3:
-        bad+="FATAL, "
-    if mon[rows["name"]] in ["green slime"]:
-        bad+="SLIME, "
-    if mon[rows["name"]] in ["stalker","yellow light","giant bat","bat"]:
-        bad+="Stun, "
-    if mon[rows["name"]] in ["small mimic","large mimic","giant mimic"]:
-        bad+="Mimic, "
-    if mon[rows["name"]] in ["wererat","werejackal","werewolf"]:
-        bad+="Lycantropy, "
+    eat_danger=mon[rows["eat_danger"]].split("|")
+    for danger in eat_danger:
+        if danger.find("=")==-1:
+            continue
+        name,prob=danger.split("=")
+        bad+=conv_special_str[name]+", "
 
     bad=bad[:-2]
     if len(bad)==0:
-        out_line.append("|Eat danger: Safe\n")
+        food_line+="|Eat danger: Safe\n"
     else:
-        out_line.append("|Eat danger: "+bad+"\n")
+        food_line+="|Eat danger: "+bad+"\n"
 
+    if len(food_line)>SCR_WIDTH:
+        food_line=food_line.replace(" (","(").replace(", ",",").replace("  "," ").replace(": ",":").replace(" |","|")
+    out_line.append(food_line)
     return out_line
 
 def card_flags(mon,format_length):
@@ -1054,6 +1015,12 @@ def card_flags(mon,format_length):
             if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres:
                 found=True
                 flag_str+=flags_perks[flag]+", "
+        if mon[rows['light_radius']]!="":#dNetHack
+            r=int(mon[rows['light_radius']])
+            if r>0:
+                found=True
+                flag_str+=f'Light radius:{r}, '
+
         if found==False:
             flag_str="None, "
         flag_str=flag_str[:-2]
@@ -1137,6 +1104,7 @@ def main(s):
     c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
     c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
     c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+    c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
     #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
     #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     if bold==1:
@@ -1200,17 +1168,17 @@ def main(s):
                 out_symbol(card_win,table[results[sel+skip]])
             else:#extended
                 card_win.move(0,0)
-                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BK))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BK))
-                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BLACK))
                 card_win.move(1,0)
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
                 out_symbol(card_win,table[mon_name])
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
                 card_win.move(2,0)
-                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BK))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BK))
-                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BK))
+                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
             if check_monster(table[mon_name])==True:
                 card=make_card(table[mon_name],format_length)
             else:
