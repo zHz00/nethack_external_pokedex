@@ -6,7 +6,10 @@ import os
 import itertools
 import datetime
 
-from nhconstants import *
+from nhconstants_flags_raw import *
+from nhconstants_flags import *
+from nhconstants_atk import *
+from nhconstants_common import *
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -285,7 +288,11 @@ def split_line2(line:str,width:int)-> str:
         else:
             if len(cur_line+","+s)>=width:
                 res_line+=cur_line+",\n"
-                cur_line=s[1:]
+                if s[0]==' ':
+                    cur_line=s[1:]
+                else:
+                    cur_line=s
+
             else:
                 cur_line+=","+s
     res_line+=cur_line
@@ -550,10 +557,11 @@ def card_resistances(mon,format_length):
     out_line=["#"]
     ress=""
     ress_list=mon[rows["res"]].split("|")
+    flags4=mon[rows["flags4"]].split("|")
     for res in resists_mon.keys():
         if res in ress_list:
             ress+=resists_mon[res]+", "
-    for res in mon[rows["flags4"]].split("|"):
+    for res in flags4:
         res=res.strip()
         if len(res)==0:
             break
@@ -566,6 +574,18 @@ def card_resistances(mon,format_length):
         flag=flag.strip()
         if(flag=="M1_SEE_INVIS") and format_length==0:#in mini format we add see invisible to resistances bc it is important
             ress+="SeeInvis, "
+
+    found=False
+    hates=""
+    for hate in resistes_mon_hates.keys():
+        if hate in flags4:
+            hates+=resistes_mon_hates[hate]+", "
+    if len(hates)>0:
+        if ress.endswith(", "):
+            ress=ress[:-2]
+        hates="|Hate:"+hates
+        ress+=hates
+
     if ress.endswith(", "):
         ress=ress[:-2]
     if len(ress)==0:
@@ -576,7 +596,7 @@ def card_resistances(mon,format_length):
         ress=ress.replace("Resistances:","Res:")
     if len(ress)>SCR_WIDTH:
         ress=ress.replace(", ",",")
-    if format_length==2:
+    if format_length>0:
         ress=split_line2(ress,SCR_WIDTH)
     out_line.append(ress)
 
@@ -868,42 +888,26 @@ def card_flags(mon,format_length):
 
         prefix="Parts:"
         flag_str=""
-        no_limbs=False
-        if "M1_NOLIMBS" in flags_parts_no.keys() and "M1_NOHANDS" not in flags_parts_no.keys():
-            no_limbs=no_limbs
-        if "M1_NOLIMBS" in flags1:
-            no_limbs=True
-        for d in flags_parts_no.keys():
-            if wingy==False and set(["M1_WINGS"]).issubset(set(d)):
-                continue#skip wings in body list if no wingy monters present in current variant
-            if set(d).issubset(set(flags1)):
-                #if flag=="M1_NOLIMBS":
-                #    no_limbs=True
-                #if d==("M1_NOHANDS",) and no_limbs:
-                #    continue
-                flag_str+=flags_parts_no[d]+", "
-            else:
-                if d==("M1_NOHANDS",) and no_limbs:
-                    flag_str+=flags_parts_no[d]+", "
-                    continue#we have no "no hands" flag but we have "no limgs" flag, so we stil have no hands
-                flag_str+=flags_parts_have[d]+", "
-        #everything but feet. no we have to decide what feet have monster
-        feet_flag_found=False
-        for d in flags_feet_no.keys():
-            if set(d).issubset(set(flags1)):
-                if feet_flag_found:
-                    feet_flag_found=feet_flag_found                
-                feet_flag_found=True
-                flag_str+=flags_feet_no[d]+", "
-                break
-
-        if feet_flag_found==False:
-            flag_str+="feet:Y, "
-        
+        res=""
+        for flags_test in body_plan:
+            if flags_test==flags_wings and wingy==False:
+                continue
+            for t in flags_test.keys():
+                if set(t).issubset(set(flags1)):
+                    #if len(t)>1 and flags_test==flags_head:
+                    #    print("!")
+                    res=flags_test[t]
+            flag_str+=res+", "
         flag_str=flag_str[:-2]
         line+=prefix+flag_str+"\n"
         if len(line)>SCR_WIDTH:
+            line=line.replace("  "," ")
+            line=line.replace(" |","|")
             line=line.replace(", ",",")
+            line=line.replace("Y,no gloves","no gloves")
+            line=line.replace("Y,long neck","long neck")
+        if len(line)>SCR_WIDTH:
+            line=line.replace("|Parts:",";")
         out_line.append(line)
         line=""
 
@@ -1012,7 +1016,7 @@ def card_flags(mon,format_length):
         flag_str=""
         found=False
         for flag in flags_perks.keys():
-            if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres:
+            if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres or flag in gen_flags or flag in flags4:
                 found=True
                 flag_str+=flags_perks[flag]+", "
         if mon[rows['light_radius']]!="":#dNetHack
@@ -1020,9 +1024,15 @@ def card_flags(mon,format_length):
             if r>0:
                 found=True
                 flag_str+=f'Light radius:{r}, '
+            if found==False:
+                flag_str="None, "
+            flag_str=flag_str[:-2]
+            flag_str+="|Vision: "
+            for flag in flags_vision_str.keys():
+                if flag in flags3:
+                    found=True
+                    flag_str+=flags_vision_str[flag]+", "
 
-        if found==False:
-            flag_str="None, "
         flag_str=flag_str[:-2]
         line+=split_line2(prefix+flag_str,SCR_WIDTH)+"\n"
 
@@ -1275,13 +1285,13 @@ def main(s):
             search_win.nodelay(False)
             in_str=""
             reloaded=False
-        if key=="=":
+        if key=="9":
             cur_color1+=1
             if cur_color1>7:
                 cur_color1=0
             c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
             c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-        if key=="-":
+        if key=="0":
             cur_color2+=1
             if cur_color2>7:
                 cur_color2=0
@@ -1399,7 +1409,7 @@ def main(s):
             s.refresh()
             s.getch()
 
-        if len(key)==1 and key not in ["=","-","[","]"]:
+        if len(key)==1 and key not in ["9","0","[","]"]:
             if len(in_str)<MAX_SEARCH:
                 in_str+=key
                 sel=0
