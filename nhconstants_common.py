@@ -1,3 +1,9 @@
+max_len_atk=0
+SCR_WIDTH=80
+LIST_WIDTH=SCR_WIDTH-8
+
+NO_ATTK="NO_ATTK"
+
 monsym= {'S_ANT':'a',
 'S_BLOB':'b',
 'S_COCKATRICE':'c',
