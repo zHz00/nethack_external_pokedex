@@ -135,6 +135,7 @@ rows={"index":0,
 "spe_ldr":51,
 "spe_fdr":52,
 "insight":53,
-"light_radius":54
+"light_radius":54,
+"wards":55
 }
 

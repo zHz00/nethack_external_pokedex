@@ -1,4 +1,5 @@
 import itertools
+import math
 
 from nhconstants_common import *
 from nhconstants_flags import *
@@ -698,6 +699,9 @@ def card_flags(mon,format_length):
             flag_str+="|"
         line+=prefix+flag_str
 
+        if mon[rows["name"]]=="Juiblex":
+            flag_str=""
+
         prefix="Move:"
         flag_str=""
         found=False
@@ -724,7 +728,9 @@ def card_flags(mon,format_length):
         if len(line)>SCR_WIDTH and format_length==1:#move goes to next line
             halves=line.split(prefix)
             line=halves[0][:-1]+"\n"
-            remainder=prefix+halves[1].strip()+"|"#remove new line
+            remainder=prefix+halves[1].strip()
+            if remainder[-1]!="|":
+                remainder+= "|"#remove new line
             line=line+remainder
 
         prefix="Picks:"
@@ -759,12 +765,25 @@ def card_flags(mon,format_length):
         if found==False:
             flag_str="None, "
         flag_str=flag_str[:-2]
-        line+=remainder+prefix+flag_str+"\n"
+        flags_move_picks=remainder+prefix+flag_str
+        test_split=line.split("\n")
+        if len(test_split)>1:
+            l1=len(test_split[-1])
+            l2=len(test_split[-2])
+            if l1==0:
+                l=l2
+            else:
+                l=l1
+        if l+len(flags_move_picks)<SCR_WIDTH-2:
+            line=line[:-1]+"|"#move "wants" to prev line
+        line+=flags_move_picks+"\n"
         if len(line)>SCR_WIDTH:
             line=line.replace(", ",",")
 
         out_line.append(line)
         line=""
+
+        #LINE 4. PERKS
 
         prefix="Perks:"
         flag_str=""
@@ -778,16 +797,21 @@ def card_flags(mon,format_length):
             if r>0:
                 found=True
                 flag_str+=f'Light radius:{r}, '
-            if found==False:
-                flag_str="None, "
-            flag_str=flag_str[:-2]
+        if found==False:
+            flag_str="None, "
+        flag_str=flag_str[:-2]
+
+        if mon[rows['light_radius']]!="":#dNetHack
             flag_str+="|Vision: "
             for flag in flags_vision_str.keys():
                 if flag in flags3:
                     found=True
                     flag_str+=flags_vision_str[flag]+", "
 
-        flag_str=flag_str[:-2]
+
+
+        if flag_str.endswith(", "):
+            flag_str=flag_str[:-2]
         line+=split_line2(prefix+flag_str,SCR_WIDTH)+"\n"
 
         out_line.append(line)
@@ -805,7 +829,49 @@ def card_dnethack(mon,format_length):
     out_line.append(f"Damage reduction|Head|Body|Arms|Legs|Feet|\n")
     out_line.append(f'Base            |{mon[rows["hdr"]]:4}|{mon[rows["bdr"]]:4}|{mon[rows["gdr"]]:4}|{mon[rows["ldr"]]:4}|{mon[rows["fdr"]]:4}|\n')
     out_line.append(f'Special         |{mon[rows["spe_hdr"]]:4}|{mon[rows["spe_bdr"]]:4}|{mon[rows["spe_gdr"]]:4}|{mon[rows["spe_ldr"]]:4}|{mon[rows["spe_fdr"]]:4}|\n')
-    #extra space is needed to pass check_formatting()
+    
+    wards_list_str=""
+    wards=mon[rows["wards"]]
+    wards=wards.split("|")
+    wards_amount_int=0
+    wards_amount_int_prev=0
+    for w in wards:
+        if len(w)==0:
+            break
+        name,prob=w.split("=")
+        if name[-2]=="_":#we hame number of wards
+            name_splitted=name.split("_")
+            wards_amount_int=int(name_splitted[-1])
+        else:
+            wards_amount_int=0
+        if wards_amount_int_prev!=0 and wards_amount_int>wards_amount_int_prev:
+            wards_amount_int_prev=wards_amount_int
+            continue
+        prob=int(prob)
+        if prob==100:
+            ward=wards_str[name]+", "
+        else:
+            if prob>0:
+                if prob==255:#pacify
+                    ward=wards_str[name]+f"(pacify), "
+                else:
+                    ward=wards_str[name]+f"({prob}%), "
+            else:
+                prob_normalized=math.floor(math.fabs(prob)/10)
+                n=prob+prob_normalized*10
+                ward=wards_str[name]+f"({prob_normalized}*N%, min {int(math.fabs(n))}), "
+        wards_list_str+=ward
+        wards_amount_int_prev=wards_amount_int
+    if len(wards_list_str)==0:
+        wards_list_str="Wards:None"
+    else:
+        wards_list_str="Wards:"+wards_list_str
+        wards_list_str=wards_list_str[:-2]
+    if len(wards_list_str)>SCR_WIDTH:
+        wards_list_str=wards_list_str.replace(", ",",")
+    if len(wards_list_str)>SCR_WIDTH:
+        wards_list_str=split_line2(wards_list_str,SCR_WIDTH)
+    out_line+=wards_list_str
     return out_line
 
 

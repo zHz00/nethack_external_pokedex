@@ -11,6 +11,10 @@ def check_formatting(card):
             continue
         if line.find(",,")!=-1:
             return False
+        if line.find(",|")!=-1:
+            return False
+        if line.find(", |")!=-1:
+            return False
         if line.find(", ,")!=-1:
             return False
         if line.find("||")!=-1:

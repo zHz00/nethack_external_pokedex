@@ -24,7 +24,12 @@ colors_table={
 
 bold=0
 
+SELECT=1
+SEARCH=2
+CARD=3
+LIST=4
 
+mode=SEARCH
 
 
 cur_len_res=66
@@ -40,17 +45,59 @@ table_temp=[]
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
+ver_name=[]
+ver_n=[]
 ver_idx=-1
+ver_selector_idx=0
+format_length=0
 
 MAX_SEARCH=50
 
+def show_ver_list(s,sel:int):
+    w1=15
+    w2=35
+    w3=10
+    cap1="Filename"
+    cap2="Variant"
+    cap3="Monsters"
+    l=len(ver_list)
+    h=c.LINES-2-1#one for header
+    offset_y=0
+    if l>=h:
+        offset_y=0
+    else:
+        offset_y=int((h-l)/2)
+    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    header=f"|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    for y in range(len(ver_list)):
+        filename=ver_list[y][:w1]
+        variant=ver_name[y][:w2]
+        monsters=str(ver_n[y])
+        info=f"|{filename:{w1}}|{variant:{w2}}|{monsters:{w3}}|"
+        if y==sel:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
+        else:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
+
 def make_ver_list():
     global ver_list,ver_idx
+    global ver_name,ver_n
     ver_list=os.listdir(data_folder)
     if len(ver_list)==0:
         print("No data files found. Exiting...")
         exit(1)
     ver_idx=0
+    ver_name=[""]*len(ver_list)
+    ver_n=[0]*len(ver_list)
+    for x in range(len(ver_list)):
+        monfile=open(data_folder+ver_list[x],"r")
+        reader=csv.reader(monfile)
+        for y,mon in enumerate(reader):
+            if y==0:
+                ver_name[x]=mon[0]
+        ver_n[x]=y-1
+        
 
 def get_ver()->str:
     return ver_list[ver_idx].split(".")[0]
@@ -201,6 +248,7 @@ def out_symbol(s,mon):
 def show_hello_msg(card_win):
     hello_msg=["=== Nethack external Pokedex ===",
     "Enter monster name to see its properties. Keys:",
+    "Ctrl+O: Choose variant, or PgUp/PgDn to switch",
     "LEFT, RIGHT: Scroll search results",
     "UP, DOWN: Change output format",
     "ESC: Clear search; F10: Exit"]
@@ -219,9 +267,371 @@ def show_not_found_msg(card_win,mon_name):
     card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
     card_win.refresh()
 
+def show_search_wnd(search_win,card_win,results,mon_name):
+    global format_length
+    global in_str,not_found_after_reload
+    global sel,skip
+    global max_sel
+    global ver_idx
+    global tries
+    card_win.clear()
+    card_win.refresh()
+    if len(results)>0 and len(in_str)>0 and not_found_after_reload==False:
+        card_win.chgat(-1,c.color_pair(BK_CARD))
+        if format_length!=2:
+            card_win.move(0,0)
+            out_symbol(card_win,table[results[sel+skip]])
+        else:#extended
+            card_win.move(0,0)
+            card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
+            card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+            card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BLACK))
+            card_win.move(1,0)
+            card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
+            out_symbol(card_win,table[mon_name])
+            card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
+            card_win.move(2,0)
+            card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
+            card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+            card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
+        if check_monster(table[mon_name])==True:
+            card=make_card(table[mon_name],format_length)
+        else:
+            card="Error making card: "+mon_name
+        card=card.split("\n")
+        #if check_formatting(card)==False:
+        #    card="Error formatting card:"+mon_name
+        cur_pair=BK_CARD
+        line_n=0
+        for i in range(len(card)):
+            line=card[i]
+            if len(line)==0:
+                continue
+            color=line[0]
+            remainder=False
+            if i!=0 and (card[i-1].strip()[-1])==",":
+                remainder=True
+            if color=="#" or color=="$":
+                line=line[1:]
+
+            if color=="#":
+                cur_pair=BK_CARD
+            if color=="$":
+                cur_pair=INV_CARD
+            if len(line.strip())==0:#only special character
+                continue
+            if remainder==False:
+                attrib=c.A_BOLD
+            else:
+                attrib=0
+            if len(line.strip())>SCR_WIDTH-1:
+                line=line[:SCR_WIDTH-1]+"!"
+            for i in range(len(line)):
+                if format_length!=2:
+                    if line_n==0:
+                        pos=i+1
+                    else:
+                        pos=i
+                if format_length==2:
+                    if line_n in [0,1,2]:
+                        pos=i+3
+                    else:
+                        pos=i
+                if line_n<c.LINES-2:
+                    if line_n==c.LINES-3 and i>=c.COLS-1:
+                        break
+                    if line[i]=="|":
+                        if cur_pair==BK_CARD:
+                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+                        else:
+                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+                    else:
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+                if line[i]==":":
+                    attrib=0
+                if line[i]=="|":
+                    attrib=c.A_BOLD
+            line_n+=1
+                
+            #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
+            card_win.chgat(-1,c.color_pair(cur_pair))
+        card_win.refresh()
+    else:
+        if not_found_after_reload:
+            show_not_found_msg(card_win,mon_name)
+        else:
+            show_hello_msg(card_win)
+
+    out_input(search_win,in_str)
+    if len(in_str)>0:
+        
+        (max_sel,appeared)=out_results(search_win,results,sel,skip)
+        if appeared==False:#next selected monster too long
+            skip+=1
+            sel-=1
+            tries+=1
+            if tries<5:
+                return
+            else:
+                tries=tries
+    tries=0
+    out_mode=""
+    if format_length==0:
+        out_mode="Format:mini"
+    if format_length==1:
+        out_mode="Format:full"
+    if format_length==2:
+        out_mode="Format:ext"
+    search_win.addstr(0,65,out_mode)
+    search_win.addstr(0,55,"Ver:"+get_ver())
+    move_to_in(search_win,in_str)
+    search_win.refresh()
+
+def react_to_key_search(s,search_win,ch,key,results,mon_name):
+    global reloaded
+    global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
+    global in_str
+    global sel,skip
+    global format_length
+    global max_sel
+    global ver_idx
+    global mode
+    global ver_selector_idx
+    if ch==27:#ESC
+        search_win.nodelay(True)
+        while search_win.getch()!=-1:
+            pass
+        search_win.nodelay(False)
+        in_str=""
+        reloaded=False
+    if key=="1":
+        cur_color1+=1
+        if cur_color1>7:
+            cur_color1=0
+        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+    if key=="2":
+        cur_color2+=1
+        if cur_color2>7:
+            cur_color2=0
+        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
+    if key=="3":
+        cur_color_bk1+=1
+        if cur_color_bk1>7:
+            cur_color_bk1=0
+        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+        c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+    if key=="4":
+        cur_color_bk2+=1
+        if cur_color_bk2>7:
+            cur_color_bk2=0
+        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+        c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
+    if key=="KEY_F(10)":
+        last=open("default.txt","w",encoding="utf-8")
+        last.write(ver_list[ver_idx])
+        last.close()
+        return -1
+    if key=="KEY_F(1)":
+        s.clear()
+        file_suffixes=["short","long","ext"]
+        name_longest=0
+        name_longest_name=""
+        for f_length in range(3):
+            failed_lines=0
+            failed_monsters=0
+            error_cards=0
+            total=0
+            failed_current_monster=False
+            report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
+            report_summary=open("report.log","a",encoding="utf-8")
+            report_summary.write("==========\n")
+            report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+            report_summary.write("File: "+ver_list[ver_idx]+"\n")
+            for mon in table.keys():
+                total+=1
+                if len(mon)>20:
+                    report_summary.write(f"long name({len(mon)}):{mon}\n")
+                if len(mon)>name_longest:
+                    name_longest=len(mon)
+                    name_longest_name=mon
+                if check_monster(table[mon])==False:
+                    report.write("Error making card: "+mon+"\n")
+                    error_cards+=1
+                    continue
+                test=make_card(table[mon],format_length=f_length)
+                test=test.split("\n")
+                if check_formatting(test)==False:
+                    report.write("Error formatting card: "+mon+"\n")
+                    error_cards+=1
+                if len(test)>c.LINES-2:
+                    report.write(f"MANY LINES({len(test)}):{mon}\n")
+                    report.write(ln[:test_len]+"\n===\n")
+                for i in range(len(test)):
+                    ln=test[i]
+                    if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
+                        ln=ln[1:]
+                    len_test=len(ln)
+                    if f_length!=2:
+                        if i==0:
+                            test_len=SCR_WIDTH-1
+                        else:
+                            test_len=SCR_WIDTH
+                    if f_length==2:
+                        if i in [0,1,2]:
+                            test_len=SCR_WIDTH-3
+                        else:
+                            test_len=SCR_WIDTH
+                    if len_test>test_len:
+                        failed_lines+=1
+                        failed_current_monster=True
+                        report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
+                        report.write(ln[:test_len]+"\n===\n")
+                    
+                if failed_current_monster==True:
+                    failed_monsters+=1
+                    failed_current_monster=False
+            report.close()
+            result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+            report_summary.write(result_str)
+            report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+            report_summary.close()
+            s.addstr(result_str)
+        for x in range(1,17):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x))
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BOLD)
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_STANDOUT)
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BLINK)
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_UNDERLINE)
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_ITALIC)
+        s.addstr("\n")        
+        for x in range(1,9):
+            s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_DIM)
+        s.refresh()
+        for i in range(8):
+            c.init_pair(i+30,c.COLOR_WHITE,i)
+            c.init_pair(i+38,c.COLOR_BLACK,i)
+        for i in range(8):
+            s.addstr(" TEST ",c.color_pair(i+30))
+            s.addstr(" TEST ",c.color_pair(i+38))
+            s.addstr("\n")
+        
+        s.refresh()
+        s.getch()
+
+    if len(key)==1 and key not in ["1","2","3","4"]:
+        if len(in_str)<MAX_SEARCH:
+            in_str+=key
+            sel=0
+            skip=0
+            reloaded=False
+        else:
+            s.addch(0x7)
+    if key=="KEY_RIGHT":
+        sel+=1
+        if sel>max_sel-1:
+            sel=max_sel-1
+            if sel+skip<len(results)-1:
+                skip+=1
+        reloaded=False
+    if key=="KEY_LEFT":
+        sel-=1
+        if sel<0:
+            if skip>0:
+                skip-=1
+            sel=0
+        reloaded=False
+    if key=="KEY_UP" :
+        format_length-=1
+        if format_length<=0:
+            format_length=0
+    if key=="KEY_DOWN" :
+        format_length+=1
+        if format_length>2:
+            format_length=2
+    if key=="KEY_BACKSPACE" or key=="^H":
+        in_str=in_str[:-1]
+        sel=0
+        skip=0
+        reloaded=False
+    if key=="KEY_NPAGE":
+        ver_idx+=1
+        if ver_idx>=len(ver_list):
+            ver_idx=0
+        read_monsters(ver_list[ver_idx])
+        if mon_name!="":
+            reloaded=True
+    if key=="KEY_PPAGE":
+        ver_idx-=1
+        if ver_idx<0:
+            ver_idx=len(ver_list)-1
+        read_monsters(ver_list[ver_idx])
+        if mon_name!="":
+            reloaded=True
+    if key=="^O":
+        mode=SELECT
+        ver_selector_idx=ver_idx
+
+    return 0
+
+def react_to_key_select(ch,key,mon_name):
+    global ver_selector_idx
+    global ver_idx
+    global mode
+    global reloaded
+    if ch==27:
+        mode=SEARCH
+    if key=="KEY_UP" :
+        if ver_selector_idx>0:
+            ver_selector_idx-=1
+    if key=="KEY_DOWN" :
+        if ver_selector_idx+1<len(ver_list):
+            ver_selector_idx+=1
+    if key=="^M":
+        ver_idx=ver_selector_idx
+        read_monsters(ver_list[ver_idx])
+        if mon_name!="":
+            reloaded=True
+        mode=SEARCH
+
+in_str=""
+not_found_after_reload=False
+cur_color1=c.COLOR_GREEN
+cur_color2=c.COLOR_CYAN
+cur_color_bk1=c.COLOR_BLACK
+cur_color_bk2=c.COLOR_BLACK
+reloaded=False
+sel=0
+skip=0
+max_sel=0
+tries=0
+
 def main(s):
     global bold
     global ver_idx
+    global mode
+    global ver_selector_idx
+    global format_length
+    global in_str
+    global not_found_after_reload
+    global reloaded
+    global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
+    global sel,skip
     if c.COLORS<16:
         bold=1
     else:
@@ -233,10 +643,7 @@ def main(s):
     s.clear()
     c.init_pair(BK,c.COLOR_WHITE,c.COLOR_BLUE)
     c.init_pair(INV,c.COLOR_BLUE,c.COLOR_WHITE)
-    cur_color1=c.COLOR_GREEN
-    cur_color2=c.COLOR_CYAN
-    cur_color_bk1=c.COLOR_BLACK
-    cur_color_bk2=c.COLOR_BLACK
+
     c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
     c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
     c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
@@ -260,13 +667,6 @@ def main(s):
     for x in range(1,17):
         s.addstr(f"TEST:{x-1} ",c.color_pair(x))
     s.refresh()
-    in_str=""
-    sel=0
-    skip=0
-    max_sel=0
-    tries=0
-    format_length=0
-    reloaded=False
     search_win=c.newwin(2,c.COLS,0,0)
     search_win.keypad(1)
     search_win.bkgd(' ',c.color_pair(BK))
@@ -276,7 +676,6 @@ def main(s):
     card_win.bkgd(' ',c.color_pair(BK_CARD))
     card_win.clear()
     card_win.refresh()
-    not_found_after_reload=False
     while True:
         results=[]
         not_found_after_reload=False
@@ -295,304 +694,22 @@ def main(s):
                 mon_name=results[sel+skip]
             else:
                 mon_name=""
-
-        card_win.clear()
-        card_win.refresh()
-        if len(results)>0 and len(in_str)>0 and not_found_after_reload==False:
-            card_win.chgat(-1,c.color_pair(BK_CARD))
-            if format_length!=2:
-                card_win.move(0,0)
-                out_symbol(card_win,table[results[sel+skip]])
-            else:#extended
-                card_win.move(0,0)
-                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
-                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BLACK))
-                card_win.move(1,0)
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
-                out_symbol(card_win,table[mon_name])
-                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
-                card_win.move(2,0)
-                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
-                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
-                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
-            if check_monster(table[mon_name])==True:
-                card=make_card(table[mon_name],format_length)
-            else:
-                card="Error making card: "+mon_name
-            card=card.split("\n")
-            #if check_formatting(card)==False:
-            #    card="Error formatting card:"+mon_name
-            cur_pair=BK_CARD
-            line_n=0
-            for i in range(len(card)):
-                line=card[i]
-                if len(line)==0:
-                    continue
-                color=line[0]
-                remainder=False
-                if i!=0 and (card[i-1].strip()[-1])==",":
-                    remainder=True
-                if color=="#" or color=="$":
-                    line=line[1:]
-
-                if color=="#":
-                    cur_pair=BK_CARD
-                if color=="$":
-                    cur_pair=INV_CARD
-                if len(line.strip())==0:#only special character
-                    continue
-                if remainder==False:
-                    attrib=c.A_BOLD
-                else:
-                    attrib=0
-                if len(line.strip())>SCR_WIDTH:
-                    line=line[:SCR_WIDTH-1]+"!"
-                for i in range(len(line)):
-                    if format_length!=2:
-                        if line_n==0:
-                            pos=i+1
-                        else:
-                            pos=i
-                    if format_length==2:
-                        if line_n in [0,1,2]:
-                            pos=i+3
-                        else:
-                            pos=i
-                    if line_n<c.LINES-2:
-                        if line[i]=="|":
-                            if cur_pair==BK_CARD:
-                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-                            else:
-                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-                        else:
-                            card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
-                    if line[i]==":":
-                        attrib=0
-                    if line[i]=="|":
-                        attrib=c.A_BOLD
-                line_n+=1
-                    
-                #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
-                card_win.chgat(-1,c.color_pair(cur_pair))
+        if mode==SEARCH:
+            show_search_wnd(search_win,card_win,results,mon_name)
+        if mode==SELECT:
+            show_ver_list(card_win,ver_selector_idx)
             card_win.refresh()
-        else:
-            if not_found_after_reload:
-                show_not_found_msg(card_win,mon_name)
-            else:
-                show_hello_msg(card_win)
-
-        out_input(search_win,in_str)
-        if len(in_str)>0:
-            (max_sel,appeared)=out_results(search_win,results,sel,skip)
-            if appeared==False:#next selected monster too long
-                skip+=1
-                sel-=1
-                tries+=1
-                if tries<5:
-                    continue
-                else:
-                    tries=tries
-        tries=0
-        out_mode=""
-        if format_length==0:
-            out_mode="Format:mini"
-        if format_length==1:
-            out_mode="Format:full"
-        if format_length==2:
-            out_mode="Format:ext"
-        search_win.addstr(0,65,out_mode)
-        search_win.addstr(0,55,"Ver:"+get_ver())
-        move_to_in(search_win,in_str)
-        search_win.refresh()
         ch=search_win.getch()
         key=c.keyname(ch).decode("utf-8")
-        if ch==27:#ESC
-            search_win.nodelay(True)
-            while search_win.getch()!=-1:
-                pass
-            search_win.nodelay(False)
-            in_str=""
-            reloaded=False
-        if key=="9":
-            cur_color1+=1
-            if cur_color1>7:
-                cur_color1=0
-            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-        if key=="0":
-            cur_color2+=1
-            if cur_color2>7:
-                cur_color2=0
-            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
-        if key=="]":
-            cur_color_bk1+=1
-            if cur_color_bk1>7:
-                cur_color_bk1=0
-            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-            c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-            c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
-        if key=="[":
-            cur_color_bk2+=1
-            if cur_color_bk2>7:
-                cur_color_bk2=0
-            c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-            c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-            c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-            c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
-        if key=="KEY_F(10)":
-            last=open("default.txt","w",encoding="utf-8")
-            last.write(ver_list[ver_idx])
-            last.close()
-            break
-        if key=="KEY_F(1)":
-            s.clear()
-            file_suffixes=["short","long","ext"]
-            name_longest=0
-            name_longest_name=""
-            for f_length in range(3):
-                failed_lines=0
-                failed_monsters=0
-                error_cards=0
-                total=0
-                failed_current_monster=False
-                report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
-                report_summary=open("report.log","a",encoding="utf-8")
-                report_summary.write("==========\n")
-                report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
-                report_summary.write("File: "+ver_list[ver_idx]+"\n")
-                for mon in table.keys():
-                    total+=1
-                    if len(mon)>20:
-                        report_summary.write(f"long name({len(mon)}):{mon}\n")
-                    if len(mon)>name_longest:
-                        name_longest=len(mon)
-                        name_longest_name=mon
-                    if check_monster(table[mon])==False:
-                        report.write("Error making card: "+mon+"\n")
-                        error_cards+=1
-                        continue
-                    test=make_card(table[mon],format_length=f_length)
-                    test=test.split("\n")
-                    if check_formatting(test)==False:
-                        report.write("Error formatting card: "+mon+"\n")
-                        error_cards+=1
-                    if len(test)>c.LINES-2:
-                        report.write(f"MANY LINES({len(test)}):{mon}\n")
-                        report.write(ln[:test_len]+"\n===\n")
-                    for i in range(len(test)):
-                        ln=test[i]
-                        if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
-                            ln=ln[1:]
-                        len_test=len(ln)
-                        if f_length!=2:
-                            if i==0:
-                                test_len=SCR_WIDTH-1
-                            else:
-                                test_len=SCR_WIDTH
-                        if f_length==2:
-                            if i in [0,1,2]:
-                                test_len=SCR_WIDTH-3
-                            else:
-                                test_len=SCR_WIDTH
-                        if len_test>test_len:
-                            failed_lines+=1
-                            failed_current_monster=True
-                            report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
-                            report.write(ln[:test_len]+"\n===\n")
-                        
-                    if failed_current_monster==True:
-                        failed_monsters+=1
-                        failed_current_monster=False
-                report.close()
-                result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
-                report_summary.write(result_str)
-                report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
-                report_summary.close()
-                s.addstr(result_str)
-            for x in range(1,17):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x))
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BOLD)
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_STANDOUT)
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BLINK)
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_UNDERLINE)
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_ITALIC)
-            s.addstr("\n")        
-            for x in range(1,9):
-                s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_DIM)
-            s.refresh()
-            for i in range(8):
-                c.init_pair(i+30,c.COLOR_WHITE,i)
-                c.init_pair(i+38,c.COLOR_BLACK,i)
-            for i in range(8):
-                s.addstr(" TEST ",c.color_pair(i+30))
-                s.addstr(" TEST ",c.color_pair(i+38))
-                s.addstr("\n")
-            
-            s.refresh()
-            s.getch()
+        if mode==SEARCH:
+            res=react_to_key_search(s,search_win,ch,key,results,mon_name)
+            if res!=0:
+                break
+            continue
+        if mode==SELECT:
+            react_to_key_select(ch,key,mon_name)
+            continue
 
-        if len(key)==1 and key not in ["9","0","[","]"]:
-            if len(in_str)<MAX_SEARCH:
-                in_str+=key
-                sel=0
-                skip=0
-                reloaded=False
-            else:
-                s.addch(0x7)
-        if key=="KEY_RIGHT":
-            sel+=1
-            if sel>max_sel-1:
-                sel=max_sel-1
-                if sel+skip<len(results)-1:
-                    skip+=1
-            reloaded=False
-        if key=="KEY_LEFT":
-            sel-=1
-            if sel<0:
-                if skip>0:
-                    skip-=1
-                sel=0
-            reloaded=False
-        if key=="KEY_UP" :
-            format_length-=1
-            if format_length<=0:
-                format_length=0
-        if key=="KEY_DOWN" :
-            format_length+=1
-            if format_length>2:
-                format_length=2
-        if key=="KEY_BACKSPACE" or key=="^H":
-            in_str=in_str[:-1]
-            sel=0
-            skip=0
-            reloaded=False
-        if key=="KEY_NPAGE":
-            ver_idx+=1
-            if ver_idx>=len(ver_list):
-                ver_idx=0
-            read_monsters(ver_list[ver_idx])
-            if mon_name!="":
-                reloaded=True
-        if key=="KEY_PPAGE":
-            ver_idx-=1
-            if ver_idx<0:
-                ver_idx=len(ver_list)-1
-            read_monsters(ver_list[ver_idx])
-            if mon_name!="":
-                reloaded=True
 
 
 

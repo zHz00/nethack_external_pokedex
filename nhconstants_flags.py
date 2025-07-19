@@ -464,3 +464,27 @@ conv_special_str={
     "COLD":"COLD",
     "HOT":"HOT"
 }
+
+wards_str={
+    "ELBERETH_0":"Elbereth",
+    "ELBERETH_1":"Elbereth(elf)",
+    "LOLTH":"Lolth",
+    "HEPTAGRAM":"Heptragram",
+    "GORGONEION":"Gorgoneion",
+    "CIRCLE_OF_ACHERON":"Circle of Acheron",
+    "PENTAGRAM":"Pentagram",
+    "HEXAGRAM":"Hexagram",
+    "HAMSA":"Hamsa",
+    "ELDER_SIGN_1":"Elder sign(1)",
+    "ELDER_SIGN_6":"Elder sign(6)",
+    "ELDER_ELEMENTAL_EYE_1":"Elder elem.eye(1)",
+    "ELDER_ELEMENTAL_EYE_5":"Elder eleme.eye(5)",
+    "ELDER_ELEMENTAL_EYE_7":"Elder elem.eye(7)",
+    "SIGN_OF_THE_SCION_QUEEN":"Sign of the Scion Queen",
+    "CARTOUCHE_OF_THE_CAT_LORD":"Cartouche of the Cat Lord",
+    "WINGS_OF_GARUDA":"Wings of Garuda",
+    "TOUSTEFNA":"Toustefna",
+    "DREPRUN":"Dreprun",
+    "VEIOISTAFUR":"Veioistafur",
+    "THJOFASTAFUR":"Thjofastafur",
+}
