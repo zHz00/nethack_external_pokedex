@@ -302,6 +302,7 @@ flags_demeanor={
 "M3_COMMANDER":"Commander",
 "M3_DETACHED":"Detached",
 "M3_BOLD":"Don't fear",
+"M4_ANIMAL_MIND":"Animal mind",
 }
 flags_demeanor_ext={
     "M2_HOSTILE":"Hostile",
@@ -321,6 +322,7 @@ flags_demeanor_ext={
 "M3_COMMANDER":"Commands others",
 "M3_DETACHED":"Detached from purpose",
 "M3_BOLD":"Don't fear",
+"M4_ANIMAL_MIND":"Animal mind",
 }
 
 flags_covet={
@@ -466,8 +468,8 @@ conv_special_str={
 }
 
 wards_str={
-    "ELBERETH_0":"Elbereth",
-    "ELBERETH_1":"Elbereth(elf)",
+    "ELBERETH_1":"Elbereth(everyone)",
+    "ELBERETH_2":"Elbereth(elf)",
     "LOLTH":"Lolth",
     "HEPTAGRAM":"Heptragram",
     "GORGONEION":"Gorgoneion",
@@ -475,11 +477,12 @@ wards_str={
     "PENTAGRAM":"Pentagram",
     "HEXAGRAM":"Hexagram",
     "HAMSA":"Hamsa",
+    "YELLOW_SIGN":"Yellow Sign",
     "ELDER_SIGN_1":"Elder sign(1)",
     "ELDER_SIGN_6":"Elder sign(6)",
-    "ELDER_ELEMENTAL_EYE_1":"Elder elem.eye(1)",
-    "ELDER_ELEMENTAL_EYE_5":"Elder eleme.eye(5)",
-    "ELDER_ELEMENTAL_EYE_7":"Elder elem.eye(7)",
+    "ELDER_ELEMENTAL_EYE_1":"Elder Elemental Eye(1)",
+    "ELDER_ELEMENTAL_EYE_5":"Elder Elemental Eye(5)",
+    "ELDER_ELEMENTAL_EYE_7":"Elder Elemental Eye(7)",
     "SIGN_OF_THE_SCION_QUEEN":"Sign of the Scion Queen",
     "CARTOUCHE_OF_THE_CAT_LORD":"Cartouche of the Cat Lord",
     "WINGS_OF_GARUDA":"Wings of Garuda",

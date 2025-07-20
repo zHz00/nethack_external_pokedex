@@ -670,7 +670,7 @@ def card_flags(mon,format_length):
         if mon[3]=="ball of light":
             found=found
         for flag in flags_demeanor.keys():
-            if flag in flags2 or flag in flags3 or flag in flags1:
+            if flag in flags1 or flag in flags2 or flag in flags3 or flag in flags4:
                 found=True
                 flag_str_ext+=flags_demeanor_ext[flag]+", "
                 flag_str_short+=flags_demeanor[flag]+", "
@@ -788,11 +788,16 @@ def card_flags(mon,format_length):
         prefix="Perks:"
         flag_str=""
         found=False
+        dnethack=False
+        if mon[rows['light_radius']]!="":
+            dnethack=True
         for flag in flags_perks.keys():
             if flag in flags1 or flag in flags2 or flag in flags3 or flag in mres or flag in gen_flags or flag in flags4:
+                if flag=="M3_INFRAVISION":
+                    continue#we include it into vision section
                 found=True
                 flag_str+=flags_perks[flag]+", "
-        if mon[rows['light_radius']]!="":#dNetHack
+        if dnethack:
             r=int(mon[rows['light_radius']])
             if r>0:
                 found=True
@@ -801,8 +806,10 @@ def card_flags(mon,format_length):
             flag_str="None, "
         flag_str=flag_str[:-2]
 
-        if mon[rows['light_radius']]!="":#dNetHack
+        if dnethack:
             flag_str+="|Vision: "
+            if "M3_INFRAVISION" in flags3:
+                flag_str+="Infravision, "
             for flag in flags_vision_str.keys():
                 if flag in flags3:
                     found=True
@@ -854,7 +861,9 @@ def card_dnethack(mon,format_length):
             if prob>0:
                 if prob==255:#pacify
                     ward=wards_str[name]+f"(pacify), "
-                else:
+                if prob==254:#crazy
+                    ward=wards_str[name]+f"(10%+crazy), "
+                if prob<254:
                     ward=wards_str[name]+f"({prob}%), "
             else:
                 prob_normalized=math.floor(math.fabs(prob)/10)

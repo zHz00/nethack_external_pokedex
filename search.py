@@ -1,8 +1,8 @@
 import csv
 import curses as c
 import os
-import itertools
 import datetime
+import time
 
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
@@ -28,6 +28,7 @@ SELECT=1
 SEARCH=2
 CARD=3
 LIST=4
+SHOW_ALL=5
 
 mode=SEARCH
 
@@ -247,17 +248,26 @@ def out_symbol(s,mon):
 
 def show_hello_msg(card_win):
     hello_msg=["=== Nethack external Pokedex ===",
-    "Enter monster name to see its properties. Keys:",
-    "Ctrl+O: Choose variant, or PgUp/PgDn to switch",
-    "LEFT, RIGHT: Scroll search results",
-    "UP, DOWN: Change output format",
-    "ESC: Clear search; F10: Exit"]
+    "Enter monster name to see its properties. Keys:"]
+    #"Ctrl+O: Choose variant, or PgUp/PgDn to switch",
+    #"LEFT, RIGHT: Scroll search results",
+    #"UP, DOWN: Change output format",
+    #"ESC: Clear search; F10: Exit"
+
+    block1=["Ctrl+O: Choose variant",
+            "PgUp/PgDn: Switch",
+            "F10: Exit"]
+    block2=["UP, DOWN: Change format",
+            "LEFT, RIGHT: Scroll results",
+            "ESC: Clear search"]
+    col1=10
+    col2=45
     card_win.chgat(-1,c.color_pair(BK_CARD))
     card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
-    for i in range(len(hello_msg)):
-        if i==0:
-            continue
-        card_win.addstr(i,15,hello_msg[i])
+    card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],c.color_pair(INV_CARD))
+    for i in range(len(block1)):
+        card_win.addstr(i+2,col1,block1[i])
+        card_win.addstr(i+2,col2,block2[i])
     card_win.refresh()
 
 def show_not_found_msg(card_win,mon_name):
@@ -276,11 +286,11 @@ def show_search_wnd(search_win,card_win,results,mon_name):
     global tries
     card_win.clear()
     card_win.refresh()
-    if len(results)>0 and len(in_str)>0 and not_found_after_reload==False:
+    if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode==SHOW_ALL:
         card_win.chgat(-1,c.color_pair(BK_CARD))
         if format_length!=2:
             card_win.move(0,0)
-            out_symbol(card_win,table[results[sel+skip]])
+            out_symbol(card_win,table[mon_name])
         else:#extended
             card_win.move(0,0)
             card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
@@ -324,7 +334,7 @@ def show_search_wnd(search_win,card_win,results,mon_name):
                 attrib=c.A_BOLD
             else:
                 attrib=0
-            if len(line.strip())>SCR_WIDTH-1:
+            if len(line.strip())>SCR_WIDTH:
                 line=line[:SCR_WIDTH-1]+"!"
             for i in range(len(line)):
                 if format_length!=2:
@@ -364,16 +374,14 @@ def show_search_wnd(search_win,card_win,results,mon_name):
 
     out_input(search_win,in_str)
     if len(in_str)>0:
-        
-        (max_sel,appeared)=out_results(search_win,results,sel,skip)
-        if appeared==False:#next selected monster too long
-            skip+=1
-            sel-=1
-            tries+=1
-            if tries<5:
-                return
-            else:
-                tries=tries
+        appeared=False
+        tries=0
+        while(appeared==False and tries<5):
+            (max_sel,appeared)=out_results(search_win,results,sel,skip)
+            if appeared==False:#next selected monster too long
+                skip+=1
+                sel-=1
+                tries+=1
     tries=0
     out_mode=""
     if format_length==0:
@@ -397,6 +405,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
     global ver_idx
     global mode
     global ver_selector_idx
+    global current_mon
     if ch==27:#ESC
         search_win.nodelay(True)
         while search_win.getch()!=-1:
@@ -437,6 +446,10 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         last.write(ver_list[ver_idx])
         last.close()
         return -1
+    if key=="KEY_F(14)":
+        mode=SHOW_ALL
+        current_mon=0
+        return 0
     if key=="KEY_F(1)":
         s.clear()
         file_suffixes=["short","long","ext"]
@@ -620,8 +633,10 @@ sel=0
 skip=0
 max_sel=0
 tries=0
+current_mon=0
 
 def main(s):
+    global current_mon
     global bold
     global ver_idx
     global mode
@@ -679,23 +694,31 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
-        for mon in table.keys():
-            if mon.lower().find(in_str.lower())!=-1:
-                results.append(mon)
-        if reloaded:
-            if mon_name not in results:
-                not_found_after_reload=True
-            else:
-                idx=results.index(mon_name)
-                skip=idx
-                sel=0
-        else:
-            if sel+skip<len(results):
-                mon_name=results[sel+skip]
-            else:
-                mon_name=""
         if mode==SEARCH:
+            for mon in table.keys():
+                if mon.lower().find(in_str.lower())!=-1:
+                    results.append(mon)
+            if reloaded:
+                if mon_name not in results:
+                    not_found_after_reload=True
+                else:
+                    idx=results.index(mon_name)
+                    skip=idx
+                    sel=0
+            else:
+                if sel+skip<len(results):
+                    mon_name=results[sel+skip]
+                else:
+                    mon_name=""
             show_search_wnd(search_win,card_win,results,mon_name)
+        if mode==SHOW_ALL:
+            show_search_wnd(search_win,card_win,table,mon_name)
+            time.sleep(0.05)
+            mon_name=list(table.keys())[current_mon]
+            current_mon+=1
+            if current_mon>=len(table)-1:
+                mode=SEARCH
+            continue
         if mode==SELECT:
             show_ver_list(card_win,ver_selector_idx)
             card_win.refresh()
@@ -709,13 +732,6 @@ def main(s):
         if mode==SELECT:
             react_to_key_select(ch,key,mon_name)
             continue
-
-
-
-
-
-
-
 
 
 if __name__=="__main__":
