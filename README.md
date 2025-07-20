@@ -1,6 +1,9 @@
 # === NetHack Externak Pokedex ===
 
+This is terminal-based utility to see properties of monsters in NetHack. It uses curses library for beatuful output.
+
 ## Variants included
+
 NetHack 3.4.3
 NetHack 3.6.7
 NetHack 3.7.0-dev
@@ -21,6 +24,7 @@ Just type monster name and see its properties!
 Also, you can type part of name and still find your monster in search results.
 
 ## Controls
+
 **PgUp/PgDn**	Switch variant
 **Ctrl+O**		Select variant from list
 **Down**		Show more information
@@ -34,9 +38,14 @@ Also, you can type part of name and still find your monster in search results.
 **Shift+F2**	Show every card in quick succession. WARNING, this is debug feature. This process cannot be interrupted. You just have to watch.
 
 ## Formats
-**mini:**	only essential information shown. Monster card is limited to 5 lines, plus two lines for search results. This enables you to place pokedex windows along with main game window. Unfortunately, some words are shrunk, and some attacks don't fit on screen, after all. This is main problem for dNetHack, where many monsters have too many too strange attacks.
+
+**mini:**	only essential information shown. Monster card is limited to 5 lines, plus two lines for search results (total: 7). This enables you to place pokedex windows along with main game window. Unfortunately, some words are shrunk, and some attacks don't fit on screen, after all. This is main problem for dNetHack, where many monsters have too many too strange attacks.
 **full:**	you see all attacks and flags, most words are not abbreviated. Omitted information: percentage for conveyed resistances and special information for dNetHack (AC breakdown, damage reduction and wards).
 **ext:**	you see all available information.
+
+## Screen size
+
+You can reduce output to 7 lines, but the program is designed to run in 80x25 mode. If you make your screen wider, you will still see card in 80 character-width format. Maybe one day i'll make adaptive design for any width, but not today.
 
 ## Licence and author information
 
