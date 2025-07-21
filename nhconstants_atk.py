@@ -289,6 +289,7 @@ ad={'AD_PHYS':'',
 "AD_SQUE":" Steal Quest Artifact or Amulet",
 "AD_RGAZ":" Random",
 "AD_RETR":" Random (fire/cold/shock)",
+"AD_WATR":" Water",
 }
 ad_short={'AD_PHYS':'',
 'AD_MAGM':' M. Missile',
@@ -476,4 +477,5 @@ ad_short={'AD_PHYS':'',
 "AD_SQUE":" -Artifact or Amulet",
 "AD_RGAZ":" Rand",
 "AD_RETR":" Rand (fire/cold/shock)",
+"AD_WATR":" Water",
 }
