@@ -21,6 +21,8 @@ def check_formatting(card):
             return False
         if line.find("| ")!=-1:
             return False
+        if line.find(":|")!=-1:
+            return False        
         if line[-1]=="|":
             if line.find("Damage reduction")==0 or\
             line.find("Base")==0 or\

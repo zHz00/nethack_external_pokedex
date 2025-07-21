@@ -302,9 +302,13 @@ def card_resistances(mon,format_length):
     ress_list=mon[rows["res"]].split("|")
     flags4=mon[rows["flags4"]].split("|")
     for res in resists_mon.keys():
+        if len(res)==0:
+            continue
         if res in ress_list:
             ress+=resists_mon[res]+", "
     for res in flags4:
+        if len(res)==0:
+            continue
         res=res.strip()
         if len(res)==0:
             break
@@ -318,7 +322,8 @@ def card_resistances(mon,format_length):
         if(flag=="M1_SEE_INVIS") and format_length==0:#in mini format we add see invisible to resistances bc it is important
             ress+="SeeInvis, "
 
-    found=False
+    if len(ress)==0:
+        ress="None"
     hates=""
     for hate in resistes_mon_hates.keys():
         if hate in flags4:
