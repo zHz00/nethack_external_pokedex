@@ -256,7 +256,7 @@ def show_hello_msg(card_win):
 
     block1=["Ctrl+O: Choose variant",
             "PgUp/PgDn: Switch",
-            "F10: Exit"]
+            "F10, Ctrl+Q: Exit"]
     block2=["UP, DOWN: Change format",
             "LEFT, RIGHT: Scroll results",
             "ESC: Clear search"]
@@ -441,7 +441,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
         c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
         c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
-    if key=="KEY_F(10)":
+    if key=="KEY_F(10)" or key=="^Q":
         last=open("default.txt","w",encoding="utf-8")
         last.write(ver_list[ver_idx])
         last.close()
@@ -451,6 +451,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         current_mon=0
         return 0
     if key=="KEY_F(1)":
+        os.makedirs("reports",exist_ok=True)
         s.clear()
         file_suffixes=["short","long","ext"]
         name_longest=0
@@ -615,7 +616,7 @@ def react_to_key_select(ch,key,mon_name):
     if key=="KEY_DOWN" :
         if ver_selector_idx+1<len(ver_list):
             ver_selector_idx+=1
-    if key=="^M":
+    if key=="^M" or key=="^J":
         ver_idx=ver_selector_idx
         read_monsters(ver_list[ver_idx])
         if mon_name!="":
@@ -747,4 +748,5 @@ if __name__=="__main__":
     except:
         pass
     read_monsters(ver_list[ver_idx])
+    os.environ.setdefault('ESCDELAY', '25')
     c.wrapper(main)
