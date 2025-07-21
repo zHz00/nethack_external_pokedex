@@ -176,8 +176,8 @@ SEPARATOR_BLACK=26
 def out_input(s,in_str):
 
     s.clear()
-    s.addstr(0,0,">"+in_str,c.color_pair(BK))
-    s.chgat(-1,c.color_pair(BK))
+    s.addstr(0,0,">"+in_str,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    s.chgat(-1,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     s.clrtoeol()
     s.refresh()
 
@@ -205,14 +205,14 @@ def out_results(s,results,sel,skip):
             out_str+=mon
         out_str+="|"
         cur+=1
-    attr=c.color_pair(BK)
+    attr=c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0)
     ch_prev=""
     idx=0
     for ch in out_str:
         if ch_prev=="|":
-            attr=c.color_pair(BK)
+            attr=c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0)
         if ch=="*":
-            attr=c.color_pair(INV)
+            attr=c.color_pair(INV)|(c.A_BOLD if cur_color_s_bold else 0)
         if ch=="|":
             attr=c.color_pair(BK)|c.A_BOLD
         ch_prev=ch
@@ -220,7 +220,7 @@ def out_results(s,results,sel,skip):
             s.addstr(ch,attr)
             idx+=1
         
-    s.chgat(c.color_pair(BK))
+    s.chgat(c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     s.refresh()
     return (cur-skip,selected_appeared)
 
@@ -390,14 +390,15 @@ def show_search_wnd(search_win,card_win,results,mon_name):
         out_mode="Format:full"
     if format_length==2:
         out_mode="Format:ext"
-    search_win.addstr(0,65,out_mode)
-    search_win.addstr(0,55,"Ver:"+get_ver())
+    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     move_to_in(search_win,in_str)
     search_win.refresh()
 
 def react_to_key_search(s,search_win,ch,key,results,mon_name):
     global reloaded
     global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
+    global cur_color_s,cur_color_bk_s,cur_color_s_bold
     global in_str
     global sel,skip
     global format_length
@@ -420,12 +421,6 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
         c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
     if key=="2":
-        cur_color2+=1
-        if cur_color2>7:
-            cur_color2=0
-        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
-    if key=="3":
         cur_color_bk1+=1
         if cur_color_bk1>7:
             cur_color_bk1=0
@@ -433,6 +428,12 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
         c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
         c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+    if key=="3":
+        cur_color2+=1
+        if cur_color2>7:
+            cur_color2=0
+        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
     if key=="4":
         cur_color_bk2+=1
         if cur_color_bk2>7:
@@ -441,9 +442,27 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
         c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
         c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
+    if key=="5":
+        cur_color_s+=1
+        if cur_color_s>7:
+            cur_color_s=0
+            if cur_color_s_bold==0:
+                cur_color_s_bold=1
+            else:
+                cur_color_s_bold=0
+        c.init_pair(BK,cur_color_s,cur_color_bk_s)
+        c.init_pair(INV,cur_color_bk_s,cur_color_s)
+    if key=="6":
+        cur_color_bk_s+=1
+        if cur_color_bk_s>7:
+            cur_color_bk_s=0
+        c.init_pair(BK,cur_color_s,cur_color_bk_s)
+        c.init_pair(INV,cur_color_bk_s,cur_color_s)
+
     if key=="KEY_F(10)" or key=="^Q":
         last=open("default.txt","w",encoding="utf-8")
         last.write(ver_list[ver_idx])
+        last.write(f"\n{cur_color1}\n{cur_color_bk1}\n{cur_color2}\n{cur_color_bk2}\n{cur_color_s}\n{cur_color_bk_s}\n{cur_color_s_bold}\n")
         last.close()
         return -1
     if key=="KEY_F(14)":
@@ -548,7 +567,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         s.refresh()
         s.getch()
 
-    if len(key)==1 and key not in ["1","2","3","4"]:
+    if len(key)==1 and key not in ["1","2","3","4","5","6"]:
         if len(in_str)<MAX_SEARCH:
             in_str+=key
             sel=0
@@ -629,6 +648,9 @@ cur_color1=c.COLOR_GREEN
 cur_color2=c.COLOR_CYAN
 cur_color_bk1=c.COLOR_BLACK
 cur_color_bk2=c.COLOR_BLACK
+cur_color_s=c.COLOR_WHITE
+cur_color_s_bold=0
+cur_color_bk_s=c.COLOR_BLUE
 reloaded=False
 sel=0
 skip=0
@@ -657,8 +679,8 @@ def main(s):
     c.mouseinterval(0)
     c.curs_set(1)
     s.clear()
-    c.init_pair(BK,c.COLOR_WHITE,c.COLOR_BLUE)
-    c.init_pair(INV,c.COLOR_BLUE,c.COLOR_WHITE)
+    c.init_pair(BK,cur_color_s,cur_color_bk_s)
+    c.init_pair(INV,cur_color_bk_s,cur_color_s)
 
     c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
     c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
@@ -739,7 +761,14 @@ if __name__=="__main__":
     make_ver_list()
     try:
         last=open("default.txt","r",encoding="utf-8")
-        last_ver_file=last.read().strip()
+        last_ver_file=last.readline().strip()
+        cur_color1=int(last.readline().strip())
+        cur_color_bk1=int(last.readline().strip())
+        cur_color2=int(last.readline().strip())
+        cur_color_bk2=int(last.readline().strip())
+        cur_color_s=int(last.readline().strip())
+        cur_color_bk_s=int(last.readline().strip())
+        cur_color_s_bold=int(last.readline().strip())
         for x in range(len(ver_list)):
             if ver_list[x]==last_ver_file:
                 ver_idx=x
