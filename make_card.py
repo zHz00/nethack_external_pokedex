@@ -905,3 +905,67 @@ def make_card(mon,format_length=0):
     #Preparing string
     out_line_s="".join(out_line)
     return out_line_s
+
+one_line_headers={
+    "Name":["name",0],
+    "Df":["difficulty",2],
+    "Lv":["level",2],
+    "Exp":["exp",4],
+    "Mv":["speed",2],
+    "AC":["ac",3],
+    "MR":["mr",3],
+    "Fr":["",2],
+    "Ali":["alignment",4],
+    "Wt":["weight",4],
+    "Nut":["nutrition",4],
+    "Sz":["",2],
+
+}
+
+def make_card_one_line(mon,actual_name):
+    gen_flags=mon[rows["geno"]].split("|")
+    freq=gen_flags[-1]
+    out_line=""
+    for f in one_line_headers.keys():
+        w=one_line_headers[f][1]
+        if w==0:#skipping name
+            continue
+        if one_line_headers[f][0]!="":
+            val=int(mon[rows[one_line_headers[f][0]]])
+            if val>9999:
+                val=int(val/1000+.5)
+                text=str(val)+"k"
+            else:
+                if w==2 and val>99:
+                    text="**"
+                else:
+                    text=str(val)
+        else:
+            if f=="Fr":
+                text=freq
+            if f=="Sz":
+                text=szs_1ch[mon[rows["size"]]]
+        out_line+=f"|{text:{w}}"
+
+    props_len=len(out_line)
+    max_name_l=SCR_WIDTH-2-props_len
+    real_name_l=len(actual_name)
+    name=actual_name
+    if real_name_l>max_name_l:
+        name=actual_name[:max_name_l-1]+"!"
+    out_line=f"|{name:{max_name_l}}"+out_line
+    return out_line
+
+def one_line_header_str():
+    out_line=""
+    name_header=""
+    for f in one_line_headers.keys():
+        w=one_line_headers[f][1]
+        if w==0:#skipping name
+            name_header=f
+            continue
+        out_line+=f"|{f:{w}}"
+    props_len=len(out_line)
+    max_name_l=SCR_WIDTH-2-props_len
+    out_line=f"|{name_header:{max_name_l}}"+out_line
+    return out_line

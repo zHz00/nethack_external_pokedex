@@ -51,6 +51,17 @@ ver_n=[]
 ver_idx=-1
 ver_selector_idx=0
 format_length=0
+list_mode_mons=[]
+list_mode_sel=0
+list_mode_skip=0
+list_mode_max=0
+
+def prepare_list(sort_field,dir,filters):
+    global list_mode_mons
+    global list_mode_max
+    #first, we are sorting by sort field, hen we sort by name
+    list_mode_mons=list(table.keys()).copy()
+    list_mode_max=len(list_mode_mons)
 
 MAX_SEARCH=50
 
@@ -104,6 +115,11 @@ def get_ver()->str:
     return ver_list[ver_idx].split(".")[0]
 
 
+def save_settings():
+    last=open("default.txt","w",encoding="utf-8")
+    last.write(ver_list[ver_idx])
+    last.write(f"\n{cur_color1}\n{cur_color_bk1}\n{cur_color2}\n{cur_color_bk2}\n{cur_color_s}\n{cur_color_bk_s}\n{cur_color_s_bold}\n")
+    last.close()
 
 
 def table_insert(table:dict(),mon):
@@ -285,8 +301,8 @@ def show_search_wnd(search_win,card_win,results,mon_name):
     global ver_idx
     global tries
     card_win.clear()
-    card_win.refresh()
-    if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode==SHOW_ALL:
+    #card_win.refresh()
+    if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode in [SHOW_ALL,CARD]:
         card_win.chgat(-1,c.color_pair(BK_CARD))
         if format_length!=2:
             card_win.move(0,0)
@@ -407,6 +423,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
     global mode
     global ver_selector_idx
     global current_mon
+    global list_mode_sel, list_mode_skip
     if ch==27:#ESC
         search_win.nodelay(True)
         while search_win.getch()!=-1:
@@ -460,10 +477,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         c.init_pair(INV,cur_color_bk_s,cur_color_s)
 
     if key=="KEY_F(10)" or key=="^Q":
-        last=open("default.txt","w",encoding="utf-8")
-        last.write(ver_list[ver_idx])
-        last.write(f"\n{cur_color1}\n{cur_color_bk1}\n{cur_color2}\n{cur_color_bk2}\n{cur_color_s}\n{cur_color_bk_s}\n{cur_color_s_bold}\n")
-        last.close()
+        save_settings()
         return -1
     if key=="KEY_F(14)":
         mode=SHOW_ALL
@@ -619,6 +633,12 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
     if key=="^O":
         mode=SELECT
         ver_selector_idx=ver_idx
+    if key=="^I":
+        mode=LIST
+        format_length=2
+        prepare_list(0,0,0)
+        list_mode_sel=0
+        list_mode_skip=0
 
     return 0
 
@@ -642,6 +662,63 @@ def react_to_key_select(ch,key,mon_name):
             reloaded=True
         mode=SEARCH
 
+def react_to_key_list(ch,key,mon_name):
+    global list_mode_sel
+    global list_mode_skip
+    global mode
+    if key=="KEY_UP" :
+        if list_mode_sel>0:
+            list_mode_sel-=1
+        else:
+            if list_mode_skip>0:
+                list_mode_skip-=1            
+    if key=="KEY_DOWN" :
+        if list_mode_sel<LIST_LINES-1:
+            list_mode_sel+=1
+        else:
+            if list_mode_skip+list_mode_sel<list_mode_max-1:
+                list_mode_skip+=1
+    if key=="KEY_PPAGE" :
+        list_mode_skip-=LIST_LINES
+        if list_mode_skip<0:
+            list_mode_skip=0
+    if key=="KEY_NPAGE" :
+        list_mode_skip+=LIST_LINES
+        if list_mode_skip+LIST_LINES>list_mode_max-1:
+            list_mode_skip=list_mode_max-LIST_LINES
+    if key=="KEY_HOME":# or alt_ch=="[H" or alt_ch=="[1~":
+        list_mode_skip=0
+        list_mode_sel=0
+    if key=="KEY_END":# or key=="KEY_A1" or alt_ch=="[4~":
+        list_mode_skip=list_mode_max-LIST_LINES
+        list_mode_sel=LIST_LINES-1
+    if key=="^I":
+        mode=SEARCH
+    if key=="^J" or key=="^M":
+        mode=CARD
+    if key=="KEY_F(10)" or key=="^Q":
+        save_settings()
+        return -1
+    return 0
+
+def react_to_key_card(ch,key,mon_name):
+    global format_length
+    global mode
+    if key=="KEY_UP" :
+        format_length-=1
+        if format_length<=0:
+            format_length=0
+    if key=="KEY_DOWN" :
+        format_length+=1
+        if format_length>2:
+            format_length=2
+    if key=="KEY_F(10)" or key=="^Q":
+        save_settings()
+        return -1
+    if ch==27:
+        mode=LIST
+
+    return 0
 in_str=""
 not_found_after_reload=False
 cur_color1=c.COLOR_GREEN
@@ -717,6 +794,24 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
+        if mode==LIST:
+            card_win.clear()
+            card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
+            for x in range(LIST_LINES):
+                current_mon=table[list_mode_mons[x+list_mode_skip]]
+                card_win.move(x+1,0)
+                out_symbol(card_win,current_mon)
+                line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
+                if x==list_mode_sel:
+                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD))
+                    if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
+                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD))
+                else:
+                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(INV_CARD))
+                    if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
+                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(INV_CARD))
+            card_win.refresh()
+
         if mode==SEARCH:
             for mon in table.keys():
                 if mon.lower().find(in_str.lower())!=-1:
@@ -742,6 +837,9 @@ def main(s):
             if current_mon>=len(table)-1:
                 mode=SEARCH
             continue
+        if mode==CARD:
+            mon_name=list_mode_mons[list_mode_sel+list_mode_skip]
+            show_search_wnd(search_win,card_win,table,mon_name)
         if mode==SELECT:
             show_ver_list(card_win,ver_selector_idx)
             card_win.refresh()
@@ -755,7 +853,14 @@ def main(s):
         if mode==SELECT:
             react_to_key_select(ch,key,mon_name)
             continue
-
+        if mode==LIST:
+            res=react_to_key_list(ch,key,mon_name)
+            if res!=0:
+                break
+        if mode==CARD:
+            res=react_to_key_card(ch,key,mon_name)
+            if res!=0:
+                break
 
 if __name__=="__main__":
     make_ver_list()

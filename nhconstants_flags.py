@@ -92,6 +92,15 @@ szs={
     "MZ_GIGANTIC":"Gigantic"
 }
 
+szs_1ch={
+    "MZ_TINY":"ti",
+    "MZ_SMALL":"sm",
+    "MZ_MEDIUM":"md",
+    "MZ_LARGE":"LG",
+    "MZ_HUGE":"HG",
+    "MZ_GIGANTIC":"GG"
+}
+
 geno_str={
     "G_UNIQ":"Unique",
     "G_SHEOL":"Sheol Only",
