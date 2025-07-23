@@ -151,7 +151,7 @@ def show_ver_list(s,sel:int):
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
     s.refresh()
 
-def show_sort_list(s,sel:int):
+def show_sort_list(s):
     w1=20
     w2=0
     w3=0
@@ -848,6 +848,7 @@ def react_to_key_list(ch,key,mon_name):
     global ver_idx,ver_selector_idx
     global mode_prev
     global reloaded
+    global sort_mode_sel
     if key=="]":
         ver_idx+=1
         if ver_idx>=len(ver_list):
@@ -905,9 +906,11 @@ def react_to_key_list(ch,key,mon_name):
     if key=="^J" or key=="^M":
         mode=CARD
     if key=="^S":
+        sort_mode_sel=sort_mode1
         mode=SELECT_SORT1
     if key=="S":
         if sort_mode1!=0:
+            sort_mode_sel=sort_mode2
             mode=SELECT_SORT2
     if key=="^D":
         if sort_dir1==0:
@@ -998,6 +1001,7 @@ def main(s):
     global reloaded
     global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
     global sel,skip
+    global sort_mode_sel
     if c.COLORS<16:
         bold=1
     else:
@@ -1046,9 +1050,10 @@ def main(s):
         results=[]
         not_found_after_reload=False
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
-            show_sort_list(card_win,sort_mode1)
+            show_sort_list(card_win)
         if mode==LIST:
             selected_mon_name=""
+            card_win.bkgd(' ',c.color_pair(BK_CARD))
             card_win.clear()
             card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
             for x in range(LIST_LINES):
