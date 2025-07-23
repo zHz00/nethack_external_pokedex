@@ -140,3 +140,20 @@ rows={"index":0,
 "wards":55
 }
 
+sort_mode_str=[
+    "(none)",
+    "Letter",
+    "Name",
+    "Difficulty",
+    "Level",
+    "Experience",
+    "Move speed",
+    "AC",
+    "MR",
+    "Frequency",
+    "Alignment",
+    "Weight",
+    "Nutrition",
+    "Size",
+]
+
