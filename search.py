@@ -286,7 +286,7 @@ SEPARATOR_BLACK=26
 
 def out_input(s,in_str):
 
-    s.clear()
+    s.erase()
     s.addstr(0,0,">"+in_str,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     s.chgat(-1,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     s.clrtoeol()
@@ -425,7 +425,7 @@ def show_list_wnd(search_win,results,mon_name):
     sort_dir1_str="Ascending" if sort_dir1==0 else "Descending"
     sort_dir2_str="Ascending" if sort_dir2==0 else "Descending"
 
-    search_win.clear()
+    search_win.erase()
 
     search_win.addstr(0,0,f"Sort1 (Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1 (Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if sort_mode1!=0:
@@ -446,7 +446,7 @@ def show_card_header_wnd(search_win,results,mon_name):
     global sort_mode1
     global sort_dir1
 
-    search_win.clear()
+    search_win.erase()
 
     search_win.addstr(0,0,"Monster:"+mon_name,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     search_win.addstr(1,0,f"Esc: Back to list",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
@@ -464,7 +464,7 @@ def show_card_wnd(card_win,results,mon_name):
     global max_sel
     global ver_idx
     global tries
-    card_win.clear()
+    card_win.erase()
     #card_win.refresh()
     if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode in [SHOW_ALL,CARD]:
         if mon_name not in table:
@@ -631,7 +631,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         return 0
     if key=="KEY_F(1)":
         os.makedirs("reports",exist_ok=True)
-        s.clear()
+        s.erase()
         file_suffixes=["short","long","ext"]
         name_longest=0
         name_longest_name=""
@@ -1010,7 +1010,7 @@ def main(s):
     c.mousemask(-1)
     c.mouseinterval(0)
     c.curs_set(1)
-    s.clear()
+    s.erase()
     c.init_pair(BK,cur_color_s,cur_color_bk_s)
     c.init_pair(INV,cur_color_bk_s,cur_color_s)
 
@@ -1031,7 +1031,7 @@ def main(s):
     lines=c.LINES
     cols=c.COLS
     s.bkgd(' ',c.color_pair(BK))
-    s.clear()
+    s.erase()
     s.refresh()
     colors_n=c.COLORS
     for x in range(1,17):
@@ -1040,11 +1040,11 @@ def main(s):
     search_win=c.newwin(2,c.COLS,0,0)
     search_win.keypad(1)
     search_win.bkgd(' ',c.color_pair(BK))
-    search_win.clear()
+    search_win.erase()
     search_win.refresh()  
     card_win=c.newwin(c.LINES-2,c.COLS,2,0)
     card_win.bkgd(' ',c.color_pair(BK_CARD))
-    card_win.clear()
+    card_win.erase()
     card_win.refresh()
     while True:
         results=[]
@@ -1054,7 +1054,7 @@ def main(s):
         if mode==LIST:
             selected_mon_name=""
             card_win.bkgd(' ',c.color_pair(BK_CARD))
-            card_win.clear()
+            card_win.erase()
             card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
             for x in range(LIST_LINES):
                 current_mon=table[list_mode_mons[x+list_mode_skip]]
