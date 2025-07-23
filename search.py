@@ -29,9 +29,11 @@ SEARCH=2
 CARD=3
 LIST=4
 SHOW_ALL=5
-SELECT_SORT=6
+SELECT_SORT1=6
+SELECT_SORT2=7
 
 mode=SEARCH
+mode_prev=SEARCH
 
 
 cur_len_res=66
@@ -50,15 +52,18 @@ ver_list=[]
 ver_name=[]
 ver_n=[]
 ver_idx=-1
+ver_idx_temp=-1
 ver_selector_idx=0
 format_length=0
 list_mode_mons=[]
 list_mode_sel=0
 list_mode_skip=0
 list_mode_max=0
-sort_mode=0
+sort_mode1=0
+sort_mode2=0
 sort_mode_sel=0
-sort_dir=0
+sort_dir1=0
+sort_dir2=0
 
 sort_mode_lambdas=[
     lambda x:0,#"(none)",
@@ -74,21 +79,49 @@ sort_mode_lambdas=[
     lambda x:int(table[x][rows["alignment"]]),#"Alignment",
     lambda x:int(table[x][rows["weight"]]),#"Weight",
     lambda x:int(table[x][rows["nutrition"]]),#"Nutrition",
-    lambda x:int(table[x][rows["size"]]),#"Size",
+    lambda x:szs_order[table[x][rows["size"]]],#"Size",
 ]
 
-double_sort=lambda a,b:(lambda x:(sort_mode_lambdas[a](x),sort_mode_lambdas[b](x)))
 
-def prepare_list(sort_field,dir,filters):
+def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
     global list_mode_max
-    if sort_field==0:
+    if sort_field1==0:
         list_mode_mons=list(table.keys()).copy()
         list_mode_max=len(list_mode_mons)
     else:
-        list_mode_mons=sorted(list_mode_mons,key=double_sort(sort_mode,2),reverse=bool(dir))
+        #list_mode_mons=sorted(list_mode_mons,key=double_sort(sort_field1,dir1,sort_field2,dir2))
+        list_mode_mons=\
+            sorted(\
+                sorted(\
+                    list_mode_mons,
+                    key=sort_mode_lambdas[sort_field2],
+                    reverse=bool(dir2)),
+                key=sort_mode_lambdas[sort_field1],
+                reverse=bool(dir1))
 
 MAX_SEARCH=50
+
+def show_ver_format(search_win):
+    out_mode=""
+    if mode==LIST:
+        out_mode="Format:list"
+    else:
+        if format_length==0:
+            out_mode="Format:mini"
+        if format_length==1:
+            out_mode="Format:full"
+        if format_length==2:
+            out_mode="Format:ext"
+    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    if ver_idx_temp!=-1:
+        search_win.addstr(0,55,"Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,49,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    else:
+        search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        if mode==LIST:
+            search_win.addstr(1,55,f"{list_mode_skip+list_mode_sel+1}/{list_mode_max}")
+
 
 def show_ver_list(s,sel:int):
     w1=15
@@ -166,6 +199,8 @@ def make_ver_list():
 def get_ver()->str:
     return ver_list[ver_idx].split(".")[0]
 
+def get_ver_temp()->str:
+    return ver_list[ver_idx_temp].split(".")[0]
 
 def save_settings():
     last=open("default.txt","w",encoding="utf-8")
@@ -200,6 +235,14 @@ def table_insert(table:dict(),mon):
         table[name1]=temp_mon
         table[name2]=mon
         table.pop(mon[rows["name"]])
+
+def reset_sort():
+    global sort_mode1,sort_mode2,sort_dir1,sort_dir2
+    sort_mode1=0
+    sort_mode2=0
+    sort_dir1=0
+    sort_dir2=0
+    
 
 def read_monsters(file):
     global table,table_temp
@@ -296,6 +339,9 @@ def move_to_in(s,in_str):
     s.move(0,1+len(in_str))
     c.curs_set(1)
 
+def disable_cursor():
+    c.curs_set(0)
+
 
 def out_symbol(s,mon):
     color=colors_table[int(mon[rows["color"]])&0x7]
@@ -322,8 +368,8 @@ def show_hello_msg(card_win):
     #"UP, DOWN: Change output format",
     #"ESC: Clear search; F10: Exit"
 
-    block1=["Ctrl+O: Choose variant",
-            "PgUp/PgDn: Switch",
+    block1=["Ctrl+O, [, ]: Choose variant",
+            "Tab: Switch to List mode",
             "F10, Ctrl+Q: Exit"]
     block2=["UP, DOWN: Change format",
             "LEFT, RIGHT: Scroll results",
@@ -362,16 +408,7 @@ def show_search_wnd(search_win,results,mon_name):
                 skip+=1
                 sel-=1
                 tries+=1
-    tries=0
-    out_mode=""
-    if format_length==0:
-        out_mode="Format:mini"
-    if format_length==1:
-        out_mode="Format:full"
-    if format_length==2:
-        out_mode="Format:ext"
-    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    show_ver_format(search_win)
     move_to_in(search_win,in_str)
     search_win.refresh()
 
@@ -382,26 +419,22 @@ def show_list_wnd(search_win,results,mon_name):
     global sel,skip
     global max_sel
     global ver_idx
-    global sort_mode
-    global sort_dir
+    global sort_mode1
+    global sort_dir1
 
-    sort_dir_str="Ascending" if sort_dir==0 else "Descending"
+    sort_dir1_str="Ascending" if sort_dir1==0 else "Descending"
+    sort_dir2_str="Ascending" if sort_dir2==0 else "Descending"
 
     search_win.clear()
 
-    search_win.addstr(0,0,f"Sorting (^S):{sort_mode_str[sort_mode]:10}|Direction (^D):{sort_dir_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(1,0,f"Tab: Switch to search mode",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,0,f"Sort1 (Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1 (Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    if sort_mode1!=0:
+        search_win.addstr(1,0,f"Sort2 (Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2 (Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    else:
+        search_win.addstr(1,0,f"Tab: Switch to search mode",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
-    out_mode=""
-    if format_length==0:
-        out_mode="Format:mini"
-    if format_length==1:
-        out_mode="Format:full"
-    if format_length==2:
-        out_mode="Format:ext"
-    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    move_to_in(search_win,in_str)
+    show_ver_format(search_win)
+    disable_cursor()
     search_win.refresh()
 
 def show_card_header_wnd(search_win,results,mon_name):
@@ -410,24 +443,16 @@ def show_card_header_wnd(search_win,results,mon_name):
     global sel,skip
     global max_sel
     global ver_idx
-    global sort_mode
-    global sort_dir
+    global sort_mode1
+    global sort_dir1
 
     search_win.clear()
 
     search_win.addstr(0,0,"Monster:"+mon_name,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     search_win.addstr(1,0,f"Esc: Back to list",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
-    out_mode=""
-    if format_length==0:
-        out_mode="Format:mini"
-    if format_length==1:
-        out_mode="Format:full"
-    if format_length==2:
-        out_mode="Format:ext"
-    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    move_to_in(search_win,in_str)
+    show_ver_format(search_win)
+    disable_cursor()
     search_win.refresh()
 
 
@@ -442,84 +467,87 @@ def show_card_wnd(card_win,results,mon_name):
     card_win.clear()
     #card_win.refresh()
     if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode in [SHOW_ALL,CARD]:
-        card_win.chgat(-1,c.color_pair(BK_CARD))
-        if format_length!=2:
-            card_win.move(0,0)
-            out_symbol(card_win,table[mon_name])
-        else:#extended
-            card_win.move(0,0)
-            card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
-            card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
-            card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BLACK))
-            card_win.move(1,0)
-            card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
-            out_symbol(card_win,table[mon_name])
-            card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
-            card_win.move(2,0)
-            card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
-            card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
-            card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
-        if check_monster(table[mon_name])==True:
-            card=make_card(table[mon_name],format_length)
+        if mon_name not in table:
+            show_not_found_msg(card_win,mon_name)
         else:
-            card="Error making card: "+mon_name
-        card=card.split("\n")
-        #if check_formatting(card)==False:
-        #    card="Error formatting card:"+mon_name
-        cur_pair=BK_CARD
-        line_n=0
-        for i in range(len(card)):
-            line=card[i]
-            if len(line)==0:
-                continue
-            color=line[0]
-            remainder=False
-            if i!=0 and (card[i-1].strip()[-1])==",":
-                remainder=True
-            if color=="#" or color=="$":
-                line=line[1:]
-
-            if color=="#":
-                cur_pair=BK_CARD
-            if color=="$":
-                cur_pair=INV_CARD
-            if len(line.strip())==0:#only special character
-                continue
-            if remainder==False:
-                attrib=c.A_BOLD
+            card_win.chgat(-1,c.color_pair(BK_CARD))
+            if format_length!=2:
+                card_win.move(0,0)
+                out_symbol(card_win,table[mon_name])
+            else:#extended
+                card_win.move(0,0)
+                card_win.addch(c.ACS_ULCORNER,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_URCORNER,c.color_pair(SEPARATOR_BLACK))
+                card_win.move(1,0)
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
+                out_symbol(card_win,table[mon_name])
+                card_win.addch(c.ACS_VLINE,c.color_pair(SEPARATOR_BLACK))
+                card_win.move(2,0)
+                card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
+                card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
+            if check_monster(table[mon_name])==True:
+                card=make_card(table[mon_name],format_length)
             else:
-                attrib=0
-            if len(line.strip())>SCR_WIDTH:
-                line=line[:SCR_WIDTH-1]+"!"
-            for i in range(len(line)):
-                if format_length!=2:
-                    if line_n==0:
-                        pos=i+1
-                    else:
-                        pos=i
-                if format_length==2:
-                    if line_n in [0,1,2]:
-                        pos=i+3
-                    else:
-                        pos=i
-                if line_n<c.LINES-2:
-                    if line_n==c.LINES-3 and i>=c.COLS-1:
-                        break
-                    if line[i]=="|":
-                        if cur_pair==BK_CARD:
-                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-                        else:
-                            card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-                    else:
-                        card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
-                if line[i]==":":
-                    attrib=0
-                if line[i]=="|":
+                card="Error making card: "+mon_name
+            card=card.split("\n")
+            #if check_formatting(card)==False:
+            #    card="Error formatting card:"+mon_name
+            cur_pair=BK_CARD
+            line_n=0
+            for i in range(len(card)):
+                line=card[i]
+                if len(line)==0:
+                    continue
+                color=line[0]
+                remainder=False
+                if i!=0 and (card[i-1].strip()[-1])==",":
+                    remainder=True
+                if color=="#" or color=="$":
+                    line=line[1:]
+
+                if color=="#":
+                    cur_pair=BK_CARD
+                if color=="$":
+                    cur_pair=INV_CARD
+                if len(line.strip())==0:#only special character
+                    continue
+                if remainder==False:
                     attrib=c.A_BOLD
-            line_n+=1
-                
-            #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
-            card_win.chgat(-1,c.color_pair(cur_pair))
+                else:
+                    attrib=0
+                if len(line.strip())>SCR_WIDTH:
+                    line=line[:SCR_WIDTH-1]+"!"
+                for i in range(len(line)):
+                    if format_length!=2:
+                        if line_n==0:
+                            pos=i+1
+                        else:
+                            pos=i
+                    if format_length==2:
+                        if line_n in [0,1,2]:
+                            pos=i+3
+                        else:
+                            pos=i
+                    if line_n<c.LINES-2:
+                        if line_n==c.LINES-3 and i>=c.COLS-1:
+                            break
+                        if line[i]=="|":
+                            if cur_pair==BK_CARD:
+                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+                            else:
+                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+                        else:
+                            card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+                    if line[i]==":":
+                        attrib=0
+                    if line[i]=="|":
+                        attrib=c.A_BOLD
+                line_n+=1
+                    
+                #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
+                card_win.chgat(-1,c.color_pair(cur_pair))
         card_win.refresh()
     else:
         if not_found_after_reload:
@@ -541,6 +569,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
     global ver_selector_idx
     global current_mon
     global list_mode_sel, list_mode_skip
+    global mode_prev
     if ch==27:#ESC
         search_win.nodelay(True)
         while search_win.getch()!=-1:
@@ -698,7 +727,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         s.refresh()
         s.getch()
 
-    if len(key)==1 and key not in ["1","2","3","4","5","6"]:
+    if len(key)==1 and key not in ["1","2","3","4","5","6","[","]"]:
         if len(in_str)<MAX_SEARCH:
             in_str+=key
             sel=0
@@ -733,27 +762,30 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
         sel=0
         skip=0
         reloaded=False
-    if key=="KEY_NPAGE":
+    if key=="]":
         ver_idx+=1
         if ver_idx>=len(ver_list):
             ver_idx=0
         read_monsters(ver_list[ver_idx])
+        reset_sort()
         if mon_name!="":
             reloaded=True
-    if key=="KEY_PPAGE":
+    if key=="[":
         ver_idx-=1
         if ver_idx<0:
             ver_idx=len(ver_list)-1
         read_monsters(ver_list[ver_idx])
+        reset_sort()
         if mon_name!="":
             reloaded=True
     if key=="^O":
+        mode_prev=SEARCH
         mode=SELECT_VER
         ver_selector_idx=ver_idx
     if key=="^I":
         mode=LIST
         format_length=2
-        prepare_list(0,0,0)
+        prepare_list(0,0,0,0,0)
         list_mode_sel=0
         list_mode_skip=0
 
@@ -764,8 +796,9 @@ def react_to_key_select_ver(ch,key,mon_name):
     global ver_idx
     global mode
     global reloaded
+    global list_mode_sel,list_mode_skip
     if ch==27:
-        mode=SEARCH
+        mode=mode_prev
     if key=="KEY_UP" :
         if ver_selector_idx>0:
             ver_selector_idx-=1
@@ -775,14 +808,18 @@ def react_to_key_select_ver(ch,key,mon_name):
     if key=="^M" or key=="^J":
         ver_idx=ver_selector_idx
         read_monsters(ver_list[ver_idx])
+        reset_sort()
+        prepare_list(0,0,0,0,0)
+        list_mode_sel=0
+        list_mode_skip=0
         if mon_name!="":
             reloaded=True
-        mode=SEARCH
+        mode=mode_prev
 
 
 def react_to_key_select_sort(ch,key,mon_name):
     global sort_mode_sel
-    global sort_mode
+    global sort_mode1,sort_mode2
     global mode
     global reloaded
     if ch==27:
@@ -794,8 +831,12 @@ def react_to_key_select_sort(ch,key,mon_name):
         if sort_mode_sel+1<len(sort_mode_str):
             sort_mode_sel+=1
     if key=="^M" or key=="^J":
-        sort_mode=sort_mode_sel
-        prepare_list(sort_mode,sort_dir,0)
+        if mode==SELECT_SORT1:
+            reset_sort()
+            sort_mode1=sort_mode_sel
+        if mode==SELECT_SORT2:
+            sort_mode2=sort_mode_sel
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
         mode=LIST
     return 0
 
@@ -803,7 +844,36 @@ def react_to_key_list(ch,key,mon_name):
     global list_mode_sel
     global list_mode_skip
     global mode
-    global sort_dir
+    global sort_dir1,sort_dir2
+    global ver_idx,ver_selector_idx
+    global mode_prev
+    global reloaded
+    if key=="]":
+        ver_idx+=1
+        if ver_idx>=len(ver_list):
+            ver_idx=0
+        read_monsters(ver_list[ver_idx])
+        reset_sort()
+        prepare_list(0,0,0,0,0)
+        list_mode_sel=0
+        list_mode_skip=0
+        if mon_name!="":
+            reloaded=True
+    if key=="[":
+        ver_idx-=1
+        if ver_idx<0:
+            ver_idx=len(ver_list)-1
+        read_monsters(ver_list[ver_idx])
+        reset_sort()
+        prepare_list(0,0,0,0,0)
+        list_mode_sel=0
+        list_mode_skip=0
+        if mon_name!="":
+            reloaded=True
+    if key=="^O":
+        mode_prev=LIST
+        mode=SELECT_VER
+        ver_selector_idx=ver_idx
     if key=="KEY_UP" :
         if list_mode_sel>0:
             list_mode_sel-=1
@@ -835,13 +905,24 @@ def react_to_key_list(ch,key,mon_name):
     if key=="^J" or key=="^M":
         mode=CARD
     if key=="^S":
-        mode=SELECT_SORT
+        mode=SELECT_SORT1
+    if key=="S":
+        if sort_mode1!=0:
+            mode=SELECT_SORT2
     if key=="^D":
-        if sort_dir==0:
-            sort_dir=1
+        if sort_dir1==0:
+            sort_dir1=1
         else:
-            sort_dir=0
-        prepare_list(sort_mode,sort_dir,0)
+            sort_dir1=0
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
+    if key=="D":
+        if sort_mode1!=0:
+            if sort_dir2==0:
+                sort_dir2=1
+            else:
+                sort_dir2=0
+            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
+ 
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
@@ -850,6 +931,8 @@ def react_to_key_list(ch,key,mon_name):
 def react_to_key_card(ch,key,mon_name):
     global format_length
     global mode
+    global ver_idx
+    global ver_idx_temp
     if key=="KEY_UP" :
         format_length-=1
         if format_length<=0:
@@ -858,10 +941,32 @@ def react_to_key_card(ch,key,mon_name):
         format_length+=1
         if format_length>2:
             format_length=2
+    if key=="]":
+        if ver_idx_temp==-1:
+            ver_idx_temp=ver_idx
+        ver_idx_temp+=1
+        if ver_idx_temp>=len(ver_list):
+            ver_idx_temp=0
+        read_monsters(ver_list[ver_idx_temp])
+        reset_sort()
+        if mon_name!="":
+            reloaded=True
+    if key=="[":
+        if ver_idx_temp==-1:
+            ver_idx_temp=ver_idx
+        ver_idx_temp-=1
+        if ver_idx_temp<0:
+            ver_idx_temp=len(ver_list)-1
+        read_monsters(ver_list[ver_idx_temp])
+        reset_sort()
+        if mon_name!="":
+            reloaded=True
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
-    if ch==27:
+    if ch==27 or key=="BACKSPACE" or key=="^H":
+        ver_idx_temp=-1
+        read_monsters(ver_list[ver_idx])
         mode=LIST
 
     return 0
@@ -940,8 +1045,8 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
-        if mode==SELECT_SORT:
-            show_sort_list(card_win,sort_mode)
+        if mode==SELECT_SORT1 or mode==SELECT_SORT2:
+            show_sort_list(card_win,sort_mode1)
         if mode==LIST:
             selected_mon_name=""
             card_win.clear()
@@ -1014,7 +1119,7 @@ def main(s):
             res=react_to_key_card(ch,key,mon_name)
             if res!=0:
                 break
-        if mode==SELECT_SORT:
+        if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             res=react_to_key_select_sort(ch,key,mon_name)
             if res!=0:
                 break            
@@ -1039,5 +1144,6 @@ if __name__=="__main__":
     except:
         pass
     read_monsters(ver_list[ver_idx])
+    reset_sort()
     os.environ.setdefault('ESCDELAY', '25')
     c.wrapper(main)

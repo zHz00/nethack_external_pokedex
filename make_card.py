@@ -945,7 +945,7 @@ def make_card_one_line(mon,actual_name):
                 text=freq
             if f=="Sz":
                 text=szs_1ch[mon[rows["size"]]]
-        out_line+=f"|{text:{w}}"
+        out_line+=f"|{text:>{w}}"
 
     props_len=len(out_line)
     max_name_l=SCR_WIDTH-2-props_len

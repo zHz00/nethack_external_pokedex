@@ -92,6 +92,15 @@ szs={
     "MZ_GIGANTIC":"Gigantic"
 }
 
+szs_order={
+    "MZ_TINY":0,
+    "MZ_SMALL":1,
+    "MZ_MEDIUM":2,
+    "MZ_LARGE":3,
+    "MZ_HUGE":4,
+    "MZ_GIGANTIC":7
+}
+
 szs_1ch={
     "MZ_TINY":"ti",
     "MZ_SMALL":"sm",
