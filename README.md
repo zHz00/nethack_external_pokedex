@@ -25,7 +25,9 @@ Also, you can type part of name and still find your monster in search results.
 
 ## Controls
 
-**PgUp/PgDn**	Switch variant  
+### Search mode (default)
+**Tab**			Switch to LIST mode  
+**[, ]**		Switch variant  
 **Ctrl+O**		Select variant from list  
 **Down**		Show more information  
 **Up**			Show less information  
@@ -33,9 +35,31 @@ Also, you can type part of name and still find your monster in search results.
 **Left, Right**	Scroll through search results  
 **F10**			Exit  
   
-**1,2,3,4,**	Change colors  
+**1-6**			Change colors  
+**1**			Foreground1 (card, list)  
+**2**			Background1 (card, list)  
+**3**			Foreground2 (card, list)  
+**4**			Background2 (card, list)  
+**5**			Foreground (upper zone, menus)  
+**6**			Background (upper zone, menus)  
+
 **F1**			Run tests and show results  
 **Shift+F2**	Show every card in quick succession. WARNING, this is debug feature. This process cannot be interrupted. You just have to watch.
+
+### List mode
+**Tab**			Switch back to SERACH mode  
+**UP, DOWN**	Scroll through list  
+**PgUp, PgDn**	Scorll, but faster  
+**Home, End**	Scroll with speed of light  
+**Enter**		View selected monter's card (Press Esc to return to list)  
+**Ctrl+S**		Select sorting field  
+**Ctrl+D**		Change sorting direction  
+**Shift+S**		Select secondary sorting field (only available if first field is active)  
+**Shift+D**		Cange secondary sorting direction  
+
+**[, ]**		Switch variant  
+**Ctrl+O**		Select variant from list  
+**F10**			Exit  
 
 ## Formats
 

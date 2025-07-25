@@ -155,7 +155,11 @@ def show_sort_list(s):
     w1=20
     w2=0
     w3=0
-    cap1="Sort field"
+    cap1=""
+    if mode==SELECT_SORT1:
+        cap1="Sort field (1)"
+    if mode==SELECT_SORT2:
+        cap1="Sort field (2)"
     cap2=""
     cap3=""
     l=len(sort_mode_str)
@@ -1063,7 +1067,7 @@ def main(s):
                 line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
                 if x==list_mode_sel:
                     selected_mon_name=list_mode_mons[x+list_mode_skip]
-                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD))
+                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
                     if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
                         card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD))
                 else:
