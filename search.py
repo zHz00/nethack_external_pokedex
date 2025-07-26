@@ -194,10 +194,15 @@ def make_ver_list():
     for x in range(len(ver_list)):
         monfile=open(data_folder+ver_list[x],"r")
         reader=csv.reader(monfile)
+        multigender=0
         for y,mon in enumerate(reader):
             if y==0:
                 ver_name[x]=mon[0]
-        ver_n[x]=y-1
+            else:
+                if len(mon[rows["namef"]])>0:
+                    #multigender monster, add 2
+                    multigender+=2
+        ver_n[x]=y+multigender
         
 
 def get_ver()->str:
@@ -560,7 +565,7 @@ def show_card_wnd(card_win,results,mon_name):
             show_hello_msg(card_win)
 
 
-def react_to_key_search(s,search_win,ch,key,results,mon_name):
+def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global reloaded
     global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
     global cur_color_s,cur_color_bk_s,cur_color_s_bold
@@ -795,7 +800,7 @@ def react_to_key_search(s,search_win,ch,key,results,mon_name):
 
     return 0
 
-def react_to_key_select_ver(ch,key,mon_name):
+def react_to_key_select_ver(ch,key,alt_ch,mon_name):
     global ver_selector_idx
     global ver_idx
     global mode
@@ -821,7 +826,7 @@ def react_to_key_select_ver(ch,key,mon_name):
         mode=mode_prev
 
 
-def react_to_key_select_sort(ch,key,mon_name):
+def react_to_key_select_sort(ch,key,alt_ch,mon_name):
     global sort_mode_sel
     global sort_mode1,sort_mode2
     global mode
@@ -844,7 +849,7 @@ def react_to_key_select_sort(ch,key,mon_name):
         mode=LIST
     return 0
 
-def react_to_key_list(ch,key,mon_name):
+def react_to_key_list(ch,key,alt_ch,mon_name):
     global list_mode_sel
     global list_mode_skip
     global mode
@@ -899,10 +904,10 @@ def react_to_key_list(ch,key,mon_name):
         list_mode_skip+=LIST_LINES
         if list_mode_skip+LIST_LINES>list_mode_max-1:
             list_mode_skip=list_mode_max-LIST_LINES
-    if key=="KEY_HOME":# or alt_ch=="[H" or alt_ch=="[1~":
+    if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
         list_mode_skip=0
         list_mode_sel=0
-    if key=="KEY_END":# or key=="KEY_A1" or alt_ch=="[4~":
+    if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
         list_mode_skip=list_mode_max-LIST_LINES
         list_mode_sel=LIST_LINES-1
     if key=="^I":
@@ -935,7 +940,7 @@ def react_to_key_list(ch,key,mon_name):
         return -1
     return 0
 
-def react_to_key_card(ch,key,mon_name):
+def react_to_key_card(ch,key,alt_ch,mon_name):
     global format_length
     global mode
     global ver_idx
@@ -1069,7 +1074,7 @@ def main(s):
                     selected_mon_name=list_mode_mons[x+list_mode_skip]
                     card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
                     if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
-                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD))
+                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
                 else:
                     card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(INV_CARD))
                     if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
@@ -1096,7 +1101,7 @@ def main(s):
             show_search_wnd(search_win,results,mon_name)
             show_card_wnd(card_win,results,mon_name)
         if mode==SHOW_ALL:
-            show_card_wnd(search_win,card_win,table,mon_name)
+            show_card_wnd(card_win,table,mon_name)
             time.sleep(0.05)
             mon_name=list(table.keys())[current_mon]
             current_mon+=1
@@ -1111,25 +1116,39 @@ def main(s):
             show_ver_list(card_win,ver_selector_idx)
             card_win.refresh()
         ch=search_win.getch()
-        key=c.keyname(ch).decode("utf-8")
+        key=c.keyname(ch).decode("utf-8")        
+        alt_ch=""
+        if ch==27:
+            s.nodelay(True)
+            next_key=s.getch()
+            if next_key!=-1:
+                alt_ch=c.keyname(next_key).decode("utf8")
+            else:
+                alt_ch=""
+            if alt_ch=="[":#home and end keys
+                for i in range(2):
+                    next_key=s.getch()
+                    if next_key!=-1:
+                        alt_ch+=c.keyname(next_key).decode("utf8")
+            s.nodelay(False)
         if mode==SEARCH:
-            res=react_to_key_search(s,search_win,ch,key,results,mon_name)
+            res=react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name)
             if res!=0:
                 break
             continue
         if mode==SELECT_VER:
-            react_to_key_select_ver(ch,key,mon_name)
+            react_to_key_select_ver(ch,key,alt_ch,mon_name)
             continue
         if mode==LIST:
-            res=react_to_key_list(ch,key,mon_name)
+            res=react_to_key_list(ch,key,alt_ch,mon_name)
             if res!=0:
                 break
         if mode==CARD:
-            res=react_to_key_card(ch,key,mon_name)
+            res=react_to_key_card(ch,key,alt_ch,mon_name)
             if res!=0:
                 break
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
-            res=react_to_key_select_sort(ch,key,mon_name)
+            res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
             if res!=0:
                 break            
 

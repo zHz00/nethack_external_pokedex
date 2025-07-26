@@ -51,11 +51,11 @@ Also, you can type part of name and still find your monster in search results.
 **UP, DOWN**	Scroll through list  
 **PgUp, PgDn**	Scorll, but faster  
 **Home, End**	Scroll with speed of light  
-**Enter**		View selected monter's card (Press Esc to return to list)  
+**Enter**		View selected monster's card (Press Esc to return to list)  
 **Ctrl+S**		Select sorting field  
 **Ctrl+D**		Change sorting direction  
 **Shift+S**		Select secondary sorting field (only available if first field is active)  
-**Shift+D**		Cange secondary sorting direction  
+**Shift+D**		Change secondary sorting direction  
 
 **[, ]**		Switch variant  
 **Ctrl+O**		Select variant from list  
