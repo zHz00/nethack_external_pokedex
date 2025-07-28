@@ -10,6 +10,8 @@ from nhconstants_atk import *
 from nhconstants_common import *
 from checker import *
 from make_card import *
+from filters import *
+import utils
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -22,6 +24,9 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
+filter_list=[make_letter_filter("Letter",""),make_name_filter("Name",""),make_conveyed_filter("Conveyed",""),make_param_filter("Param","",0,0)]
+filter_on=[False]*len(filter_list)
+
 bold=0
 
 SELECT_VER=1
@@ -31,6 +36,8 @@ LIST=4
 SHOW_ALL=5
 SELECT_SORT1=6
 SELECT_SORT2=7
+FILTER=8
+SELECT_RES=9
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -65,6 +72,13 @@ sort_mode_sel=0
 sort_dir1=0
 sort_dir2=0
 
+filter_mode_sel=0
+filters_edits_offset_x=0
+filters_edits_offset_y=0
+
+res_mode_sel=0
+res_mode_list={y:x for x,y in resists_conv.items()}
+
 sort_mode_lambdas=[
     lambda x:0,#"(none)",
     lambda x:monsym[table[x][rows["symbol"]]],#"Letter",
@@ -87,7 +101,10 @@ def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
     global list_mode_max
     if sort_field1==0:
-        list_mode_mons=list(table.keys()).copy()
+        list_mode_mons=[]
+        for mon in table.keys():
+            if test_monster(table[mon],filters):
+                list_mode_mons.append(mon)
         list_mode_max=len(list_mode_mons)
     else:
         #list_mode_mons=sorted(list_mode_mons,key=double_sort(sort_field1,dir1,sort_field2,dir2))
@@ -151,6 +168,50 @@ def show_ver_list(s,sel:int):
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
     s.refresh()
 
+def show_filters(s,sel:int):
+    global filters_edits_offset_x,filters_edits_offset_y
+    w1=2
+    w2=15
+    w3=40
+    cap1="ON"
+    cap2="Filter"
+    cap3="Value"
+    l=len(ver_list)
+    h=c.LINES-2-1#one for header
+    offset_y=0
+    if l>=h:
+        offset_y=0
+    else:
+        offset_y=int((h-l)/2)
+    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    filters_edits_offset_x=offset_x+w1+w2+3
+    filters_edits_offset_y=offset_y+1
+    header=f"|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    for y in range(len(filter_list)):
+        filter=filter_list[y]
+        field=filter["fields"][0]
+        on="+" if filter_on[y] else "-"
+        name=filter["name"]
+        value="<any>"
+        if ("value" in field) and len(str(field["value"]))>0 and field["value"]!="*":
+            if field["field"]=="resconv":
+                value=resists_conv[field["value"]]
+            else:
+                value=str(field["value"])
+                if field["value"]==" ":
+                    value="["+value+"]"
+        if "min" in field:
+            value=f"{field['field']}={field['min']}...{field['max']}"
+        
+        info=f"|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
+        if y==sel:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
+        else:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
+    s.refresh()
+
+
 def show_sort_list(s):
     w1=20
     w2=0
@@ -176,6 +237,31 @@ def show_sort_list(s):
         sort_mode_line=sort_mode_str[y]
         info=f"|{sort_mode_line:{w1}}|"
         if y==sort_mode_sel:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
+        else:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
+    s.refresh()
+
+def show_res_list(s):
+    w1=20
+    w2=0
+    w3=0
+    cap1="Conveyed"
+    cap2=""
+    cap3=""
+    l=len(res_mode_list)
+    h=c.LINES-2-1#one for header
+    offset_y=0
+    if l>=h:
+        offset_y=0
+    else:
+        offset_y=int((h-l)/2)
+    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    header=f"|{cap1:{w1}}|"
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    for y,r in enumerate(res_mode_list.keys()):
+        info=f"|{r:{w1}}|"
+        if y==res_mode_sel:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
@@ -463,6 +549,31 @@ def show_card_header_wnd(search_win,results,mon_name):
     show_ver_format(search_win)
     disable_cursor()
     search_win.refresh()
+
+def show_list(card_win,search_win,results):
+    global selected_mon_name
+    selected_mon_name=""
+    card_win.bkgd(' ',c.color_pair(BK_CARD))
+    card_win.erase()
+    card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
+    for x in range(LIST_LINES):
+        if x+list_mode_skip>=len(list_mode_mons):
+            break
+        current_mon=table[list_mode_mons[x+list_mode_skip]]
+        card_win.move(x+1,0)
+        out_symbol(card_win,current_mon)
+        line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
+        if x==list_mode_sel:
+            selected_mon_name=list_mode_mons[x+list_mode_skip]
+            card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
+            if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
+                card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
+        else:
+            card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(INV_CARD))
+            if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
+                card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(INV_CARD))
+    card_win.refresh()
+    show_list_wnd(search_win,results,selected_mon_name)
 
 
 
@@ -794,7 +905,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     if key=="^I":
         mode=LIST
         format_length=2
-        prepare_list(0,0,0,0,0)
+        prepare_list(0,0,0,0,[])
         list_mode_sel=0
         list_mode_skip=0
 
@@ -818,7 +929,7 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
         ver_idx=ver_selector_idx
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,0)
+        prepare_list(0,0,0,0,[])
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -845,9 +956,75 @@ def react_to_key_select_sort(ch,key,alt_ch,mon_name):
             sort_mode1=sort_mode_sel
         if mode==SELECT_SORT2:
             sort_mode2=sort_mode_sel
-        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
         mode=LIST
     return 0
+
+def react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name):
+    global res_mode_sel
+    global sort_mode1,sort_mode2
+    global mode
+    global reloaded
+    if ch==27:
+        mode=FILTER
+    if key=="KEY_UP" :
+        if res_mode_sel>0:
+            res_mode_sel-=1
+    if key=="KEY_DOWN" :
+        if res_mode_sel+1<len(res_mode_list):
+            res_mode_sel+=1
+    if key=="^M" or key=="^J":
+        filter_list[filter_mode_sel]["fields"][0]["value"]=list(resists_conv.keys())[res_mode_sel]
+        show_list(card_win,search_win,[])
+        mode=FILTER
+    return 0
+
+def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
+    global filter_mode_sel
+    global filter_on
+    global mode
+    global reloaded
+    global filter_list
+    f=filter_list[filter_mode_sel]["fields"][0]
+    if ch==27:
+        mode=LIST
+    if key=="KEY_UP" :
+        if filter_mode_sel>0:
+            filter_mode_sel-=1
+    if key=="KEY_DOWN" :
+        if filter_mode_sel+1<len(filter_list):
+            filter_mode_sel+=1
+    if key==" ":
+        filter_on[filter_mode_sel]=not filter_on[filter_mode_sel]
+    if key=="^M" or key=="^J":
+        #f=make_name_filter("test","z")
+        #prepare_list(0,0,0,0,[f])
+        #reset_sort()
+        #prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
+        if f["field"]=="symbol":
+            new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,2)
+            if len(new)>0:
+                f["value"]=new[0]
+                filter_on[filter_mode_sel]=True
+            show_filters(card_win,filter_mode_sel)
+        if f["field"]=="name":
+            new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,20)
+            if len(new)>0:
+                f["value"]=new.strip()
+                filter_on[filter_mode_sel]=True
+            show_filters(card_win,filter_mode_sel)
+        if f["field"]=="resconv":
+            mode=SELECT_RES
+    if key=="^A":
+        active_filters=[]
+        for x in range(len(filter_list)):
+            if filter_on[x]:
+                active_filters.append(filter_list[x])
+        reset_sort()
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters)
+        mode=LIST
+    return 0
+
 
 def react_to_key_list(ch,key,alt_ch,mon_name):
     global list_mode_sel
@@ -864,7 +1041,7 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             ver_idx=0
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,0)
+        prepare_list(0,0,0,0,[])
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -875,7 +1052,7 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             ver_idx=len(ver_list)-1
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,0)
+        prepare_list(0,0,0,0,[])
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -891,7 +1068,7 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             if list_mode_skip>0:
                 list_mode_skip-=1            
     if key=="KEY_DOWN" :
-        if list_mode_sel<LIST_LINES-1:
+        if list_mode_sel<LIST_LINES-1 and list_mode_sel+list_mode_skip+1<list_mode_max:
             list_mode_sel+=1
         else:
             if list_mode_skip+list_mode_sel<list_mode_max-1:
@@ -900,16 +1077,24 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
         list_mode_skip-=LIST_LINES
         if list_mode_skip<0:
             list_mode_skip=0
-    if key=="KEY_NPAGE" :
-        list_mode_skip+=LIST_LINES
-        if list_mode_skip+LIST_LINES>list_mode_max-1:
-            list_mode_skip=list_mode_max-LIST_LINES
+    if key=="KEY_NPAGE":
+        if list_mode_max<LIST_LINES:
+            list_mode_skip=0
+            list_mode_sel=list_mode_max-1
+        else:
+            list_mode_skip+=LIST_LINES
+            if list_mode_skip+LIST_LINES>list_mode_max-1:
+                list_mode_skip=list_mode_max-LIST_LINES
     if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
         list_mode_skip=0
         list_mode_sel=0
     if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
-        list_mode_skip=list_mode_max-LIST_LINES
-        list_mode_sel=LIST_LINES-1
+        if list_mode_max>LIST_LINES:
+            list_mode_skip=list_mode_max-LIST_LINES
+            list_mode_sel=LIST_LINES-1
+        else:
+            list_mode_skip=0
+            list_mode_sel=list_mode_max-1
     if key=="^I":
         mode=SEARCH
     if key=="^J" or key=="^M":
@@ -917,6 +1102,9 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
     if key=="^S":
         sort_mode_sel=sort_mode1
         mode=SELECT_SORT1
+    if key=="^F":
+        mode=FILTER
+        #f=make_letter_filter("test","b")
     if key=="S":
         if sort_mode1!=0:
             sort_mode_sel=sort_mode2
@@ -926,14 +1114,14 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             sort_dir1=1
         else:
             sort_dir1=0
-        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
     if key=="D":
         if sort_mode1!=0:
             if sort_dir2==0:
                 sort_dir2=1
             else:
                 sort_dir2=0
-            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,0)
+            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
  
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
@@ -1058,29 +1246,14 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
+        if mode==SELECT_RES:
+            show_res_list(card_win)
+        if mode==FILTER:
+            show_filters(card_win,filter_mode_sel)
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             show_sort_list(card_win)
         if mode==LIST:
-            selected_mon_name=""
-            card_win.bkgd(' ',c.color_pair(BK_CARD))
-            card_win.erase()
-            card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
-            for x in range(LIST_LINES):
-                current_mon=table[list_mode_mons[x+list_mode_skip]]
-                card_win.move(x+1,0)
-                out_symbol(card_win,current_mon)
-                line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
-                if x==list_mode_sel:
-                    selected_mon_name=list_mode_mons[x+list_mode_skip]
-                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
-                    if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
-                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
-                else:
-                    card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(INV_CARD))
-                    if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
-                        card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(INV_CARD))
-            card_win.refresh()
-            show_list_wnd(search_win,results,selected_mon_name)
+            show_list(card_win,search_win,results)
 
         if mode==SEARCH:
             for mon in table.keys():
@@ -1143,14 +1316,27 @@ def main(s):
             res=react_to_key_list(ch,key,alt_ch,mon_name)
             if res!=0:
                 break
+            continue
+        if mode==FILTER:
+            res=react_to_key_filters(card_win,ch,key,alt_ch,mon_name)
+            if res!=0:
+                break
+            continue
+        if mode==SELECT_RES:
+            res=react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name)
+            if res!=0:
+                break
+            continue
         if mode==CARD:
             res=react_to_key_card(ch,key,alt_ch,mon_name)
             if res!=0:
                 break
+            continue
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
             if res!=0:
-                break            
+                break
+            continue            
 
 if __name__=="__main__":
     make_ver_list()
