@@ -157,6 +157,8 @@ sort_mode_str=[
     "Size",
 ]
 
+
+
 filters_mode_param_str={
 "(none)":"",
 
@@ -173,3 +175,20 @@ filters_mode_param_str={
 "Insight required":"insight",
 "Light radius":"light_radius",
 }
+
+param_mode_list={y:x for x,y in filters_mode_param_str.items()}
+
+filter_mode_param_short_str=[
+    "None",
+    "Dif",
+    "Level",
+    "Exp",
+    "Speed",
+    "AC",
+    "MR",
+    "Ali",
+    "Weight",
+    "Nutr.",
+    "Inisght",
+    "Light"
+]

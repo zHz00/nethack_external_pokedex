@@ -83,6 +83,22 @@ resists_conv={'':'(none)',
 'M1_TPORT':'Teleportitis',
 'M1_TPORT_CNTRL':'T. Control'}
 
+res_mode_list={y:x for x,y in resists_conv.items()}
+
+resists_conv_short=[
+    "None",
+    "Fire",
+    "Cold",
+    "Sleep",
+    "Disint",
+    "Shock",
+    "Poison",
+    "Acid",
+    "Stone",
+    "Tele",
+    "T.Ctrl"
+]
+
 
 szs={
     "MZ_TINY":"Tiny",

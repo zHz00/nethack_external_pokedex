@@ -9,7 +9,7 @@ def make_letter_filter(fname,letter):
     field["value"]=letter
     f=dict()
     f["name"]=fname
-    if len(letter)>0:
+    if len(letter)>0 and letter!="*":
         f["short_name"]=f"('{letter}')"
     else:
         f["short_name"]="<any>"
@@ -24,7 +24,7 @@ def make_name_filter(fname,name):
     f=dict()
     f["name"]=fname
     if len(name)>0:
-        f["short_name"]=f"*{name}*"
+        f["short_name"]=f"*{name[:9]}*"
     else:
         f["short_name"]="<any>"
     f["fields"]=[field]
@@ -37,7 +37,10 @@ def make_conveyed_filter(fname,res):
     field["value"]=res
     f=dict()
     f["name"]=fname
-    f["name_short"]="(res)"
+    if len(res)>0:
+        f["short_name"]=resists_conv_short[list(resists_conv.keys()).index(res)]
+    else:
+        f["short_name"]="<any>"
     f["fields"]=[field]
     return f
 
@@ -49,7 +52,10 @@ def make_param_filter(fname,param,min,max):
     field["max"]=max
     f=dict()
     f["name"]=fname
-    f["name_short"]="(param)"
+    if len(param)>0:
+        f["short_name"]=filter_mode_param_short_str[list(param_mode_list.keys()).index(param)]
+    else:
+        f["short_name"]="<any>"
     f["fields"]=[field]
     return f
 
@@ -59,7 +65,7 @@ def test_monster_one_field(mon,field):
     if "value" in field:
         #checking for exact value
         if f=="symbol":
-            test=(monsym[mon[rows[f]]]==field["value"] or field["value"]=="*")
+            test=(monsym[mon[rows[f]]]==field["value"] or field["value"]=="*" or field["value"]=="")
         if f=="name":
             test=(mon[rows[f]].lower().find(field["value"].lower())!=-1 or field["value"]=="*")
         if f=="prob":
@@ -70,13 +76,16 @@ def test_monster_one_field(mon,field):
             test=(field["value"] in ress_names or len(field["value"])==0 or field["value"] in mon[rows["flags1"]])
     if "min" in field:
         #param test
-        if len(mon[rows[f]])==0:#empty string
-            test=False
+        if len(f)==0:#empty parameter
+            test=True
         else:
-            test_value=int(mon[rows[f]])
-            min=field["min"]
-            max=field["max"]
-            test=(test_value>=min and test_value<=max)
+            if len(mon[rows[f]])==0:#empty value, this is not dNetHack, but we are testing insight or something similar
+                test=False
+            else:
+                test_value=int(mon[rows[f]])
+                min=field["min"]
+                max=field["max"]
+                test=(test_value>=min and test_value<=max)
                 
     return test
 def test_monster_one_filter(mon,f):

@@ -36,7 +36,7 @@ LIST=4
 SHOW_ALL=5
 SELECT_SORT1=6
 SELECT_SORT2=7
-FILTER=8
+FILTERS=8
 SELECT_RES=9
 SELECT_PARAM=10
 
@@ -78,10 +78,10 @@ filters_edits_offset_x=0
 filters_edits_offset_y=0
 
 res_mode_sel=0
-res_mode_list={y:x for x,y in resists_conv.items()}
+
 
 param_mode_sel=0
-param_mode_list={y:x for x,y in filters_mode_param_str.items()}
+
 
 sort_mode_lambdas=[
     lambda x:0,#"(none)",
@@ -100,51 +100,71 @@ sort_mode_lambdas=[
     lambda x:szs_order[table[x][rows["size"]]],#"Size",
 ]
 
+def active_filters(f_on,f_list):
+    active=[]
+    for x in range(len(f_list)):
+        if f_on[x]:
+            active.append(f_list[x])
+    return active
+
 
 def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
     global list_mode_max
-    if sort_field1==0:
-        list_mode_mons=[]
-        for mon in table.keys():
-            if test_monster(table[mon],filters):
-                list_mode_mons.append(mon)
-        list_mode_max=len(list_mode_mons)
-    else:
-        #list_mode_mons=sorted(list_mode_mons,key=double_sort(sort_field1,dir1,sort_field2,dir2))
-        list_mode_mons=\
-            sorted(\
-                sorted(\
-                    list_mode_mons,
-                    key=sort_mode_lambdas[sort_field2],
-                    reverse=bool(dir2)),
-                key=sort_mode_lambdas[sort_field1],
-                reverse=bool(dir1))
+    list_mode_mons=[]
+    for mon in table.keys():
+        if test_monster(table[mon],filters):
+            list_mode_mons.append(mon)
+    list_mode_max=len(list_mode_mons)
 
-MAX_SEARCH=50
+    list_mode_mons=\
+        sorted(\
+            sorted(\
+                list_mode_mons,
+                key=sort_mode_lambdas[sort_field2],
+                reverse=bool(dir2)),
+            key=sort_mode_lambdas[sort_field1],
+            reverse=bool(dir1))
+
+MAX_SEARCH=40
 
 def show_ver_format(search_win):
+    x1=50
+    x2=60
     out_mode=""
-    if mode==LIST or mode==FILTER:
-        out_mode="Format:list"
+    if mode==LIST or mode==FILTERS:
+        out_mode="|Format:list"
     else:
         if format_length==0:
-            out_mode="Format:mini"
+            out_mode="|Format:mini"
         if format_length==1:
-            out_mode="Format:full"
+            out_mode="|Format:full"
         if format_length==2:
-            out_mode="Format:ext"
-    search_win.addstr(0,65,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+            out_mode="|Format:ext"
+    search_win.addstr(0,x2,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if ver_idx_temp!=-1:
-        search_win.addstr(0,55,"Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        search_win.addstr(1,49,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(0,x1,"|Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
-        search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode==LIST or mode==FILTER:
-            search_win.addstr(1,55,f"{list_mode_skip+list_mode_sel+1}/{list_mode_max}")
+        search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM]:
+            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}")
+
+            num_filters=0
+            last_filter=0
+            for x in range(len(filter_on)):
+                if filter_on[x] and filter_list[x]["short_name"]!="<any>":
+                    last_filter=x
+                    num_filters+=1
+            if num_filters==0:
+                search_win.addstr(1,x2,"|Filter:Ctrl+F")
+            if num_filters==1:
+                search_win.addstr(1,x2,"|Filter:"+filter_list[last_filter]["short_name"])
+            if num_filters>1:
+                search_win.addstr(1,x2,f"|Filters:{num_filters}")
 
 
-def show_ver_list(s,sel:int):
+def show_select_ver(s,sel:int):
     w1=15
     w2=35
     w3=10
@@ -216,10 +236,11 @@ def show_filters(s,sel:int):
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
+    s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w1+w2+w3+3}}|",c.color_pair(BK)|c.A_BOLD)
     s.refresh()
 
 
-def show_sort_list(s):
+def show_select_sort(s):
     w1=20
     w2=0
     w3=0
@@ -249,7 +270,7 @@ def show_sort_list(s):
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
     s.refresh()
 
-def show_res_list(s):
+def show_select_res(s):
     w1=20
     w2=0
     w3=0
@@ -273,7 +294,7 @@ def show_res_list(s):
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
     s.refresh()
-def show_param_list(s):
+def show_select_param(s):
     w1=30
     w2=0
     w3=0
@@ -369,6 +390,10 @@ def reset_sort():
     sort_mode2=0
     sort_dir1=0
     sort_dir2=0
+
+def reset_filters():
+    global filter_on
+    filter_on=[False]*len(filter_on)
     
 
 def read_monsters(file):
@@ -518,7 +543,7 @@ def show_not_found_msg(card_win,mon_name):
     card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
     card_win.refresh()
 
-def show_search_wnd(search_win,results,mon_name):
+def show_search_upper(search_win,results,mon_name):
     global format_length
     global in_str,not_found_after_reload
     global sel,skip
@@ -540,7 +565,7 @@ def show_search_wnd(search_win,results,mon_name):
     search_win.refresh()
 
 
-def show_list_wnd(search_win,results,mon_name):
+def show_list_upper(search_win,results,mon_name):
     global format_length
     global in_str,not_found_after_reload
     global sel,skip
@@ -554,9 +579,9 @@ def show_list_wnd(search_win,results,mon_name):
 
     search_win.erase()
 
-    search_win.addstr(0,0,f"Sort1 (Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1 (Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,0,f"Sort1(Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1(Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if sort_mode1!=0:
-        search_win.addstr(1,0,f"Sort2 (Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2 (Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,0,f"Sort2(Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2(Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(1,0,f"Tab: Switch to search mode",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
@@ -564,7 +589,7 @@ def show_list_wnd(search_win,results,mon_name):
     disable_cursor()
     search_win.refresh()
 
-def show_card_header_wnd(search_win,results,mon_name):
+def show_card_upper(search_win,results,mon_name):
     global format_length
     global in_str,not_found_after_reload
     global sel,skip
@@ -605,11 +630,11 @@ def show_list(card_win,search_win,results):
             if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
                 card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(INV_CARD))
     card_win.refresh()
-    show_list_wnd(search_win,results,selected_mon_name)
+    show_list_upper(search_win,results,selected_mon_name)
 
 
 
-def show_card_wnd(card_win,results,mon_name):
+def show_card(card_win,results,mon_name):
     global format_length
     global in_str,not_found_after_reload
     global sel,skip
@@ -920,6 +945,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             ver_idx=0
         read_monsters(ver_list[ver_idx])
         reset_sort()
+        reset_filters()
         if mon_name!="":
             reloaded=True
     if key=="[":
@@ -928,6 +954,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             ver_idx=len(ver_list)-1
         read_monsters(ver_list[ver_idx])
         reset_sort()
+        reset_filters()
         if mon_name!="":
             reloaded=True
     if key=="^O":
@@ -937,7 +964,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     if key=="^I":
         mode=LIST
         format_length=2
-        prepare_list(0,0,0,0,[])
+        prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
 
@@ -961,7 +988,8 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
         ver_idx=ver_selector_idx
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,[])
+        reset_filters()
+        prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -988,17 +1016,17 @@ def react_to_key_select_sort(ch,key,alt_ch,mon_name):
             sort_mode1=sort_mode_sel
         if mode==SELECT_SORT2:
             sort_mode2=sort_mode_sel
-        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
         mode=LIST
     return 0
 
-def react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name):
+def react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name):
     global res_mode_sel
     global sort_mode1,sort_mode2
     global mode
     global reloaded
     if ch==27:
-        mode=FILTER
+        mode=FILTERS
         show_list(card_win,search_win,[])
     if key=="KEY_UP" :
         if res_mode_sel>0:
@@ -1007,18 +1035,19 @@ def react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name):
         if res_mode_sel+1<len(res_mode_list):
             res_mode_sel+=1
     if key=="^M" or key=="^J":
-        filter_list[filter_mode_sel]["fields"][0]["value"]=list(resists_conv.keys())[res_mode_sel]
+        filter_list[filter_mode_sel]=make_conveyed_filter("Conveyed",list(resists_conv.keys())[res_mode_sel])
         filter_on[filter_mode_sel]=True
-        mode=FILTER
+        mode=FILTERS
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
         show_list(card_win,search_win,[])
     return 0
-def react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name):
+def react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name):
     global param_mode_sel
     global sort_mode1,sort_mode2
     global mode
     global reloaded
     if ch==27:
-        mode=FILTER
+        mode=FILTERS
         show_list(card_win,search_win,[])
     if key=="KEY_UP" :
         if param_mode_sel>0:
@@ -1028,13 +1057,18 @@ def react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name):
             param_mode_sel+=1
     if key=="^M" or key=="^J":
         param_caption=list(filters_mode_param_str.keys())[param_mode_sel]
-        filter_list[filter_mode_sel]["fields"][0]["field"]=filters_mode_param_str[param_caption]
+        filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],0,0)
         filter_on[filter_mode_sel]=True
         show_list(card_win,search_win,[])
         show_filters(card_win,filter_mode_sel)
+        if param_mode_sel==0:#(none), we don't have to enter min and max
+            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+            show_list(card_win,search_win,[])
+            mode=FILTERS
+            return 0
         min=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1,6).strip()
         if min=="":
-            mode=FILTER
+            mode=FILTERS
             return 0
         try:
             int(min)
@@ -1042,13 +1076,13 @@ def react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name):
             utils.show_message("Only integers allowed!")
             show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
-            mode=FILTER
+            mode=FILTERS
             return 0
-        filter_list[filter_mode_sel]["fields"][0]["min"]=int(min)
+        filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],int(min),0)
         show_filters(card_win,filter_mode_sel)
         max=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1+3+len(min),6).strip()
         if max=="":
-            mode=FILTER
+            mode=FILTERS
             return 0
         try:
             int(max)
@@ -1056,16 +1090,18 @@ def react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name):
             utils.show_message("Only integers allowed!")
             show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
-            mode=FILTER
+            mode=FILTERS
             return 0
-        filter_list[filter_mode_sel]["fields"][0]["max"]=int(max)
+        filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],int(min),int(max))
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        show_list(card_win,search_win,[])
         show_filters(card_win,filter_mode_sel)
 
-        mode=FILTER
+        mode=FILTERS
     return 0
 
 
-def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
+def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global filter_mode_sel
     global filter_on
     global mode
@@ -1083,6 +1119,8 @@ def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
             filter_mode_sel+=1
     if key==" ":
         filter_on[filter_mode_sel]=not filter_on[filter_mode_sel]
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        show_list(card_win,search_win,[])
     if key=="^M" or key=="^J":
         #f=make_name_filter("test","z")
         #prepare_list(0,0,0,0,[f])
@@ -1091,29 +1129,23 @@ def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
         if f["field"]=="symbol":
             new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,2)
             if len(new)>0:
-                f["value"]=new[0]
+                filter_list[filter_mode_sel]=make_letter_filter("Letter",new[0])
                 filter_on[filter_mode_sel]=True
+                prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+                show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="name":
             new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,20)
             if len(new)>0:
-                f["value"]=new.strip()
+                filter_list[filter_mode_sel]=make_name_filter("Name",new.strip())
                 filter_on[filter_mode_sel]=True
+                prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+                show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="prob":
             mode=SELECT_RES
         if "min" in f:#param filter
             mode=SELECT_PARAM
-    if key=="^A":
-        active_filters=[]
-        for x in range(len(filter_list)):
-            if filter_on[x]:
-                active_filters.append(filter_list[x])
-        reset_sort()
-        list_mode_sel=0
-        list_mode_skip=0
-        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters)
-        mode=LIST
     return 0
 
 
@@ -1132,7 +1164,8 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             ver_idx=0
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,[])
+        reset_filters()
+        prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -1143,7 +1176,8 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             ver_idx=len(ver_list)-1
         read_monsters(ver_list[ver_idx])
         reset_sort()
-        prepare_list(0,0,0,0,[])
+        reset_filters()
+        prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
         if mon_name!="":
@@ -1194,7 +1228,7 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
         sort_mode_sel=sort_mode1
         mode=SELECT_SORT1
     if key=="^F":
-        mode=FILTER
+        mode=FILTERS
         #f=make_letter_filter("test","b")
     if key=="S":
         if sort_mode1!=0:
@@ -1205,14 +1239,14 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
             sort_dir1=1
         else:
             sort_dir1=0
-        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
     if key=="D":
         if sort_mode1!=0:
             if sort_dir2==0:
                 sort_dir2=1
             else:
                 sort_dir2=0
-            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
+            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
  
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
@@ -1239,7 +1273,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         if ver_idx_temp>=len(ver_list):
             ver_idx_temp=0
         read_monsters(ver_list[ver_idx_temp])
-        reset_sort()
+        #reset_sort()
         if mon_name!="":
             reloaded=True
     if key=="[":
@@ -1249,7 +1283,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         if ver_idx_temp<0:
             ver_idx_temp=len(ver_list)-1
         read_monsters(ver_list[ver_idx_temp])
-        reset_sort()
+        #reset_sort()
         if mon_name!="":
             reloaded=True
     if key=="KEY_F(10)" or key=="^Q":
@@ -1338,13 +1372,13 @@ def main(s):
         results=[]
         not_found_after_reload=False
         if mode==SELECT_RES:
-            show_res_list(card_win)
+            show_select_res(card_win)
         if mode==SELECT_PARAM:
-            show_param_list(card_win)
-        if mode==FILTER:
+            show_select_param(card_win)
+        if mode==FILTERS:
             show_filters(card_win,filter_mode_sel)
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
-            show_sort_list(card_win)
+            show_select_sort(card_win)
         if mode==LIST:
             show_list(card_win,search_win,results)
 
@@ -1364,10 +1398,10 @@ def main(s):
                     mon_name=results[sel+skip]
                 else:
                     mon_name=""
-            show_search_wnd(search_win,results,mon_name)
-            show_card_wnd(card_win,results,mon_name)
+            show_search_upper(search_win,results,mon_name)
+            show_card(card_win,results,mon_name)
         if mode==SHOW_ALL:
-            show_card_wnd(card_win,table,mon_name)
+            show_card(card_win,table,mon_name)
             time.sleep(0.05)
             mon_name=list(table.keys())[current_mon]
             current_mon+=1
@@ -1376,10 +1410,10 @@ def main(s):
             continue
         if mode==CARD:
             mon_name=list_mode_mons[list_mode_sel+list_mode_skip]
-            show_card_header_wnd(search_win,results,mon_name)
-            show_card_wnd(card_win,table,mon_name)
+            show_card_upper(search_win,results,mon_name)
+            show_card(card_win,table,mon_name)
         if mode==SELECT_VER:
-            show_ver_list(card_win,ver_selector_idx)
+            show_select_ver(card_win,ver_selector_idx)
             card_win.refresh()
         ch=search_win.getch()
         key=c.keyname(ch).decode("utf-8")        
@@ -1410,18 +1444,18 @@ def main(s):
             if res!=0:
                 break
             continue
-        if mode==FILTER:
-            res=react_to_key_filters(card_win,ch,key,alt_ch,mon_name)
+        if mode==FILTERS:
+            res=react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue
         if mode==SELECT_RES:
-            res=react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name)
+            res=react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue
         if mode==SELECT_PARAM:
-            res=react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name)
+            res=react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue
@@ -1457,5 +1491,6 @@ if __name__=="__main__":
         pass
     read_monsters(ver_list[ver_idx])
     reset_sort()
+    reset_filters()
     os.environ.setdefault('ESCDELAY', '25')
     c.wrapper(main)
