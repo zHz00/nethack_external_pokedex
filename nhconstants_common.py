@@ -157,3 +157,19 @@ sort_mode_str=[
     "Size",
 ]
 
+filters_mode_param_str={
+"(none)":"",
+
+"Difficulty":"difficulty",
+"Level":"level",
+"Experience":"exp",
+"Move Speed":"speed",
+"AC":"ac",
+"MR":"mr",
+"Alignment":"alignment",
+"Weight":"weight",
+"Nutrition":"nutrition",
+
+"Insight required":"insight",
+"Light radius":"light_radius",
+}

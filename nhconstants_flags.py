@@ -71,7 +71,8 @@ resistes_mon_hates={
 "M4_VULNERABLE_ACID":"Acid",#+
 }
 
-resists_conv={'MR_FIRE':'Fire',
+resists_conv={'':'(none)',
+'MR_FIRE':'Fire',
 'MR_COLD':'Cold',
 'MR_SLEEP':'Sleep',
 'MR_DISINT':'Disint.',

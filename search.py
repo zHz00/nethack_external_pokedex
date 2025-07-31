@@ -38,6 +38,7 @@ SELECT_SORT1=6
 SELECT_SORT2=7
 FILTER=8
 SELECT_RES=9
+SELECT_PARAM=10
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -78,6 +79,9 @@ filters_edits_offset_y=0
 
 res_mode_sel=0
 res_mode_list={y:x for x,y in resists_conv.items()}
+
+param_mode_sel=0
+param_mode_list={y:x for x,y in filters_mode_param_str.items()}
 
 sort_mode_lambdas=[
     lambda x:0,#"(none)",
@@ -121,7 +125,7 @@ MAX_SEARCH=50
 
 def show_ver_format(search_win):
     out_mode=""
-    if mode==LIST:
+    if mode==LIST or mode==FILTER:
         out_mode="Format:list"
     else:
         if format_length==0:
@@ -136,7 +140,7 @@ def show_ver_format(search_win):
         search_win.addstr(1,49,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,55,"Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode==LIST:
+        if mode==LIST or mode==FILTER:
             search_win.addstr(1,55,f"{list_mode_skip+list_mode_sel+1}/{list_mode_max}")
 
 
@@ -195,14 +199,17 @@ def show_filters(s,sel:int):
         name=filter["name"]
         value="<any>"
         if ("value" in field) and len(str(field["value"]))>0 and field["value"]!="*":
-            if field["field"]=="resconv":
+            if field["field"]=="prob":
                 value=resists_conv[field["value"]]
             else:
                 value=str(field["value"])
                 if field["value"]==" ":
                     value="["+value+"]"
         if "min" in field:
-            value=f"{field['field']}={field['min']}...{field['max']}"
+            if field['field']=="":
+                value="<any>"
+            else:
+                value=f"{param_mode_list[field['field']]}={field['min']}...{field['max']}"
         
         info=f"|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
         if y==sel:
@@ -266,6 +273,31 @@ def show_res_list(s):
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
     s.refresh()
+def show_param_list(s):
+    w1=30
+    w2=0
+    w3=0
+    cap1="Numeric parameters"
+    cap2=""
+    cap3=""
+    l=len(filters_mode_param_str)
+    h=c.LINES-2-1#one for header
+    offset_y=0
+    if l>=h:
+        offset_y=0
+    else:
+        offset_y=int((h-l)/2)
+    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    header=f"|{cap1:{w1}}|"
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    for y,r in enumerate(filters_mode_param_str.keys()):
+        info=f"|{r:{w1}}|"
+        if y==param_mode_sel:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
+        else:
+            s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
+    s.refresh()
+
 
 def make_ver_list():
     global ver_list,ver_idx
@@ -967,6 +999,7 @@ def react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name):
     global reloaded
     if ch==27:
         mode=FILTER
+        show_list(card_win,search_win,[])
     if key=="KEY_UP" :
         if res_mode_sel>0:
             res_mode_sel-=1
@@ -975,9 +1008,62 @@ def react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name):
             res_mode_sel+=1
     if key=="^M" or key=="^J":
         filter_list[filter_mode_sel]["fields"][0]["value"]=list(resists_conv.keys())[res_mode_sel]
+        filter_on[filter_mode_sel]=True
+        mode=FILTER
         show_list(card_win,search_win,[])
+    return 0
+def react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name):
+    global param_mode_sel
+    global sort_mode1,sort_mode2
+    global mode
+    global reloaded
+    if ch==27:
+        mode=FILTER
+        show_list(card_win,search_win,[])
+    if key=="KEY_UP" :
+        if param_mode_sel>0:
+            param_mode_sel-=1
+    if key=="KEY_DOWN" :
+        if param_mode_sel+1<len(filters_mode_param_str):
+            param_mode_sel+=1
+    if key=="^M" or key=="^J":
+        param_caption=list(filters_mode_param_str.keys())[param_mode_sel]
+        filter_list[filter_mode_sel]["fields"][0]["field"]=filters_mode_param_str[param_caption]
+        filter_on[filter_mode_sel]=True
+        show_list(card_win,search_win,[])
+        show_filters(card_win,filter_mode_sel)
+        min=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1,6).strip()
+        if min=="":
+            mode=FILTER
+            return 0
+        try:
+            int(min)
+        except:
+            utils.show_message("Only integers allowed!")
+            show_list(card_win,search_win,[])
+            show_filters(card_win,filter_mode_sel)
+            mode=FILTER
+            return 0
+        filter_list[filter_mode_sel]["fields"][0]["min"]=int(min)
+        show_filters(card_win,filter_mode_sel)
+        max=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1+3+len(min),6).strip()
+        if max=="":
+            mode=FILTER
+            return 0
+        try:
+            int(max)
+        except:
+            utils.show_message("Only integers allowed!")
+            show_list(card_win,search_win,[])
+            show_filters(card_win,filter_mode_sel)
+            mode=FILTER
+            return 0
+        filter_list[filter_mode_sel]["fields"][0]["max"]=int(max)
+        show_filters(card_win,filter_mode_sel)
+
         mode=FILTER
     return 0
+
 
 def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
     global filter_mode_sel
@@ -985,6 +1071,7 @@ def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
     global mode
     global reloaded
     global filter_list
+    global list_mode_sel,list_mode_skip
     f=filter_list[filter_mode_sel]["fields"][0]
     if ch==27:
         mode=LIST
@@ -1013,14 +1100,18 @@ def react_to_key_filters(card_win,ch,key,alt_ch,mon_name):
                 f["value"]=new.strip()
                 filter_on[filter_mode_sel]=True
             show_filters(card_win,filter_mode_sel)
-        if f["field"]=="resconv":
+        if f["field"]=="prob":
             mode=SELECT_RES
+        if "min" in f:#param filter
+            mode=SELECT_PARAM
     if key=="^A":
         active_filters=[]
         for x in range(len(filter_list)):
             if filter_on[x]:
                 active_filters.append(filter_list[x])
         reset_sort()
+        list_mode_sel=0
+        list_mode_skip=0
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters)
         mode=LIST
     return 0
@@ -1248,6 +1339,8 @@ def main(s):
         not_found_after_reload=False
         if mode==SELECT_RES:
             show_res_list(card_win)
+        if mode==SELECT_PARAM:
+            show_param_list(card_win)
         if mode==FILTER:
             show_filters(card_win,filter_mode_sel)
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
@@ -1324,6 +1417,11 @@ def main(s):
             continue
         if mode==SELECT_RES:
             res=react_to_key_res(card_win,search_win,ch,key,alt_ch,mon_name)
+            if res!=0:
+                break
+            continue
+        if mode==SELECT_PARAM:
+            res=react_to_key_param(card_win,search_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue
