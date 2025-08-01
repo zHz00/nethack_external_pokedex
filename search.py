@@ -327,6 +327,7 @@ def make_ver_list():
     if len(ver_list)==0:
         print("No data files found. Exiting...")
         exit(1)
+    ver_list=sorted(ver_list)
     ver_idx=0
     ver_name=[""]*len(ver_list)
     ver_n=[0]*len(ver_list)
@@ -1025,6 +1026,7 @@ def react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name):
     global sort_mode1,sort_mode2
     global mode
     global reloaded
+    global list_mode_sel,list_mode_skip
     if ch==27:
         mode=FILTERS
         show_list(card_win,search_win,[])
@@ -1039,6 +1041,8 @@ def react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name):
         filter_on[filter_mode_sel]=True
         mode=FILTERS
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        list_mode_sel=0
+        list_mode_skip=0
         show_list(card_win,search_win,[])
     return 0
 def react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name):
@@ -1046,6 +1050,7 @@ def react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name):
     global sort_mode1,sort_mode2
     global mode
     global reloaded
+    global list_mode_sel,list_mode_skip
     if ch==27:
         mode=FILTERS
         show_list(card_win,search_win,[])
@@ -1063,6 +1068,8 @@ def react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name):
         show_filters(card_win,filter_mode_sel)
         if param_mode_sel==0:#(none), we don't have to enter min and max
             prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+            list_mode_sel=0
+            list_mode_skip=0
             show_list(card_win,search_win,[])
             mode=FILTERS
             return 0
@@ -1094,6 +1101,8 @@ def react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name):
             return 0
         filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],int(min),int(max))
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        list_mode_sel=0
+        list_mode_skip=0
         show_list(card_win,search_win,[])
         show_filters(card_win,filter_mode_sel)
 
@@ -1120,6 +1129,8 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     if key==" ":
         filter_on[filter_mode_sel]=not filter_on[filter_mode_sel]
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        list_mode_sel=0
+        list_mode_skip=0
         show_list(card_win,search_win,[])
     if key=="^M" or key=="^J":
         #f=make_name_filter("test","z")
@@ -1132,6 +1143,8 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
                 filter_list[filter_mode_sel]=make_letter_filter("Letter",new[0])
                 filter_on[filter_mode_sel]=True
                 prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+                list_mode_sel=0
+                list_mode_skip=0
                 show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="name":
@@ -1140,6 +1153,8 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
                 filter_list[filter_mode_sel]=make_name_filter("Name",new.strip())
                 filter_on[filter_mode_sel]=True
                 prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+                list_mode_sel=0
+                list_mode_skip=0
                 show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="prob":
