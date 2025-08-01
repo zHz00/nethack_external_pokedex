@@ -511,7 +511,11 @@ def out_symbol(s,mon):
         if int(mon[rows["color"]])<=8 and int(mon[rows["color"]])>0:
             s.addstr(monsym[mon[rows["symbol"]]],c.color_pair(color+1))
 
-
+def show_hint(search_win):
+    search_win.addstr(0,3,"<- Type here")
+    search_win.addstr(1,0,"In this line you'll see search results")
+    search_win.addstr(0,SCR_WIDTH-4,"<-+")
+    search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |")
 
 def show_hello_msg(card_win):
     hello_msg=["=== Nethack external Pokedex ===",
@@ -521,12 +525,12 @@ def show_hello_msg(card_win):
     #"UP, DOWN: Change output format",
     #"ESC: Clear search; F10: Exit"
 
-    block1=["Ctrl+O, [, ]: Choose variant",
-            "Tab: Switch to List mode",
+    block1=["LEFT, RIGHT: Scroll results",
+            "ESC: Clear search",
+            "Tab: Switch to List mode"]
+    block2=["[, ], Ctrl+O: Choose variant",
+            "UP, DOWN: Change format",
             "F10, Ctrl+Q: Exit"]
-    block2=["UP, DOWN: Change format",
-            "LEFT, RIGHT: Scroll results",
-            "ESC: Clear search"]
     col1=10
     col2=45
     card_win.chgat(-1,c.color_pair(BK_CARD))
@@ -535,6 +539,15 @@ def show_hello_msg(card_win):
     for i in range(len(block1)):
         card_win.addstr(i+2,col1,block1[i])
         card_win.addstr(i+2,col2,block2[i])
+
+    card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    card_win.addstr(2,0,"+---------",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+
+    card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    card_win.addstr(2,SCR_WIDTH-7,"---+ |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    card_win.addstr(3,SCR_WIDTH-12,"----------+",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
     card_win.refresh()
 
 def show_not_found_msg(card_win,mon_name):
@@ -1414,6 +1427,9 @@ def main(s):
                 else:
                     mon_name=""
             show_search_upper(search_win,results,mon_name)
+            if in_str=="":
+                show_hint(search_win)
+                move_to_in(search_win,in_str)
             show_card(card_win,results,mon_name)
         if mode==SHOW_ALL:
             show_card(card_win,table,mon_name)
