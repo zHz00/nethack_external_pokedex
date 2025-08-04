@@ -148,7 +148,7 @@ def show_ver_format(search_win):
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
         if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM]:
-            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}")
+            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
             last_filter=0
@@ -157,11 +157,11 @@ def show_ver_format(search_win):
                     last_filter=x
                     num_filters+=1
             if num_filters==0:
-                search_win.addstr(1,x2,"|Filter:Ctrl+F")
+                search_win.addstr(1,x2,"|Filter:Ctrl+F",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters==1:
-                search_win.addstr(1,x2,"|Filter:"+filter_list[last_filter]["short_name"])
+                search_win.addstr(1,x2,"|Filter:"+filter_list[last_filter]["short_name"],c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters>1:
-                search_win.addstr(1,x2,f"|Filters:{num_filters}")
+                search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
 
 def show_select_ver(s,sel:int):
@@ -512,10 +512,10 @@ def out_symbol(s,mon):
             s.addstr(monsym[mon[rows["symbol"]]],c.color_pair(color+1))
 
 def show_hint(search_win):
-    search_win.addstr(0,3,"<- Type here")
-    search_win.addstr(1,0,"In this line you'll see search results")
-    search_win.addstr(0,SCR_WIDTH-4,"<-+")
-    search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |")
+    search_win.addstr(0,3,"<- Type here",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(1,0,"In this line you'll see search results",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,SCR_WIDTH-4,"<-+",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
 def show_hello_msg(card_win):
     hello_msg=["=== Nethack external Pokedex ===",
@@ -540,14 +540,16 @@ def show_hello_msg(card_win):
         card_win.addstr(i+2,col1,block1[i])
         card_win.addstr(i+2,col2,block2[i])
 
-    card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-    card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-    card_win.addstr(2,0,"+---------",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+    if len(in_str)==0:
 
-    card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-    card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-    card_win.addstr(2,SCR_WIDTH-7,"---+ |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-    card_win.addstr(3,SCR_WIDTH-12,"----------+",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(2,0,"+---------",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+
+        card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(2,SCR_WIDTH-7,"---+ |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(3,SCR_WIDTH-12,"----------+",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
     card_win.refresh()
 
 def show_not_found_msg(card_win,mon_name):
@@ -820,7 +822,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         mode=SHOW_ALL
         current_mon=0
         return 0
-    if key=="KEY_F(1)":
+    if key=="KEY_F(3)":
         os.makedirs("reports",exist_ok=True)
         s.erase()
         file_suffixes=["short","long","ext"]
@@ -981,6 +983,18 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
+    if key=="KEY_F(1)":
+        utils.show_message("Quick help:\n\
+\n\
+_Ctrl+O:_        Select NetHack variant to search\n\
+_[, ]:_          Switch to next NetHack variant\n\
+_Left, Right:_   Scroll through search results\n\
+_Esc:_           Clear search line\n\
+_Up:_            Show less information\n\
+_Down:_          Show more information\n\
+_Tab:_           Switch to **List** mode\n\
+_Ctrl+Q or F10:_ Exit\n\
+_1...6:_         Change colors\n")
 
     return 0
 
@@ -1279,6 +1293,24 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
+    if key=="KEY_F(1)":
+        utils.show_message("Quick help:\n\
+\n\
+_Tab:_           Switch to **Search** mode\n\
+_Ctrl+O:_        Select NetHack variant to view\n\
+_[, ]:_          Switch to next NetHack variant\n\
+_Up, Down:_      Scroll through list\n\
+_PgUp, PgDn:_    Scorll, but faster\n\
+_Home, End:_     Scroll with speed of light\n\
+_Enter:_         View selected monster's card\n\
+_Ctrl+S:_        Select primary sorting field\n\
+_Ctrl+D:_        Change primary sorting direction\n\
+_Shift+S:_       Select secondary sorting field\n\
+_Shift+D:_       Change secondary sorting direction\n\
+(You must use primary field first)\n\
+\n\
+_Ctrl+F:_        Show filters window\n\
+_Ctrl+Q or F10:_ Exit\n")
     return 0
 
 def react_to_key_card(ch,key,alt_ch,mon_name):
@@ -1321,6 +1353,17 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         ver_idx_temp=-1
         read_monsters(ver_list[ver_idx])
         mode=LIST
+    if key=="KEY_F(1)":
+        utils.show_message("Quick help:\n\
+\n\
+_Esc:_           Return to lilst\n\
+_[, ]:_          Switch variant\n\
+(Variant will be reverted when you press Esc)\n\
+\n\
+_Ctrl+O:_        Nothing. Use square brackets!\n\
+_Up:_            Show less information\n\
+_Down:_          Show more information\n\
+_F10 or Ctrl+Q:_ Exit")
 
     return 0
 in_str=""
@@ -1371,6 +1414,7 @@ def main(s):
     c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
     #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
     #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
+    utils.init_pairs()
     if bold==1:
         for x in range(1,9):
             c.init_pair(x,x-1,c.COLOR_BLACK)
