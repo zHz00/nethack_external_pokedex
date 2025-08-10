@@ -3,6 +3,7 @@ import curses as c
 import os
 import datetime
 import time
+import json
 
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
@@ -39,6 +40,7 @@ SELECT_SORT2=7
 FILTERS=8
 SELECT_RES=9
 SELECT_PARAM=10
+EXPLANATION=11
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -54,6 +56,8 @@ max_len_con=0
 
 table=dict()
 table_temp=[]
+explanation_at=dict()
+explanation_ad=dict()
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
@@ -323,7 +327,11 @@ def show_select_param(s):
 def make_ver_list():
     global ver_list,ver_idx
     global ver_name,ver_n
-    ver_list=os.listdir(data_folder)
+    file_list=os.listdir(data_folder)
+    ver_list=[]
+    for name in file_list:
+        if name.endswith(".csv"):
+            ver_list.append(name)
     if len(ver_list)==0:
         print("No data files found. Exiting...")
         exit(1)
@@ -401,6 +409,7 @@ def read_monsters(file):
     global table,table_temp
     global disable_sorting
     global wingy
+    global explanation_at,explanation_ad
     wingy=False
     table=dict()
     table_temp=[]
@@ -428,7 +437,52 @@ def read_monsters(file):
             table_insert(table,mon_copy)
         if "M1_WINGS" in mon[rows["flags1"]]:
             wingy=True
+    base_name=file.replace(".csv","")
+    try:
+        at_file=open(data_folder+base_name+".at.json","r",encoding="utf-8")
+        explanation_at=json.load(at_file,)
+        at_file.close()
+    except FileNotFoundError as e:
+        explanation_at=dict()
+        for mon_name in table.keys():
+            mon=table[mon_name]
+            for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
+                if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
+                    continue
+                attack=mon[attack_n]
+                attack=attack[5:]
+                attack=attack[:-1]
+                attack=attack.split(",")
+                at=attack[0]
+                #ad=mon[attack_n][1]
+                if at not in explanation_at:
+                    explanation_at[at]="DUMMY"
+        at_file=open(data_folder+base_name+".at.json","w",encoding="utf-8")
+        json.dump(explanation_at,at_file,indent=1)
+        at_file.close()
 
+    try:
+        ad_file=open(data_folder+base_name+".ad.json","r")
+        explanation_ad=json.load(ad_file)
+        ad_file.close()    
+    except FileNotFoundError as e:
+        explanation_ad=dict()
+        for mon_name in table.keys():
+            mon=table[mon_name]
+            for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
+                if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
+                    continue
+                attack=mon[attack_n]
+                attack=attack[5:]
+                attack=attack[:-1]
+                attack=attack.split(",")
+                ad=attack[1]
+                #ad=mon[attack_n][1]
+                if ad not in explanation_ad:
+                    explanation_ad[ad]="DUMMY"
+        ad_file=open(data_folder+base_name+".ad.json","w",encoding="utf-8")
+        json.dump(explanation_ad,ad_file,indent=1)
+        ad_file.close()
 BK=20
 INV=21
 BK_CARD=22
@@ -648,7 +702,57 @@ def show_list(card_win,search_win,results):
     card_win.refresh()
     show_list_upper(search_win,results,selected_mon_name)
 
+def show_explanation(card_win,results,mon_name):
+    card_win.erase()
+    attacks=card_explanation(table[mon_name],explanation_at,explanation_ad)
+    card="".join(attacks).split("\n")
+    cur_pair=BK_CARD
+    line_n=0
+    for i in range(len(card)):
+        line=card[i]
+        if len(line)==0:
+            continue
+        color=line[0]
+        remainder=False
+        if i!=0 and (card[i-1].strip()[-1])==",":
+            remainder=True
+        if color=="#" or color=="$":
+            line=line[1:]
 
+        if color=="#":
+            cur_pair=BK_CARD
+        if color=="$":
+            cur_pair=INV_CARD
+        if len(line.strip())==0:#only special character
+            continue
+        if remainder==False:
+            attrib=c.A_BOLD
+        else:
+            attrib=0
+        if len(line.strip())>SCR_WIDTH:
+            line=line[:SCR_WIDTH-1]+"!"
+        for i in range(len(line)):
+            pos=i
+            if line_n<c.LINES-2:
+                if line_n==c.LINES-3 and i>=c.COLS-1:
+                    break
+                if line[i]=="|":
+                    if cur_pair==BK_CARD:
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+                    else:
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+                else:
+                    card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+            if line[i]==":":
+                attrib=0
+            if line[i]=="|":
+                attrib=c.A_BOLD
+        line_n+=1
+            
+        #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
+        card_win.chgat(-1,c.color_pair(cur_pair))
+    card_win.refresh()
+    
 
 def show_card(card_win,results,mon_name):
     global format_length
@@ -983,6 +1087,8 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
+    if key=="^A":
+        mode=EXPLANATION
     if key=="KEY_F(1)":
         utils.show_message("Quick help:\n\
 \n\
@@ -1313,6 +1419,60 @@ _Ctrl+F:_        Show filters window\n\
 _Ctrl+Q or F10:_ Exit\n")
     return 0
 
+def react_to_key_explanation(ch,key,alt_ch,mon_name):
+    global format_length
+    global mode
+    global ver_idx
+    global ver_idx_temp
+    if key=="KEY_UP" :
+        format_length-=1
+        if format_length<=0:
+            format_length=0
+    if key=="KEY_DOWN" :
+        format_length+=1
+        if format_length>2:
+            format_length=2
+    if key=="]":
+        if ver_idx_temp==-1:
+            ver_idx_temp=ver_idx
+        ver_idx_temp+=1
+        if ver_idx_temp>=len(ver_list):
+            ver_idx_temp=0
+        read_monsters(ver_list[ver_idx_temp])
+        #reset_sort()
+        if mon_name!="":
+            reloaded=True
+    if key=="[":
+        if ver_idx_temp==-1:
+            ver_idx_temp=ver_idx
+        ver_idx_temp-=1
+        if ver_idx_temp<0:
+            ver_idx_temp=len(ver_list)-1
+        read_monsters(ver_list[ver_idx_temp])
+        #reset_sort()
+        if mon_name!="":
+            reloaded=True
+    if key=="KEY_F(10)" or key=="^Q":
+        save_settings()
+        return -1
+    if ch==27 or key=="BACKSPACE" or key=="^H":
+        ver_idx_temp=-1
+        read_monsters(ver_list[ver_idx])
+        mode=SEARCH
+    if key=="KEY_F(1)":
+        utils.show_message("Quick help:\n\
+\n\
+_Esc:_           Return to lilst\n\
+_[, ]:_          Switch variant\n\
+(Variant will be reverted when you press Esc)\n\
+\n\
+_Ctrl+O:_        Nothing. Use square brackets!\n\
+_Up:_            Show less information\n\
+_Down:_          Show more information\n\
+_F10 or Ctrl+Q:_ Exit")
+
+    return 0
+
 def react_to_key_card(ch,key,alt_ch,mon_name):
     global format_length
     global mode
@@ -1366,6 +1526,7 @@ _Down:_          Show more information\n\
 _F10 or Ctrl+Q:_ Exit")
 
     return 0
+
 in_str=""
 not_found_after_reload=False
 cur_color1=c.COLOR_GREEN
@@ -1443,6 +1604,8 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
+        if mode==EXPLANATION:
+            show_explanation(card_win,results,mon_name)
         if mode==SELECT_RES:
             show_select_res(card_win)
         if mode==SELECT_PARAM:
@@ -1543,7 +1706,12 @@ def main(s):
             res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
             if res!=0:
                 break
-            continue            
+            continue
+        if mode==EXPLANATION:
+            res=react_to_key_explanation(ch,key,alt_ch,mon_name)
+            if res!=0:
+                break
+            continue
 
 if __name__=="__main__":
     make_ver_list()

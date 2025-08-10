@@ -184,6 +184,91 @@ def card_gen(mon,format_length):
 
     return out_line
 
+def card_explanation(mon,at_e,ad_e):
+    global max_len_atk,max_len_res,max_len_con
+    out_line=["$"]
+    #Attacks
+    attacks=""
+    interrupted=0
+    for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
+        attack=mon[attack_n]
+        attack_s=""
+
+        if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
+            if attacks.endswith(", "):
+                attacks=attacks[:-2]
+            interrupted=1
+            break
+
+        attack=attack[5:]
+        attack=attack[:-1]
+        attack=attack.split(",")
+        for x in range(len(attack)):
+            attack[x]=attack[x].strip()
+        at_actual=at
+        ad_actual=ad
+        if attack[0] not in at_actual:
+            attack_s+="NOT FOUND AT:"+attack[0]+"\n"
+        else:
+            if attack[1] not in ad_actual:
+                attack_s+="NOT FOUND AD:"+attack[1]+"\n"
+            else:#normal flow
+                if(attack[2]=="0" and attack[3]=="0"):
+                    if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
+                        attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e; "#Oona special
+                    else:
+                        attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+"; "#0d0 is ignored
+                else:
+                    attack_s+=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+"; "
+
+        if len(attack)>8:#dNetHack
+            lev=0 if len(attack[4])==0 else int(attack[4])
+            off=0 if len(attack[5])==0 else int(attack[5])
+            poly=0 if len(attack[6])==0 else int(attack[6])
+            ins=0 if len(attack[7])==0 else int(attack[7])
+            san=0 if len(attack[8])==0 else int(attack[8])
+            ext=""
+            if lev>0:
+                ext+=f"Lv{lev}+, "
+            if off!=0:
+                ext+="Offhand, "
+            if poly!=0:
+                ext+="Polyself weap, "
+            if ins>0:
+                ext+=f"Insight>={ins}, "
+            if san<0:
+                ext+=f"Sanity<{-san}, "
+            if san>0:
+                ext+=f"Sanity>{san}, "
+            if len(ext)>0:
+                ext=ext[:-2]
+                ext="["+ext+"]"
+                attack_s=attack_s[:-2]
+                attack_s+=ext+", "
+        attack_e="\n#    "+at_actual[attack[0]]+":"+at_e[attack[0]]
+        if len(ad_actual[attack[1]])==0:
+            attack_e+="("+ad_e[attack[1]]+")"
+        else:
+            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[attack[1]]
+        attack_e=split_line2(attack_e,SCR_WIDTH)
+        attacks+="\n$"+attack_s+attack_e
+    
+    if attacks.endswith(", "):
+        attacks=attacks[:-2]
+    if len(attacks)>max_len_atk:
+        max_len_atk=len(attacks)
+    
+    attacks_list=attacks.split(",")
+    attacks_list_condensed=[]
+    cnt=0
+
+    attacks_list="Attacks:"+", ".join(attacks_list)+"\n"
+    #sl=split_line(attacks_list,SCR_WIDTH)
+    #sl2=split_line2(attacks_list,SCR_WIDTH)
+    out_line.append(attacks_list)
+
+    return out_line
+
 def card_atk(mon,format_length):
     global max_len_atk,max_len_res,max_len_con
     out_line=["$"]

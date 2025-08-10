@@ -1,0 +1,19 @@
+{
+ "AT_BITE": "Ordinary",
+ "AT_STNG": "Ordinary",
+ "AT_NONE": "Activates when you hit monster",
+ "AT_TUCH": "Ordinary",
+ "AT_GAZE": "Acitvates when you see monster (prevented by blindness)",
+ "AT_BREA": "Ray-type breath (prevented by reflection)",
+ "AT_BOOM": "3x3 explosion on death",
+ "AT_EXPL": "Explosion suicide attack",
+ "AT_CLAW": "Ordinary",
+ "AT_WEAP": "Damage from weapon added",
+ "AT_TENT": "Prevented by helmet 7/8 chance, by greased helmet 100% chance, 50% wear off",
+ "AT_ENGL": "You can't move and always hit",
+ "AT_MAGC": "Cast spell",
+ "AT_BUTT": "Ordinary",
+ "AT_KICK": "Ordinary",
+ "AT_HUGS": "You can't move",
+ "AT_SPIT": "Ranged only"
+}
