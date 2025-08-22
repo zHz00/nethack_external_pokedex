@@ -58,6 +58,29 @@ def split_line2(line:str,width:int)-> str:
     res_line+=cur_line
     return res_line
 
+def split_line3(line:str,width:int)-> str:
+    splitted=line.split(" ")
+    cur_line=""
+    res_line=""
+    for s in splitted:
+        if len(cur_line)==0:
+            cur_line=s
+            space_counter=0
+        else:
+            if len(cur_line+" "+s)>=width-1:
+                res_line+=cur_line+" \n^"
+                if s[0]==' ':
+                    cur_line=s[1:]
+                else:
+                    cur_line="    "+s
+                    space_counter=0
+
+            else:
+                cur_line+=" "+s
+        space_counter+=1
+    res_line+=cur_line
+    return res_line
+
 
 def card_basic_info(mon,format_length):
     #Difficulty
@@ -250,7 +273,12 @@ def card_explanation(mon,at_e,ad_e):
             attack_e+="("+ad_e[attack[1]]+")"
         else:
             attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[attack[1]]
-        attack_e=split_line2(attack_e,SCR_WIDTH)
+
+        attack_e_list=attack_e.split("\n")
+        for i in range(len(attack_e_list)):
+            attack_e_list[i]=split_line3(attack_e_list[i],SCR_WIDTH)
+        attack_e="\n".join(attack_e_list)
+        #attack_es=split_line3(attack_e,SCR_WIDTH)
         attacks+="\n$"+attack_s+attack_e
     
     if attacks.endswith(", "):
@@ -263,6 +291,7 @@ def card_explanation(mon,at_e,ad_e):
     cnt=0
 
     attacks_list="Attacks:"+", ".join(attacks_list)+"\n"
+    attacks_list=attacks_list.replace(",  ",", ")#double space after joining with ", " is very likely
     #sl=split_line(attacks_list,SCR_WIDTH)
     #sl2=split_line2(attacks_list,SCR_WIDTH)
     out_line.append(attacks_list)

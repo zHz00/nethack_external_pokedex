@@ -716,15 +716,17 @@ def show_explanation(card_win,results,mon_name):
         remainder=False
         if i!=0 and (card[i-1].strip()[-1])==",":
             remainder=True
-        if color=="#" or color=="$":
+        if color in ["#","$","^"]:
             line=line[1:]
 
-        if color=="#":
+        if color in ["#","^"]:
             cur_pair=BK_CARD
         if color=="$":
             cur_pair=INV_CARD
         if len(line.strip())==0:#only special character
             continue
+        if color=="^":
+            remainder=True
         if remainder==False:
             attrib=c.A_BOLD
         else:
@@ -982,6 +984,12 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
                         failed_current_monster=True
                         report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
                         report.write(ln[:test_len]+"\n===\n")
+                
+                test_e="".join(card_explanation(table[mon],explanation_at,explanation_ad))
+                test_e=test_e.split("\n")
+                if len(test_e)>c.LINES-2:
+                    report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
+                    report.write(ln[:test_len]+"\n===\n")
                     
                 if failed_current_monster==True:
                     failed_monsters+=1
