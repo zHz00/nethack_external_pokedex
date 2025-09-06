@@ -226,6 +226,8 @@ def card_explanation(mon,at_e,ad_e):
         attack=attack[5:]
         attack=attack[:-1]
         attack=attack.split(",")
+        attack[0]=attack[0].strip()
+        attack[1]=attack[1].strip()
         for x in range(len(attack)):
             attack[x]=attack[x].strip()
         at_actual=at
@@ -268,11 +270,11 @@ def card_explanation(mon,at_e,ad_e):
                 ext="["+ext+"]"
                 attack_s=attack_s[:-2]
                 attack_s+=ext+", "
-        attack_e="\n#    "+at_actual[attack[0]]+":"+at_e[attack[0]]
+        attack_e="\n#    "+at_actual[attack[0]]+":"+at_e[attack[0]]["explanation"]
         if len(ad_actual[attack[1]])==0:
-            attack_e+="("+ad_e[attack[1]]+")"
+            attack_e+="("+ad_e[attack[0]][attack[1]]["explanation"]+")"
         else:
-            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[attack[1]]
+            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[attack[0]][attack[1]]["explanation"]
 
         attack_e_list=attack_e.split("\n")
         for i in range(len(attack_e_list)):

@@ -1,0 +1,1149 @@
+{
+ "at": {
+  "AT_BITE": {
+   "type": "AT_BITE",
+   "caption": "Bite",
+   "caption_short": "Bite",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_BITE"
+  },
+  "AT_STNG": {
+   "type": "AT_STNG",
+   "caption": "Sting",
+   "caption_short": "Stng",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_STNG"
+  },
+  "AT_NONE": {
+   "type": "AT_NONE",
+   "caption": "Passive",
+   "caption_short": "Pasv",
+   "explanation": "Activates when you hit monster",
+   "ad_list_name": "AT_NONE"
+  },
+  "AT_TUCH": {
+   "type": "AT_TUCH",
+   "caption": "Touch",
+   "caption_short": "Tch",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_TUCH"
+  },
+  "AT_GAZE": {
+   "type": "AT_GAZE",
+   "caption": "Gaze",
+   "caption_short": "Gz",
+   "explanation": "Acitvates when you see monster (prevented by blindness)",
+   "ad_list_name": "AT_GAZE"
+  },
+  "AT_BREA": {
+   "type": "AT_BREA",
+   "caption": "Breath",
+   "caption_short": "Brth",
+   "explanation": "Ray-type breath (prevented by reflection)",
+   "ad_list_name": "AT_BREA"
+  },
+  "AT_BOOM": {
+   "type": "AT_BOOM",
+   "caption": "Explode",
+   "caption_short": "Xplode",
+   "explanation": "3x3 explosion on death",
+   "ad_list_name": "AT_BOOM"
+  },
+  "AT_EXPL": {
+   "type": "AT_EXPL",
+   "caption": "Explode",
+   "caption_short": "Xplode",
+   "explanation": "Explosion suicide attack",
+   "ad_list_name": "AT_EXPL"
+  },
+  "AT_CLAW": {
+   "type": "AT_CLAW",
+   "caption": "Claw",
+   "caption_short": "Claw",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_CLAW"
+  },
+  "AT_WEAP": {
+   "type": "AT_WEAP",
+   "caption": "Weapon",
+   "caption_short": "Weap",
+   "explanation": "Damage from weapon added",
+   "ad_list_name": "AT_WEAP"
+  },
+  "AT_TENT": {
+   "type": "AT_TENT",
+   "caption": "Suck",
+   "caption_short": "Suck",
+   "explanation": "Prevented by helmet 7/8 chance, by greased helmet 100% chance, 50% wear off",
+   "ad_list_name": "AT_TENT"
+  },
+  "AT_ENGL": {
+   "type": "AT_ENGL",
+   "caption": "Engulf",
+   "caption_short": "Englf",
+   "explanation": "You can't move and always hit",
+   "ad_list_name": "AT_ENGL"
+  },
+  "AT_MAGC": {
+   "type": "AT_MAGC",
+   "caption": "Spell",
+   "caption_short": "Spell",
+   "explanation": "Cast spell",
+   "ad_list_name": "AT_MAGC"
+  },
+  "AT_BUTT": {
+   "type": "AT_BUTT",
+   "caption": "Butt",
+   "caption_short": "Butt",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_BUTT"
+  },
+  "AT_KICK": {
+   "type": "AT_KICK",
+   "caption": "Kick",
+   "caption_short": "Kick",
+   "explanation": "Ordinary",
+   "ad_list_name": "AT_KICK"
+  },
+  "AT_HUGS": {
+   "type": "AT_HUGS",
+   "caption": "Hug",
+   "caption_short": "Hug",
+   "explanation": "You can't move",
+   "ad_list_name": "AT_HUGS"
+  },
+  "AT_SPIT": {
+   "type": "AT_SPIT",
+   "caption": "Spit",
+   "caption_short": "Spit",
+   "explanation": "Ranged only",
+   "ad_list_name": "AT_SPIT"
+  }
+ },
+ "ad": {
+  "AT_BITE": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SLEE": {
+    "type": "AD_SLEE",
+    "caption": "Sleep",
+    "caption_short": "Sleep",
+    "explanation": "You fall asleep if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRCO": {
+    "type": "AD_DRCO",
+    "caption": "Poison -Co",
+    "caption_short": "Poison -Co",
+    "explanation": "Drain Co if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRST": {
+    "type": "AD_DRST",
+    "caption": "Poison -St",
+    "caption_short": "Poison -St",
+    "explanation": "Drain St if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ELEC": {
+    "type": "AD_ELEC",
+    "caption": "Shock",
+    "caption_short": "Shock",
+    "explanation": "Additional shock damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PLYS": {
+    "type": "AD_PLYS",
+    "caption": "Paralyze",
+    "caption_short": "Prlz",
+    "explanation": "You can't act or move",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_RUST": {
+    "type": "AD_RUST",
+    "caption": "Rust",
+    "caption_short": "Rust",
+    "explanation": "Only worn and wielded metallic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DCAY": {
+    "type": "AD_DCAY",
+    "caption": "Decay organics",
+    "caption_short": "Decay organics",
+    "explanation": "Only worn and wielded organic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CORR": {
+    "type": "AD_CORR",
+    "caption": "Corrode",
+    "caption_short": "Corrode",
+    "explanation": "Only worn and wielded metallic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRLI": {
+    "type": "AD_DRLI",
+    "caption": "Drain life",
+    "caption_short": "-Lv",
+    "explanation": "You lose level if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_WERE": {
+    "type": "AD_WERE",
+    "caption": "Lycantropy",
+    "caption_short": "Lycantropy",
+    "explanation": "You will change form time to time. Heal by prayer or spring of wolfsbane",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SSEX": {
+    "type": "AD_SSEX",
+    "caption": "Seduce",
+    "caption_short": "Seduce",
+    "explanation": "Demon will disrobe you and if he/she succeed, you have sex. Chance of positive effect is x/(In+Ch), where x is [1...35]",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_STNG": {
+   "AD_DRST": {
+    "type": "AD_DRST",
+    "caption": "Poison -St",
+    "caption_short": "Poison -St",
+    "explanation": "Drain St if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_LEGS": {
+    "type": "AD_LEGS",
+    "caption": "Legs",
+    "caption_short": "Legs",
+    "explanation": "You legs became wounded. Heal by potion of speed!",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRLI": {
+    "type": "AD_DRLI",
+    "caption": "Drain life",
+    "caption_short": "-Lv",
+    "explanation": "You lose level if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DISE": {
+    "type": "AD_DISE",
+    "caption": "Disease",
+    "caption_short": "Disease",
+    "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_NONE": {
+   "AD_ACID": {
+    "type": "AD_ACID",
+    "caption": "Acid",
+    "caption_short": "Acid",
+    "explanation": "Additional acid damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PLYS": {
+    "type": "AD_PLYS",
+    "caption": "Paralyze",
+    "caption_short": "Prlz",
+    "explanation": "You can't act or move",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STON": {
+    "type": "AD_STON",
+    "caption": "Petrify",
+    "caption_short": "Petrify",
+    "explanation": "Delayed petrification",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ELEC": {
+    "type": "AD_ELEC",
+    "caption": "Shock",
+    "caption_short": "Shock",
+    "explanation": "Additional shock damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STUN": {
+    "type": "AD_STUN",
+    "caption": "Stun",
+    "caption_short": "Stun",
+    "explanation": "Heal with unicorn horn",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SLIM": {
+    "type": "AD_SLIM",
+    "caption": "Slime",
+    "caption_short": "Slime",
+    "explanation": "Heal by wand of fire",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CORR": {
+    "type": "AD_CORR",
+    "caption": "Corrode",
+    "caption_short": "Corrode",
+    "explanation": "Only worn and wielded metallic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_RUST": {
+    "type": "AD_RUST",
+    "caption": "Rust",
+    "caption_short": "Rust",
+    "explanation": "Only worn and wielded metallic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ENCH": {
+    "type": "AD_ENCH",
+    "caption": "Disenchant",
+    "caption_short": "Disenchant",
+    "explanation": "Only worn and wielded items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_MAGM": {
+    "type": "AD_MAGM",
+    "caption": "M. Missile",
+    "caption_short": "M. Missile",
+    "explanation": "Ray-type, prevented by reflection",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_TUCH": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PLYS": {
+    "type": "AD_PLYS",
+    "caption": "Paralyze",
+    "caption_short": "Prlz",
+    "explanation": "You can't act or move",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STON": {
+    "type": "AD_STON",
+    "caption": "Petrify",
+    "caption_short": "Petrify",
+    "explanation": "Delayed petrification",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STCK": {
+    "type": "AD_STCK",
+    "caption": "Sticky",
+    "caption_short": "Sticky",
+    "explanation": "You can't move, prevented by greased or oilskin cloak",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SLIM": {
+    "type": "AD_SLIM",
+    "caption": "Slime",
+    "caption_short": "Slime",
+    "explanation": "Heal by wand of fire",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_RUST": {
+    "type": "AD_RUST",
+    "caption": "Rust",
+    "caption_short": "Rust",
+    "explanation": "Only worn and wielded metallic items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRLI": {
+    "type": "AD_DRLI",
+    "caption": "Drain life",
+    "caption_short": "-Lv",
+    "explanation": "You lose level if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SLOW": {
+    "type": "AD_SLOW",
+    "caption": "Slow",
+    "caption_short": "Slow",
+    "explanation": "1/4 chance to lose intrinsic or temporary speed",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DETH": {
+    "type": "AD_DETH",
+    "caption": "Deadly touch",
+    "caption_short": "Deadly",
+    "explanation": "You lose max HP and can die if not magic resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PEST": {
+    "type": "AD_PEST",
+    "caption": "Plus disease",
+    "caption_short": "+disease",
+    "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing. Second hit stuns",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FAMN": {
+    "type": "AD_FAMN",
+    "caption": "Plus hunger",
+    "caption_short": "+hunger",
+    "explanation": "You lose 40-80 nutrition. Second hit stuns.",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_WRAP": {
+    "type": "AD_WRAP",
+    "caption": "Drowning",
+    "caption_short": "Drown",
+    "explanation": "If you are caught, the next turn you drown",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_GAZE": {
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_BLND": {
+    "type": "AD_BLND",
+    "caption": "Blind",
+    "caption_short": "Blind",
+    "explanation": "You became blind for a time",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CONF": {
+    "type": "AD_CONF",
+    "caption": "Conf",
+    "caption_short": "Conf",
+    "explanation": "Heal with unicorn horn",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STON": {
+    "type": "AD_STON",
+    "caption": "Petrify",
+    "caption_short": "Petrify",
+    "explanation": "Delayed petrification",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STUN": {
+    "type": "AD_STUN",
+    "caption": "Stun",
+    "caption_short": "Stun",
+    "explanation": "Heal with unicorn horn",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_BREA": {
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_MAGM": {
+    "type": "AD_MAGM",
+    "caption": "M. Missile",
+    "caption_short": "M. Missile",
+    "explanation": "Ray-type, prevented by reflection",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SLEE": {
+    "type": "AD_SLEE",
+    "caption": "Sleep",
+    "caption_short": "Sleep",
+    "explanation": "You fall asleep if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DISN": {
+    "type": "AD_DISN",
+    "caption": "Disint.",
+    "caption_short": "Disint.",
+    "explanation": "Disintegrate your shield, then armor, then you, if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ELEC": {
+    "type": "AD_ELEC",
+    "caption": "Shock",
+    "caption_short": "Shock",
+    "explanation": "Additional shock damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRST": {
+    "type": "AD_DRST",
+    "caption": "Poison -St",
+    "caption_short": "Poison -St",
+    "explanation": "Drain St if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ACID": {
+    "type": "AD_ACID",
+    "caption": "Acid",
+    "caption_short": "Acid",
+    "explanation": "Additional acid damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_RBRE": {
+    "type": "AD_RBRE",
+    "caption": "Random",
+    "caption_short": "Rand",
+    "explanation": "Types: magic missile, fire, frost, sleep gas, disintegration, lightning, poison clouds (non-reflectible), acid",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_BOOM": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_EXPL": {
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ELEC": {
+    "type": "AD_ELEC",
+    "caption": "Shock",
+    "caption_short": "Shock",
+    "explanation": "Additional shock damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_BLND": {
+    "type": "AD_BLND",
+    "caption": "Blind",
+    "caption_short": "Blind",
+    "explanation": "You became blind for a time",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_HALU": {
+    "type": "AD_HALU",
+    "caption": "Hallu",
+    "caption_short": "Hallu",
+    "explanation": "You begin hallucinating. Heal by unicorn horn.",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_CLAW": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CURS": {
+    "type": "AD_CURS",
+    "caption": "-Intrinsic",
+    "caption_short": "-Intrinsic",
+    "explanation": "Steal random intrinsic",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRDX": {
+    "type": "AD_DRDX",
+    "caption": "Poison -Dx",
+    "caption_short": "Poison -Dx",
+    "explanation": "Drain Dx if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SGLD": {
+    "type": "AD_SGLD",
+    "caption": "Steal gold",
+    "caption_short": "Steal gold",
+    "explanation": "From open inventory or from ground",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STCK": {
+    "type": "AD_STCK",
+    "caption": "Sticky",
+    "caption_short": "Sticky",
+    "explanation": "You can't move, prevented by greased or oilskin cloak",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SITM": {
+    "type": "AD_SITM",
+    "caption": "Steal",
+    "caption_short": "Steal",
+    "explanation": "Steal 1 item",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SEDU": {
+    "type": "AD_SEDU",
+    "caption": "Steal",
+    "caption_short": "Steal",
+    "explanation": "Steal 1 item, then self-teleport",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_BLND": {
+    "type": "AD_BLND",
+    "caption": "Blind",
+    "caption_short": "Blind",
+    "explanation": "You became blind for a time",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_TLPT": {
+    "type": "AD_TLPT",
+    "caption": "Teleport",
+    "caption_short": "Tele",
+    "explanation": "You are teleported",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_POLY": {
+    "type": "AD_POLY",
+    "caption": "Polymorph",
+    "caption_short": "Polymorph",
+    "explanation": "You are polymorphed",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ENCH": {
+    "type": "AD_ENCH",
+    "caption": "Disenchant",
+    "caption_short": "Disenchant",
+    "explanation": "Only worn and wielded items affected",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PLYS": {
+    "type": "AD_PLYS",
+    "caption": "Paralyze",
+    "caption_short": "Prlz",
+    "explanation": "You can't act or move",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_HEAL": {
+    "type": "AD_HEAL",
+    "caption": "Heal",
+    "caption_short": "Heal",
+    "explanation": "You must be naked and empty-handed to be healed",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_SAMU": {
+    "type": "AD_SAMU",
+    "caption": "-Artifact",
+    "caption_short": "-Arti",
+    "explanation": "Steal Amulet of Yendor",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DISE": {
+    "type": "AD_DISE",
+    "caption": "Disease",
+    "caption_short": "Disease",
+    "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_WEAP": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRLI": {
+    "type": "AD_DRLI",
+    "caption": "Drain life",
+    "caption_short": "-Lv",
+    "explanation": "You lose level if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRST": {
+    "type": "AD_DRST",
+    "caption": "Poison -St",
+    "caption_short": "Poison -St",
+    "explanation": "Drain St if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CONF": {
+    "type": "AD_CONF",
+    "caption": "Conf",
+    "caption_short": "Conf",
+    "explanation": "Heal with unicorn horn",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_TENT": {
+   "AD_DRIN": {
+    "type": "AD_DRIN",
+    "caption": "-In",
+    "caption_short": "-In",
+    "explanation": "Drain In, prevented by sustain ability;if In<3, you die",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_ENGL": {
+   "AD_ACID": {
+    "type": "AD_ACID",
+    "caption": "Acid",
+    "caption_short": "Acid",
+    "explanation": "Additional acid damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_WRAP": {
+    "type": "AD_WRAP",
+    "caption": "Drowning",
+    "caption_short": "Drown",
+    "explanation": "If you are caught, the next turn you drown",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_BLND": {
+    "type": "AD_BLND",
+    "caption": "Blind",
+    "caption_short": "Blind",
+    "explanation": "You became blind for a time",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_ELEC": {
+    "type": "AD_ELEC",
+    "caption": "Shock",
+    "caption_short": "Shock",
+    "explanation": "Additional shock damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DREN": {
+    "type": "AD_DREN",
+    "caption": "Drain Pw",
+    "caption_short": "-Pw",
+    "explanation": "3/4 chance of drain Pw, amount is XP-based",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DGST": {
+    "type": "AD_DGST",
+    "caption": "Digest",
+    "caption_short": "Digest",
+    "explanation": "~10 turns to live, Co and AC-based; prevented by slow digestion",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DISE": {
+    "type": "AD_DISE",
+    "caption": "Disease",
+    "caption_short": "Disease",
+    "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_MAGC": {
+   "AD_SPEL": {
+    "type": "AD_SPEL",
+    "caption": "Mage",
+    "caption_short": "Mage",
+    "explanation": "Psi bolt (Lvl>=1), Cure self (2), Haste self (3), Stun (4), Disappear (5), Drain strength (7), Destroy armor (9), Curse items (11), Aggravate (14), Summon nasties (16), Touch of death (21), Double Trouble (19/unique)",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_MAGM": {
+    "type": "AD_MAGM",
+    "caption": "M. Missile",
+    "caption_short": "M. Missile",
+    "explanation": "Ray-type, prevented by reflection",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_CLRC": {
+    "type": "AD_CLRC",
+    "caption": "Clerical",
+    "caption_short": "Cler",
+    "explanation": "Open wounds (Lvl>1), Cure self (2), Confuse (3), Paralyze (5), Blind (6), Summon insects (9), Curse items (10), Lightning (12), Fire pillar (13), Geyser (14)",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_COLD": {
+    "type": "AD_COLD",
+    "caption": "Cold",
+    "caption_short": "Cold",
+    "explanation": "Additional cold damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_BUTT": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_KICK": {
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_STUN": {
+    "type": "AD_STUN",
+    "caption": "Stun",
+    "caption_short": "Stun",
+    "explanation": "Heal with unicorn horn",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_HUGS": {
+   "AD_WRAP": {
+    "type": "AD_WRAP",
+    "caption": "Drowning",
+    "caption_short": "Drown",
+    "explanation": "If you are caught, the next turn you drown",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_PHYS": {
+    "type": "AD_PHYS",
+    "caption": "",
+    "caption_short": "",
+    "explanation": "Physical",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_FIRE": {
+    "type": "AD_FIRE",
+    "caption": "Fire",
+    "caption_short": "Fire",
+    "explanation": "Additional fire damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  },
+  "AT_SPIT": {
+   "AD_ACID": {
+    "type": "AD_ACID",
+    "caption": "Acid",
+    "caption_short": "Acid",
+    "explanation": "Additional acid damage if not resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_DRST": {
+    "type": "AD_DRST",
+    "caption": "Poison -St",
+    "caption_short": "Poison -St",
+    "explanation": "Drain St if not poison resistant",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   },
+   "AD_BLND": {
+    "type": "AD_BLND",
+    "caption": "Blind",
+    "caption_short": "Blind",
+    "explanation": "You became blind for a time",
+    "resisted": false,
+    "can_be_cancelled": false,
+    "mc": false
+   }
+  }
+ }
+}

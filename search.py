@@ -56,8 +56,8 @@ max_len_con=0
 
 table=dict()
 table_temp=[]
-explanation_at=dict()
-explanation_ad=dict()
+explanation_at_ext=dict()
+explanation_ad_ext=dict()
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
@@ -409,7 +409,7 @@ def read_monsters(file):
     global table,table_temp
     global disable_sorting
     global wingy
-    global explanation_at,explanation_ad
+    global explanation_at_ext,explanation_ad_ext
     wingy=False
     table=dict()
     table_temp=[]
@@ -439,11 +439,14 @@ def read_monsters(file):
             wingy=True
     base_name=file.replace(".csv","")
     try:
-        at_file=open(data_folder+base_name+".at.json","r",encoding="utf-8")
-        explanation_at=json.load(at_file,)
-        at_file.close()
+        attacks_file=open(data_folder+base_name+".attacks.json","r")
+        explanation_attacks=json.load(attacks_file)
+        attacks_file.close()
+        explanation_at_ext=explanation_attacks["at"]
+        explanation_ad_ext=explanation_attacks["ad"]
     except FileNotFoundError as e:
-        explanation_at=dict()
+        explanation_at_ext=dict()
+        explanation_ad_ext=dict()
         for mon_name in table.keys():
             mon=table[mon_name]
             for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
@@ -453,36 +456,36 @@ def read_monsters(file):
                 attack=attack[5:]
                 attack=attack[:-1]
                 attack=attack.split(",")
-                at=attack[0]
+                at_cur=attack[0].strip()
+                ad_cur=attack[1].strip()
+                if at_cur not in explanation_at_ext:
+                    at_item=dict()
+                    at_item["type"]=at_cur
+                    at_item["caption"]=at[at_cur].strip()
+                    at_item["caption_short"]=at_short[at_cur].strip()
+                    at_item["explanation"]=at[at_cur].strip()
+                    at_item["ad_list_name"]=at_cur
+                    explanation_at_ext[at_cur]=at_item
+                if at_cur not in explanation_ad_ext:
+                    explanation_ad_ext[at_cur]=dict()
+                if ad_cur not in explanation_ad_ext[at_cur]:
+                    ad_item=dict()
+                    ad_item["type"]=ad_cur
+                    ad_item["caption"]=ad[ad_cur].strip()
+                    ad_item["caption_short"]=ad_short[ad_cur].strip()
+                    ad_item["explanation"]=ad[ad_cur].strip()
+                    ad_item["resisted"]=False
+                    ad_item["can_be_cancelled"]=False
+                    ad_item["mc"]=False
+                    explanation_ad_ext[at_cur][ad_cur]=ad_item
                 #ad=mon[attack_n][1]
-                if at not in explanation_at:
-                    explanation_at[at]="DUMMY"
-        at_file=open(data_folder+base_name+".at.json","w",encoding="utf-8")
-        json.dump(explanation_at,at_file,indent=1)
-        at_file.close()
+        explanation_attacks=dict()
+        explanation_attacks["at"]=explanation_at_ext
+        explanation_attacks["ad"]=explanation_ad_ext
+        attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
+        json.dump(explanation_attacks,attacks_file,indent=1)
+        attacks_file.close()
 
-    try:
-        ad_file=open(data_folder+base_name+".ad.json","r")
-        explanation_ad=json.load(ad_file)
-        ad_file.close()    
-    except FileNotFoundError as e:
-        explanation_ad=dict()
-        for mon_name in table.keys():
-            mon=table[mon_name]
-            for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
-                if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
-                    continue
-                attack=mon[attack_n]
-                attack=attack[5:]
-                attack=attack[:-1]
-                attack=attack.split(",")
-                ad=attack[1]
-                #ad=mon[attack_n][1]
-                if ad not in explanation_ad:
-                    explanation_ad[ad]="DUMMY"
-        ad_file=open(data_folder+base_name+".ad.json","w",encoding="utf-8")
-        json.dump(explanation_ad,ad_file,indent=1)
-        ad_file.close()
 BK=20
 INV=21
 BK_CARD=22
@@ -704,7 +707,7 @@ def show_list(card_win,search_win,results):
 
 def show_explanation(card_win,results,mon_name):
     card_win.erase()
-    attacks=card_explanation(table[mon_name],explanation_at,explanation_ad)
+    attacks=card_explanation(table[mon_name],explanation_at_ext,explanation_ad_ext)
     card="".join(attacks).split("\n")
     cur_pair=BK_CARD
     line_n=0
@@ -985,7 +988,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
                         report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
                         report.write(ln[:test_len]+"\n===\n")
                 
-                test_e="".join(card_explanation(table[mon],explanation_at,explanation_ad))
+                test_e="".join(card_explanation(table[mon],explanation_at_ext,explanation_ad_ext))
                 test_e=test_e.split("\n")
                 if len(test_e)>c.LINES-2:
                     report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
