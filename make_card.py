@@ -270,11 +270,20 @@ def card_explanation(mon,at_e,ad_e):
                 ext="["+ext+"]"
                 attack_s=attack_s[:-2]
                 attack_s+=ext+", "
+        #checking structure
+        if attack[0] not in at_e:
+            return f"ERROR! {attack[0]} not in at_e"
+        if "explanation" not in at_e[attack[0]]:
+            return f"ERROR! explanation not in at_e[{attack[0]}]"
+        if attack[1] not in ad_e[at_e[attack[0]]["ad_list_name"]]:
+            return f"ERROR! {attack[1]} not in ad_e[{attack[0]}]"
+        if "explanation" not in ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]:
+            return f"ERROR! explanation not in ad_e[{attack[0]}][{attack[1]}"
         attack_e="\n#    "+at_actual[attack[0]]+":"+at_e[attack[0]]["explanation"]
         if len(ad_actual[attack[1]])==0:
-            attack_e+="("+ad_e[attack[0]][attack[1]]["explanation"]+")"
+            attack_e+="("+ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]+")"
         else:
-            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[attack[0]][attack[1]]["explanation"]
+            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]
 
         attack_e_list=attack_e.split("\n")
         for i in range(len(attack_e_list)):
