@@ -734,7 +734,8 @@ def show_explanation(card_win,results,mon_name):
             attrib=c.A_BOLD
         else:
             attrib=0
-        if len(line.strip())>SCR_WIDTH:
+        line=line.rstrip()
+        if len(line)>SCR_WIDTH:
             line=line[:SCR_WIDTH-1]+"!"
         for i in range(len(line)):
             pos=i

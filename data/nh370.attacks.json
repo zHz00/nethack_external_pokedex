@@ -46,28 +46,28 @@
       "type": "AT_HUGS",
       "caption": "Hug",
       "caption_short": "Hug",
-      "explanation": "You can't move",
+      "explanation": "50%: stick [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt)]",
       "ad_list_name": "AT_COMMON"
     },
     "AT_SPIT": {
       "type": "AT_SPIT",
       "caption": "Spit",
       "caption_short": "Spit",
-      "explanation": "Ranged only",
+      "explanation": "Ranged only, 8 directions",
       "ad_list_name": "AT_SPIT"
     },
     "AT_ENGL": {
       "type": "AT_ENGL",
       "caption": "Engulf",
       "caption_short": "Englf",
-      "explanation": "You can't move and always hit",
+      "explanation": "You are inside a monster, can't move and always hit",
       "ad_list_name": "AT_ENGL"
     },
     "AT_BREA": {
       "type": "AT_BREA",
       "caption": "Breath",
       "caption_short": "Brth",
-      "explanation": "Ray-type breath (prevented by reflection)",
+      "explanation": "66.7% chance, 8 directions, ray-type [prevented by reflection]",
       "ad_list_name": "AT_BREA"
     },
     "AT_EXPL": {
@@ -88,21 +88,21 @@
       "type": "AT_GAZE",
       "caption": "Gaze",
       "caption_short": "Gz",
-      "explanation": "Acitvates when you see monster (prevented by blindness)",
+      "explanation": "Acitvates when you see a monster [prevented by blindness]",
       "ad_list_name": "AT_GAZE"
     },
     "AT_TENT": {
       "type": "AT_TENT",
       "caption": "Suck",
       "caption_short": "Suck",
-      "explanation": "Prevented by helmet 7/8 chance, by greased helmet 100% chance, 50% wear off",
+      "explanation": "Prevented by helmet 87.5%, by greased helmet 100%, but 50% wear off",
       "ad_list_name": "AT_COMMON"
     },
     "AT_WEAP": {
       "type": "AT_WEAP",
       "caption": "Weapon",
       "caption_short": "Weap",
-      "explanation": "Damage from weapon added",
+      "explanation": "Damage from weapon is added to standard damage",
       "ad_list_name": "AT_COMMON"
     },
     "AT_MAGC": {
@@ -116,7 +116,7 @@
       "type": "AT_NONE",
       "caption": "Passive",
       "caption_short": "Pasv",
-      "explanation": "Activates when you hit monster",
+      "explanation": "Activates when you try to hit a monster in melee",
       "ad_list_name": "AT_NONE"
     }
   },
@@ -126,8 +126,8 @@
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "Additional acid damage if not resistant",
-        "resisted": false,
+        "explanation": "1. If you kick and hit, then 16.7%: corrode boots for one grade. If you \nstrike and hit, then 16.7%: corrode weapon for one grade. \n2. Damage->XdY if X!=0 and Lv d Y, if X=0. If you hit, 50%: acid damage for Damage Hp. Then 3.3% of corrode armor for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -135,17 +135,17 @@
         "type": "AD_PLYS",
         "caption": "Paralyze",
         "caption_short": "Prlz",
-        "explanation": "You can't act or move",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "66.7%: Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you missed, set paralyze timer: if Wi>12 then Damage turns; if Wi<=12 then 75%: Damage turns; 25%: 127 turns. Then Damage->0. If you hit blind floating eye, 0.2%: lose 1 Luck. Resistance item: ring of free action",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STON": {
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "Delayed petrification",
-        "resisted": false,
+        "explanation": "Instant petrify if you land a successful hit, but have incorrect protector. Protectors are:\nKick: boots\nStrike with weapon: weapon\nStrike with bare hands: gloves\nDamage->0",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -153,43 +153,43 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "66.7%: Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you missed, do cold damage. Also, monster heals for Damage/2 Hp and can even split if healed enough.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ELEC": {
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Additional shock damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "66.7%: Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you missed, do shock damage for Damage Hp.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_FIRE": {
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "1. If you kick and hit, then 16.7%: burn boots for one grade. If you strike and hit, then 16.7%: burn weapon for one grade. Note: fire vortex don't erode objects.\n2. 66.7%: Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you missed, do fire damage for Damage Hp.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STUN": {
         "type": "AD_STUN",
         "caption": "Stun",
         "caption_short": "Stun",
-        "explanation": "Heal with unicorn horn",
+        "explanation": "66.7%: Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you missed, but only if you are not already stunned, set stun timer to Damage turns. Then, Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SLIM": {
         "type": "AD_SLIM",
         "caption": "Slime",
         "caption_short": "Slime",
-        "explanation": "Heal by wand of fire",
+        "explanation": "Nothing (sic!)",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -198,35 +198,35 @@
         "type": "AD_CORR",
         "caption": "Corrode",
         "caption_short": "Corrode",
-        "explanation": "Only worn and wielded metallic items affected",
+        "explanation": "If you kick and hit, then 100%: corrode boots for one grade. If you \nstrike and hit, then 100%: corrode weapon for one grade. Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_RUST": {
         "type": "AD_RUST",
         "caption": "Rust",
         "caption_short": "Rust",
-        "explanation": "Only worn and wielded metallic items affected",
+        "explanation": "If you kick and hit, then 100%: rust boots for one grade. If you \nstrike and hit, then 100%: rust weapon for one grade. Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ENCH": {
         "type": "AD_ENCH",
         "caption": "Disenchant",
         "caption_short": "Disenchant",
-        "explanation": "Only worn and wielded items affected",
+        "explanation": "If you kick and hit, then 100%: if positively enchanted, boots lose 1 enchantment. If you \nstrike and hit, then 100%: if positively enchanted, weapon lose 1 enchantment. Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_MAGM": {
         "type": "AD_MAGM",
         "caption": "M. Missile",
         "caption_short": "M. Missile",
-        "explanation": "Ray-type, prevented by reflection",
-        "resisted": false,
+        "explanation": "Damage->XdY if X!=0 and Lv d Y, if X=0. Even if you miss, do magic missile damage for Damage Hp",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       }
@@ -236,45 +236,45 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "20%: nothing; 80%: Damage->2d6 (fire). Burn away slime; If Lv>=d20, destroy Damage/5 items without additional \ndamage: Potions, Scrolls, Spellbooks, Green slime globs. Separate roll: if Lv>=d20, burn one (organic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_BLND": {
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "You became blind for a time",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Set blindness timer to Damage turns. Also, set stunned timer to d3 turns if current timer is lesser. Then, Damage->0. Resistance item: worn blindfold",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_CONF": {
         "type": "AD_CONF",
         "caption": "Conf",
         "caption_short": "Conf",
-        "explanation": "Heal with unicorn horn",
+        "explanation": "20%: nothing; 80%: Increase confused timer by 3d4 turns. Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STON": {
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "Delayed petrification",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Instant petrification. Damage->0. Resistance item: aside from rare stoning resistace, you can protect yourself with blindfold or some reflecting item.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STUN": {
         "type": "AD_STUN",
         "caption": "Stun",
         "caption_short": "Stun",
-        "explanation": "Heal with unicorn horn",
+        "explanation": "20%: nothing; 80%: Increase stunned timer by 2d6 turns. Then, Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       }
     },
@@ -283,81 +283,81 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: Potions",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_FIRE": {
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Ray Damage->Xd6. Burn away slime. Burn one (organic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.\nIf selected item is body item (most outer: cloak, body armor, shirt), then 33.3%: destroy Damage/5 items with no additional damage: Potions, Scrolls, Spellbooks, Green slime globs",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_MAGM": {
         "type": "AD_MAGM",
         "caption": "M. Missile",
         "caption_short": "M. Missile",
-        "explanation": "Ray-type, prevented by reflection",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Ray Damage->Xd6",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SLEE": {
         "type": "AD_SLEE",
         "caption": "Sleep",
         "caption_short": "Sleep",
-        "explanation": "You fall asleep if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Set sleep timer to Xd25 turns. Damage->0",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DISN": {
         "type": "AD_DISN",
         "caption": "Disint.",
         "caption_short": "Disint.",
-        "explanation": "Disintegrate your shield, then armor, then you, if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "1. If you have a shield, then destroy it, but you stay alive\n2. Else, destroy body armor and cloak, but you stay alive\n3. Else, you die.\nPlease note that if you are resistant, you will not die, but this will not protect your items. In all cases Damage->0",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ELEC": {
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Additional shock damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: destroy Damage/5 items with no additional damage: Wands, metallic \nrings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DRST": {
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "Drain St if not poison resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Poison with no additinal damage: (a) 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage \nreceived, -1 Co, -3 Dx. (b) 60.0% of 5+d10 additional damage (c) 33.3% of -1 Dx.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ACID": {
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "Additional acid damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Damage->Xd6. If twoweapon, then 33.3% separate chance of corrode every weapon. If one weapon, then 16.7%: corrode weapon.\nSeparate 16.7% chance  of corrode one (metallic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_RBRE": {
         "type": "AD_RBRE",
         "caption": "Random",
         "caption_short": "Rand",
-        "explanation": "Types: magic missile, fire, frost, sleep gas, disintegration, lightning, poison clouds (non-reflectible), acid",
+        "explanation": "Types: magic missile , fire, cold, sleep, disintegration, lightning, poison clouds (non-reflectible), acid",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       }
     },
@@ -366,7 +366,7 @@
         "type": "AD_PHYS",
         "caption": "",
         "caption_short": "",
-        "explanation": "Physical",
+        "explanation": "Ordinary physical. Damage->XdY if X!=0 and Lv d Y, if X=0",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -377,8 +377,8 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
+        "explanation": "Damage->XdY if X!=0 and Lv d Y, if X=0. Destroy Damage/5 items with no additional damage: Potions. Also destroy items on the floor.",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -386,8 +386,8 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
+        "explanation": "Burn away slime. Damage->XdY if X!=0 and Lv d Y, if X=0. Destroy Damage/5 items with no additional damage: Potions, Scrolls, Spellbooks, Green slime globs. Also destroy items on the floor. Burn one (organic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -395,8 +395,8 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Additional shock damage if not resistant",
-        "resisted": false,
+        "explanation": "Damage->XdY if X!=0 and Lv d Y, if X=0. Destroy Damage/5 items with no  additional damage: Wands, metallic rings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -404,8 +404,8 @@
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "You became blind for a time",
-        "resisted": false,
+        "explanation": "Set blindness timer to Damage turns, then Damage->0. If you didn't see the monster, then set timer to d(Damage/2). Resistance item: worn blindfold",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -413,7 +413,7 @@
         "type": "AD_HALU",
         "caption": "Hallu",
         "caption_short": "Hallu",
-        "explanation": "You begin hallucinating. Heal by unicorn horn.",
+        "explanation": "Increase hallucination timer by Damage turns, then Damage->0",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -424,7 +424,7 @@
         "type": "AD_PHYS",
         "caption": "",
         "caption_short": "",
-        "explanation": "Physical",
+        "explanation": "Ordinary physical",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -433,7 +433,7 @@
         "type": "AD_MAGM",
         "caption": "M. Missile",
         "caption_short": "M. Missile",
-        "explanation": "Ray-type, prevented by reflection",
+        "explanation": "DUMMY",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -442,62 +442,62 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "Burn away slime; If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d6), Scrolls (1), Spellbooks (1), Green slime globs ((Wt+19)/20)",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_COLD": {
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "If Lv>=d20, destroy Damage/5 items with \nadditional damage: Potions (d4)",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_SLEE": {
         "type": "AD_SLEE",
         "caption": "Sleep",
         "caption_short": "Sleep",
-        "explanation": "You fall asleep if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "80%: ordinary damage; 20%: ordinary damage, then, if not helpless, sleep counter set to d10 turns",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_ELEC": {
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Additional shock damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "If Lv>=d20, destroy Damage/5 items with additional damage: Wands(d10), metallic rings (0 damage, if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DRST": {
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "Drain St if not poison resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "87.5%: ordinary damage; 12.5%: ordinary damage, then poison: (a) 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 St. (b) 80% of 5+d10 additional damage (c) 16.7% of -1 St.",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_ACID": {
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "Additional acid damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "33.3%: ordinary damage, 66.7%: no damage",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_BLND": {
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "You became blind for a time",
-        "resisted": false,
+        "explanation": "Set blindness timer to Damage turns, then Damage->0. Resistance item: worn blindfold",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -505,16 +505,16 @@
         "type": "AD_STUN",
         "caption": "Stun",
         "caption_short": "Stun",
-        "explanation": "Heal with unicorn horn",
+        "explanation": "75%: ordinary damage; 25%: increase stun timer for Damage turns, but Damage->Damage/2",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SLOW": {
         "type": "AD_SLOW",
         "caption": "Slow",
         "caption_short": "Slow",
-        "explanation": "1/4 chance to lose intrinsic or temporary speed",
+        "explanation": "75%: ordinary damage; 25%: ordinary damage, then lose intrinsic speed",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -523,115 +523,115 @@
         "type": "AD_PLYS",
         "caption": "Paralyze",
         "caption_short": "Prlz",
-        "explanation": "You can't act or move",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "If not helpless, set paralyzed timer to d10 turns. Resistance item: ring of free action",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DRLI": {
         "type": "AD_DRLI",
         "caption": "Drain life",
         "caption_short": "-Lv",
-        "explanation": "You lose level if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "66.7%: ordinary damage; 33.3%: ordinary damage, then lose 1 experience level",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DREN": {
         "type": "AD_DREN",
         "caption": "Drain Pw",
         "caption_short": "-Pw",
-        "explanation": "3/4 chance of drain Pw, amount is XP-based",
+        "explanation": "75%: nothing; 25%: Pw->Pw-Damage, if Pw becomes negative, then MAX Pw->MAX Pw-d(Pw-Damage). In all cases Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_LEGS": {
         "type": "AD_LEGS",
         "caption": "Legs",
         "caption_short": "Legs",
-        "explanation": "You legs became wounded. Heal by potion of speed!",
+        "explanation": "If levitating, flying or riding: nothing; if iron shoes or low boots: 60%: ordinary damage; 40%: nothing; other cases: ordinary damage, then set wounded legs timeout for d(60-Dx) turns, but if current timeout is already greater, then just ordinary damage",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STON": {
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "Delayed petrification",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "66.7% (at new moon) or 96.7% (other moon phases): ordinary damage; 33.3% (at new moon) or 3.3% (other moon phases): ordingary damage, then lose intrinsic speed, then begin 5-turns petrification process, but you can act only for first two turns ",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_STCK": {
         "type": "AD_STCK",
         "caption": "Sticky",
         "caption_short": "Sticky",
-        "explanation": "You can't move, prevented by greased or oilskin cloak",
+        "explanation": "Monster sticks to you. After that you can't move, and lose one turn for each moving try. ",
         "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_SGLD": {
         "type": "AD_SGLD",
         "caption": "Steal gold",
         "caption_short": "Steal gold",
-        "explanation": "From open inventory or from ground",
+        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else steal 10%...100% of your gold, uniformely distributed. Then monster teleports away if he can, or flee if he can't",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SITM": {
         "type": "AD_SITM",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Steal 1 item",
+        "explanation": "Nymphs: if you are punished, 75% that chain is removed. Else, if your have adorement rings without gloves, steal one. Else, steal one object, uncovered by others, then nymph teleports. Animals: Steal one object, uncovered by others, then monster flees.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SEDU": {
         "type": "AD_SEDU",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Steal 1 item, then self-teleport",
+        "explanation": "Nymphs: if you are punished, 75% that chain is removed. Else, if your \nhave adorement rings without gloves, steal one. Else, steal one object, \nuncovered by others, then nymph teleports. Animals: Steal one object, \nuncovered by others, then monster flees.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_TLPT": {
         "type": "AD_TLPT",
         "caption": "Teleport",
         "caption_short": "Tele",
-        "explanation": "You are teleported",
+        "explanation": "Teleport to safe location, guaranteed not fatal (set to 1 hp if damage was too big). If you have teleport control and not stunned, you can select new location",
         "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_RUST": {
         "type": "AD_RUST",
         "caption": "Rust",
         "caption_short": "Rust",
-        "explanation": "Only worn and wielded metallic items affected",
+        "explanation": "Rust one (metallic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_CONF": {
         "type": "AD_CONF",
         "caption": "Conf",
         "caption_short": "Conf",
-        "explanation": "Heal with unicorn horn",
+        "explanation": "75%: nothing; 25%: set confusion timer to Damage turns, then Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DGST": {
         "type": "AD_DGST",
         "caption": "Digest",
         "caption_short": "Digest",
-        "explanation": "~10 turns to live, Co and AC-based; prevented by slow digestion",
+        "explanation": "DUMMY",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -640,52 +640,52 @@
         "type": "AD_HEAL",
         "caption": "Heal",
         "caption_short": "Heal",
-        "explanation": "You must be naked and empty-handed to be healed",
+        "explanation": "If armed or not naked: ordinary damage. If naked and unarmed, Damage->0, cure sickness, Hp->Hp+d7, 14.2% of MAX Hp->MAX Hp+1 (if MAX Hp<5*xlvl+(2*xlvl)d10), then 7.7% of flee. ",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_WRAP": {
         "type": "AD_WRAP",
         "caption": "Drowning",
         "caption_short": "Drown",
-        "explanation": "If you are caught, the next turn you drown",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "If you are not stuck: 10% of ordinary damage, then stick; 90% of nothing. If you are stuck, and monster is on the water, and you can't breath in water, then ordinary damage, then drown. Other cases: ordinary damage. Resistance item: initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt), but if you are already stuck, this will not help.",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_WERE": {
         "type": "AD_WERE",
         "caption": "Lycantropy",
         "caption_short": "Lycantropy",
-        "explanation": "You will change form time to time. Heal by prayer or spring of wolfsbane",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "75%: ordinary damage; 25%: ordinary damage, then catch lycantropy. Resistance item: ring of protection from shape changers",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DRDX": {
         "type": "AD_DRDX",
         "caption": "Poison -Dx",
         "caption_short": "Poison -Dx",
-        "explanation": "Drain Dx if not poison resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "87.5%: ordinary damage; 12.5%: ordinary damage, then poison: (a) 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. (b) 80% of 5+d10 additional damage (c) 16.7% of \n-1 Dx.",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DRCO": {
         "type": "AD_DRCO",
         "caption": "Poison -Co",
         "caption_short": "Poison -Co",
-        "explanation": "Drain Co if not poison resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "87.5%: ordinary damage; 12.5%: ordinary damage, then poison: (a) 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -3 Co. (b) 80% of 5+d10 additional damage (c) 16.7% of -1 Co.",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_DRIN": {
         "type": "AD_DRIN",
         "caption": "-In",
         "caption_short": "-In",
-        "explanation": "Drain In, prevented by sustain ability;if In<3, you die",
+        "explanation": "-d2 In (In<3: death), then 20%: forget any number of spells (from 1 to all); 20% independent chance: forget d2 learned skills for one grade. If spells of skills was forgotten, then skip further drain attacks for this turn",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -694,7 +694,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing",
+        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -703,25 +703,25 @@
         "type": "AD_DCAY",
         "caption": "Decay organics",
         "caption_short": "Decay organics",
-        "explanation": "Only worn and wielded organic items affected",
+        "explanation": "Rot one (organic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SSEX": {
         "type": "AD_SSEX",
         "caption": "Seduce",
         "caption_short": "Seduce",
-        "explanation": "Demon will disrobe you and if he/she succeed, you have sex. Chance of positive effect is x/(In+Ch), where x is [1...35]",
+        "explanation": "1. Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor absent, then 2. Sex occurs: if d35-1>min(32, Ch+Wi) then you get one of negative effects: -Pw, -Wi, -Co, -xlvl or -(6+d10) hp. Else you get one of positive effects: +Pw and MAX Pw, +Co, +Wi, +xlvl or + hp.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_HALU": {
         "type": "AD_HALU",
         "caption": "Hallu",
         "caption_short": "Hallu",
-        "explanation": "You begin hallucinating. Heal by unicorn horn.",
+        "explanation": "DUMMY",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -730,8 +730,8 @@
         "type": "AD_DETH",
         "caption": "Deadly touch",
         "caption_short": "Deadly",
-        "explanation": "You lose max HP and can die if not magic resistant",
-        "resisted": false,
+        "explanation": "25%: nothing; 60%: MAX Hp reduced:\nMAX Hp>25*xlvl:MAX Hp->MAX Hp-Damage\nMAX Hp>10*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/2)\nMAX Hp>5*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/4)\nMAX Hp<=5*xlvl:MAX Hp->MAX Hp-d(Damage/2);\n15%: if magic resistant, MAX Hp reduced as described above, else \"Touch of death\" occurs: Damage->50+8d6. If  Damage/2>MAX Hp, then you die. Else, Hp->Hp-Damage, MAX Hp->MAX Hp-Damage/2",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -739,7 +739,7 @@
         "type": "AD_PEST",
         "caption": "Plus disease",
         "caption_short": "+disease",
-        "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing. Second hit stuns",
+        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -748,7 +748,7 @@
         "type": "AD_FAMN",
         "caption": "Plus hunger",
         "caption_short": "+hunger",
-        "explanation": "You lose 40-80 nutrition. Second hit stuns.",
+        "explanation": "If you are not fainted, lose 40+d40 nutrition",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -757,34 +757,34 @@
         "type": "AD_SLIM",
         "caption": "Slime",
         "caption_short": "Slime",
-        "explanation": "Heal by wand of fire",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "Set sliming timer to 10 turns. Resistance item: amulet of unchanging",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_ENCH": {
         "type": "AD_ENCH",
         "caption": "Disenchant",
         "caption_short": "Disenchant",
-        "explanation": "Only worn and wielded items affected",
+        "explanation": "1. Select random armor (for body, only outermost slot is used: cloak, body armor, shirt), 2. If positively enchanted, drain selected item for 1 point with 90% chance (or 10% chance for artifacts). If player is naked, drain one of worn chargeble, positively enchanted rings for 1 point (20% for each)",
         "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "can_be_cancelled": true,
+        "mc": true
       },
       "AD_CORR": {
         "type": "AD_CORR",
         "caption": "Corrode",
         "caption_short": "Corrode",
-        "explanation": "Only worn and wielded metallic items affected",
+        "explanation": "Corrode one (metallic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_SAMU": {
         "type": "AD_SAMU",
         "caption": "-Artifact",
         "caption_short": "-Arti",
-        "explanation": "Steal Amulet of Yendor",
+        "explanation": "95%: ordinary damage; 5%: ordinary damage, then steal one quest artifact of any role. If you have no quest artifacts, then steal one item: invocation items, Amulet of Yendor, fake Amulet of Yendor, ordinary bell. Wizard of Yendor don't steal fake Amulet and ordinary bell. Then monster teleports away.",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -793,19 +793,19 @@
         "type": "AD_CURS",
         "caption": "-Intrinsic",
         "caption_short": "-Intrinsic",
-        "explanation": "Steal random intrinsic",
+        "explanation": "90%: ordinary damage; 10%: ordinary damage, then lose random instrinsic and give it to monster (fire, cold, poison, telepathy, teleportitis, invisiblity, see invisible, speed, stealth, aggravate monsters, intrinsic protection). Gremlins can steal only at night (22:00...05:00 server time)",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_POLY": {
         "type": "AD_POLY",
         "caption": "Polymorph",
         "caption_short": "Polymorph",
-        "explanation": "You are polymorphed",
-        "resisted": false,
-        "can_be_cancelled": false,
-        "mc": false
+        "explanation": "If you have lycantropy, polymorph to your secon form. Else, polymorph to random monster. Resistanse item: amulet of unchanging",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       }
     },
     "AT_ENGL": {
@@ -813,16 +813,16 @@
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "Additional acid damage if not resistant",
-        "resisted": false,
+        "explanation": "Just acid damage",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
       "AD_WRAP": {
         "type": "AD_WRAP",
-        "caption": "Drowning",
-        "caption_short": "Drown",
-        "explanation": "If you are caught, the next turn you drown",
+        "caption": "Wrap",
+        "caption_short": "Wrap",
+        "explanation": "No effect except engulfing itself (sic!) and no damage.",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -840,8 +840,8 @@
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "You became blind for a time",
-        "resisted": false,
+        "explanation": "Set blindness timeout to Damage turns. Then, Damage->0. Resistace item: worn blindfold.",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -849,44 +849,44 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "50%: nothing; 50%: cold damage for Damage points",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ELEC": {
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Additional shock damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "50%: nothing; 50%: shock damage for Damage points",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DREN": {
         "type": "AD_DREN",
         "caption": "Drain Pw",
         "caption_short": "-Pw",
-        "explanation": "3/4 chance of drain Pw, amount is XP-based",
+        "explanation": "25%: nothing; 75%: Pw->Pw-Damage, if Pw becomes negative, then MAX Pw->MAX Pw-d(Pw-Damage). In all cases Damage->0",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_FIRE": {
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Additional fire damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "50%: nothing; 50%: Burn away slime. Fire damage for Damage points",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DGST": {
         "type": "AD_DGST",
         "caption": "Digest",
         "caption_short": "Digest",
-        "explanation": "~10 turns to live, Co and AC-based; prevented by slow digestion",
-        "resisted": false,
+        "explanation": "Set digestion timer to [10-AC+Co/3+d(25-Lv)/2-1] attacks. Please note that counter decreases with every attack, not with every turn. When counter reaches zero, you die. When you get expelled, timer resets. Resistance item: ring of slow digestion",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -894,7 +894,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "~30 turns to live, Co-based. Heal by unicorn horn, extra or full healing",
+        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -905,36 +905,36 @@
         "type": "AD_SPEL",
         "caption": "Mage",
         "caption_short": "Mage",
-        "explanation": "Psi bolt (Lvl>=1), Cure self (2), Haste self (3), Stun (4), Disappear (5), Drain strength (7), Destroy armor (9), Curse items (11), Aggravate (14), Summon nasties (16), Touch of death (21), Double Trouble (19/unique)",
+        "explanation": "Psi bolt (Lvl>=1, D), Cure self (2, U), Haste self (3, U), Stun (4, D), Disappear (5, U), Drain strength (7, D), Destroy armor (9, D), Curse items (11, D), Aggravate (14, U), Summon nasties (16, U), Touch of death (21, D), Double Trouble (19, only for Wizard of Yendor)",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_MAGM": {
         "type": "AD_MAGM",
         "caption": "M. Missile",
         "caption_short": "M. Missile",
-        "explanation": "Ray-type, prevented by reflection",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Magic missiles damage.\nRanged: Damage->XdY\nMelee: Damage->(Lv/2+1)d6",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_CLRC": {
         "type": "AD_CLRC",
         "caption": "Clerical",
         "caption_short": "Cler",
-        "explanation": "Open wounds (Lvl>1), Cure self (2), Confuse (3), Paralyze (5), Blind (6), Summon insects (9), Curse items (10), Lightning (12), Fire pillar (13), Geyser (14)",
+        "explanation": "Open wounds (Lvl>=1, D), Cure self (2, U), Confuse (3, D), Paralyze (5, D), Blind (6, D), Summon insects (9, U), Curse items (10, D), Lightning (12, D), Fire pillar (13, D), Geyser (14, D)",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_COLD": {
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Additional cold damage if not resistant",
-        "resisted": false,
-        "can_be_cancelled": false,
+        "explanation": "Cold damage.\nRanged: Damage->XdY. Also, destroy Damage/5 items with no additional damage: Potions\nMelee: Damage->(Lv/2+X)dY",
+        "resisted": true,
+        "can_be_cancelled": true,
         "mc": false
       }
     },
@@ -943,8 +943,8 @@
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "Additional acid damage if not resistant",
-        "resisted": false,
+        "explanation": "Acid venom: Damage->2d6",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -952,8 +952,8 @@
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "Drain St if not poison resistant",
-        "resisted": false,
+        "explanation": "Despite its name, this attack creates a blinding venom. Blinding venom: increase blindness timer by d25 turns. Resistance item: worn blindfold",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -961,8 +961,8 @@
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "You became blind for a time",
-        "resisted": false,
+        "explanation": "Blinding venom: increase blindness timer by d25 turns. Resistance item: worn blindfold",
+        "resisted": true,
         "can_be_cancelled": false,
         "mc": false
       }
