@@ -58,6 +58,7 @@ table=dict()
 table_temp=[]
 explanation_at=dict()
 explanation_ad=dict()
+explanation_offset=0
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
@@ -494,6 +495,17 @@ SEPARATOR_BK=24
 SEPARATOR_INV=25
 SEPARATOR_BLACK=26
 
+def reset_colors():
+    c.init_pair(BK,cur_color_s,cur_color_bk_s)
+    c.init_pair(INV,cur_color_bk_s,cur_color_s)
+
+    c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
+    c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+    c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
+    c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+    c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
+
+
 def out_input(s,in_str):
 
     s.erase()
@@ -706,12 +718,15 @@ def show_list(card_win,search_win,results):
     show_list_upper(search_win,results,selected_mon_name)
 
 def show_explanation(card_win,results,mon_name):
+    global explanation_offset
     card_win.erase()
     attacks=card_explanation(table[mon_name],explanation_at,explanation_ad)
     card="".join(attacks).split("\n")
     cur_pair=BK_CARD
     line_n=0
-    for i in range(len(card)):
+    if explanation_offset>len(card):
+        explanation_offset=0#cycle scroll
+    for i in range(explanation_offset,len(card)):
         line=card[i]
         if len(line)==0:
             continue
@@ -757,6 +772,13 @@ def show_explanation(card_win,results,mon_name):
             
         #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
         card_win.chgat(-1,c.color_pair(cur_pair))
+        if line_n==c.LINES-2 or explanation_offset>0:#two or more screens
+            p=1+explanation_offset//(c.LINES-3)
+            p_max=1+len(card)//(c.LINES-3)
+            page_n=f"[Page {p} of {p_max}. SPACE: Scroll]"
+            spaces=(c.COLS-len(page_n))//2-1
+            page_n=" "*spaces+page_n+" "*spaces
+            card_win.addstr(c.LINES-3,0,page_n,c.color_pair(SEPARATOR_BK))
     card_win.refresh()
     
 
@@ -857,7 +879,109 @@ def show_card(card_win,results,mon_name):
             show_not_found_msg(card_win,mon_name)
         else:
             show_hello_msg(card_win)
+def run_tests(s):
+    os.makedirs("reports",exist_ok=True)
+    s.erase()
+    file_suffixes=["short","long","ext"]
+    name_longest=0
+    name_longest_name=""
+    for f_length in range(3):
+        failed_lines=0
+        failed_monsters=0
+        error_cards=0
+        total=0
+        failed_current_monster=False
+        report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
+        report_summary=open("report.log","a",encoding="utf-8")
+        report_summary.write("==========\n")
+        report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+        report_summary.write("File: "+ver_list[ver_idx]+"\n")
+        for mon in table.keys():
+            total+=1
+            if len(mon)>20:
+                report_summary.write(f"long name({len(mon)}):{mon}\n")
+            if len(mon)>name_longest:
+                name_longest=len(mon)
+                name_longest_name=mon
+            if check_monster(table[mon])==False:
+                report.write("Error making card: "+mon+"\n")
+                error_cards+=1
+                continue
+            test=make_card(table[mon],format_length=f_length)
+            test=test.split("\n")
+            if check_formatting(test)==False:
+                report.write("Error formatting card: "+mon+"\n")
+                error_cards+=1
+            if len(test)>c.LINES-2:
+                report.write(f"MANY LINES({len(test)}):{mon}\n")
+                report.write(ln[:test_len]+"\n===\n")
+            for i in range(len(test)):
+                ln=test[i]
+                if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
+                    ln=ln[1:]
+                len_test=len(ln)
+                if f_length!=2:
+                    if i==0:
+                        test_len=SCR_WIDTH-1
+                    else:
+                        test_len=SCR_WIDTH
+                if f_length==2:
+                    if i in [0,1,2]:
+                        test_len=SCR_WIDTH-3
+                    else:
+                        test_len=SCR_WIDTH
+                if len_test>test_len:
+                    failed_lines+=1
+                    failed_current_monster=True
+                    report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
+                    report.write(ln[:test_len]+"\n===\n")
 
+            if failed_current_monster==True:
+                failed_monsters+=1
+                failed_current_monster=False
+        report.close()
+        result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+        report_summary.write(result_str)
+        report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+        report_summary.close()
+        s.addstr(result_str)
+    #explanation testing now is a separate process
+    failed_lines=0
+    failed_monsters=0
+    error_cards=0
+    total=0
+    failed_current_monster=False
+    report=open("reports/report-"+ver_list[ver_idx]+"-"+"EXPL"+".txt","w",encoding="utf-8")
+    report_summary=open("report.log","a",encoding="utf-8")
+    report_summary.write("==========\n")
+    report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+    report_summary.write("File: "+ver_list[ver_idx]+"\n")
+    for mon in table.keys():
+        total+=1
+        test_e="".join(card_explanation(table[mon],explanation_at,explanation_ad))
+        if test_e.startswith("ERROR!"):
+            failed_current_monster=True
+            report.write(f"EXPLANATION DICT FAIL:{mon}: {test_e}\n")
+            report.write(ln[:test_len]+"\n===\n")
+        if test_e.find("DUMMY")!=-1:
+            failed_current_monster=True
+            report.write(f"EXPLANATION DUMMY:{mon}\n")
+            report.write(ln[:test_len]+"\n===\n")
+        test_e=test_e.split("\n")
+        if len(test_e)>c.LINES-2:
+            failed_current_monster=True
+            report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
+            report.write(ln[:test_len]+"\n===\n")
+            
+        if failed_current_monster==True:
+            failed_monsters+=1
+            failed_current_monster=False
+    report.close()
+    result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+    report_summary.write(result_str)
+    report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+    report_summary.close()
+    s.addstr(result_str)
 
 def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global reloaded
@@ -884,30 +1008,22 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         cur_color1+=1
         if cur_color1>7:
             cur_color1=0
-        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+        reset_colors()
     if key=="2":
         cur_color_bk1+=1
         if cur_color_bk1>7:
             cur_color_bk1=0
-        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-        c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-        c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+        reset_colors()
     if key=="3":
         cur_color2+=1
         if cur_color2>7:
             cur_color2=0
-        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)          
+        reset_colors()
     if key=="4":
         cur_color_bk2+=1
         if cur_color_bk2>7:
             cur_color_bk2=0
-        c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-        c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-        c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-        c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)  
+        reset_colors()
     if key=="5":
         cur_color_s+=1
         if cur_color_s>7:
@@ -916,14 +1032,12 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
                 cur_color_s_bold=1
             else:
                 cur_color_s_bold=0
-        c.init_pair(BK,cur_color_s,cur_color_bk_s)
-        c.init_pair(INV,cur_color_bk_s,cur_color_s)
+        reset_colors()
     if key=="6":
         cur_color_bk_s+=1
         if cur_color_bk_s>7:
             cur_color_bk_s=0
-        c.init_pair(BK,cur_color_s,cur_color_bk_s)
-        c.init_pair(INV,cur_color_bk_s,cur_color_s)
+        reset_colors()
 
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
@@ -933,86 +1047,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         current_mon=0
         return 0
     if key=="KEY_F(3)":
-        os.makedirs("reports",exist_ok=True)
-        s.erase()
-        file_suffixes=["short","long","ext"]
-        name_longest=0
-        name_longest_name=""
-        for f_length in range(3):
-            failed_lines=0
-            failed_monsters=0
-            error_cards=0
-            total=0
-            failed_current_monster=False
-            report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
-            report_summary=open("report.log","a",encoding="utf-8")
-            report_summary.write("==========\n")
-            report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
-            report_summary.write("File: "+ver_list[ver_idx]+"\n")
-            for mon in table.keys():
-                total+=1
-                if len(mon)>20:
-                    report_summary.write(f"long name({len(mon)}):{mon}\n")
-                if len(mon)>name_longest:
-                    name_longest=len(mon)
-                    name_longest_name=mon
-                if check_monster(table[mon])==False:
-                    report.write("Error making card: "+mon+"\n")
-                    error_cards+=1
-                    continue
-                test=make_card(table[mon],format_length=f_length)
-                test=test.split("\n")
-                if check_formatting(test)==False:
-                    report.write("Error formatting card: "+mon+"\n")
-                    error_cards+=1
-                if len(test)>c.LINES-2:
-                    report.write(f"MANY LINES({len(test)}):{mon}\n")
-                    report.write(ln[:test_len]+"\n===\n")
-                for i in range(len(test)):
-                    ln=test[i]
-                    if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
-                        ln=ln[1:]
-                    len_test=len(ln)
-                    if f_length!=2:
-                        if i==0:
-                            test_len=SCR_WIDTH-1
-                        else:
-                            test_len=SCR_WIDTH
-                    if f_length==2:
-                        if i in [0,1,2]:
-                            test_len=SCR_WIDTH-3
-                        else:
-                            test_len=SCR_WIDTH
-                    if len_test>test_len:
-                        failed_lines+=1
-                        failed_current_monster=True
-                        report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
-                        report.write(ln[:test_len]+"\n===\n")
-                
-                test_e="".join(card_explanation(table[mon],explanation_at,explanation_ad))
-                if test_e.startswith("ERROR!"):
-                    failed_current_monster=True
-                    report.write(f"EXPLANATION DICT FAIL:{mon}: {test_e}\n")
-                    report.write(ln[:test_len]+"\n===\n")
-                if test_e.find("DUMMY")!=-1:
-                    failed_current_monster=True
-                    report.write(f"EXPLANATION DUMMY:{mon}\n")
-                    report.write(ln[:test_len]+"\n===\n")
-                test_e=test_e.split("\n")
-                if len(test_e)>c.LINES-2:
-                    failed_current_monster=True
-                    report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
-                    report.write(ln[:test_len]+"\n===\n")
-                    
-                if failed_current_monster==True:
-                    failed_monsters+=1
-                    failed_current_monster=False
-            report.close()
-            result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
-            report_summary.write(result_str)
-            report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
-            report_summary.close()
-            s.addstr(result_str)
+        run_tests(s)
         for x in range(1,17):
             s.addstr(f"TEST:{(x-1):2} ",c.color_pair(x))
             if x==8:
@@ -1046,6 +1081,8 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         
         s.refresh()
         s.getch()
+        reset_colors()
+        utils.init_pairs()
 
     if len(key)==1 and key not in ["1","2","3","4","5","6","[","]"]:
         if len(in_str)<MAX_SEARCH:
@@ -1121,6 +1158,7 @@ _Left, Right:_   Scroll through search results\n\
 _Esc:_           Clear search line\n\
 _Up:_            Show less information\n\
 _Down:_          Show more information\n\
+_Ctrl+A:_        Show attacks analysis windows\n\
 _Tab:_           Switch to **List** mode\n\
 _Ctrl+Q or F10:_ Exit\n\
 _1...6:_         Change colors\n")
@@ -1442,11 +1480,12 @@ _Ctrl+F:_        Show filters window\n\
 _Ctrl+Q or F10:_ Exit\n")
     return 0
 
-def react_to_key_explanation(ch,key,alt_ch,mon_name):
+def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
     global format_length
     global mode
     global ver_idx
     global ver_idx_temp
+    global explanation_offset
     if key=="KEY_UP" :
         format_length-=1
         if format_length<=0:
@@ -1478,11 +1517,17 @@ def react_to_key_explanation(ch,key,alt_ch,mon_name):
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
+    if key==" ":
+        explanation_offset+=(c.LINES-3)
     if ch==27 or key=="BACKSPACE" or key=="^H":
         ver_idx_temp=-1
         read_monsters(ver_list[ver_idx])
         mode=SEARCH
     if key=="KEY_F(1)":
+        card_win.addstr(0,25,"|Attack can be resisted ------------->",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(2,25,"|Attack can be prevented by magic cancellation ----+",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.refresh()
         utils.show_message("Quick help:\n\
 \n\
 _Esc:_           Return to lilst\n\
@@ -1490,9 +1535,10 @@ _[, ]:_          Switch variant\n\
 (Variant will be reverted when you press Esc)\n\
 \n\
 _Ctrl+O:_        Nothing. Use square brackets!\n\
-_Up:_            Show less information\n\
-_Down:_          Show more information\n\
-_F10 or Ctrl+Q:_ Exit")
+_Up:_            Show less information (main screen)\n\
+_Down:_          Show more information (main screen)\n\
+_Space:_         Scroll screens if more than one available\n\
+_F10 or Ctrl+Q:_ Exit",offset=1)
 
     return 0
 
@@ -1539,7 +1585,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
     if key=="KEY_F(1)":
         utils.show_message("Quick help:\n\
 \n\
-_Esc:_           Return to lilst\n\
+_Esc:_           Return to list\n\
 _[, ]:_          Switch variant\n\
 (Variant will be reverted when you press Esc)\n\
 \n\
@@ -1588,14 +1634,7 @@ def main(s):
     c.mouseinterval(0)
     c.curs_set(1)
     s.erase()
-    c.init_pair(BK,cur_color_s,cur_color_bk_s)
-    c.init_pair(INV,cur_color_bk_s,cur_color_s)
-
-    c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-    c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
-    c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-    c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
-    c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
+    reset_colors()
     #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
     #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     utils.init_pairs()
@@ -1630,6 +1669,7 @@ def main(s):
         results=[]
         not_found_after_reload=False
         if mode==EXPLANATION:
+            show_card_upper(search_win,results,mon_name)
             show_explanation(card_win,results,mon_name)
         if mode==SELECT_RES:
             show_select_res(card_win)
@@ -1733,7 +1773,7 @@ def main(s):
                 break
             continue
         if mode==EXPLANATION:
-            res=react_to_key_explanation(ch,key,alt_ch,mon_name)
+            res=react_to_key_explanation(card_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue

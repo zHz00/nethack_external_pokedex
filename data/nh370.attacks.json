@@ -126,7 +126,7 @@
         "type": "AD_ACID",
         "caption": "Acid",
         "caption_short": "Acid",
-        "explanation": "1. If you kick and hit, then 16.7%: corrode boots for one grade. If you \nstrike and hit, then 16.7%: corrode weapon for one grade. \n2. Damage->XdY if X!=0 and Lv d Y, if X=0. If you hit, 50%: acid damage for Damage Hp. Then 3.3% of corrode armor for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "explanation": "1. If you kick and hit, then 16.7%: corrode boots for one grade. If you strike and hit, then 16.7%: corrode weapon for one grade. \n2. Damage->XdY if X!=0 and Lv d Y, if X=0. If you hit, 50%: acid damage for Damage Hp. Then 3.3% of corrode armor for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
         "resisted": true,
         "can_be_cancelled": false,
         "mc": false
@@ -198,7 +198,7 @@
         "type": "AD_CORR",
         "caption": "Corrode",
         "caption_short": "Corrode",
-        "explanation": "If you kick and hit, then 100%: corrode boots for one grade. If you \nstrike and hit, then 100%: corrode weapon for one grade. Damage->0",
+        "explanation": "If you kick and hit, then 100%: corrode boots for one grade. If you strike and hit, then 100%: corrode weapon for one grade. Damage->0",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -207,7 +207,7 @@
         "type": "AD_RUST",
         "caption": "Rust",
         "caption_short": "Rust",
-        "explanation": "If you kick and hit, then 100%: rust boots for one grade. If you \nstrike and hit, then 100%: rust weapon for one grade. Damage->0",
+        "explanation": "If you kick and hit, then 100%: rust boots for one grade. If you strike and hit, then 100%: rust weapon for one grade. Damage->0",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -216,7 +216,7 @@
         "type": "AD_ENCH",
         "caption": "Disenchant",
         "caption_short": "Disenchant",
-        "explanation": "If you kick and hit, then 100%: if positively enchanted, boots lose 1 enchantment. If you \nstrike and hit, then 100%: if positively enchanted, weapon lose 1 enchantment. Damage->0",
+        "explanation": "If you kick and hit, then 100%: if positively enchanted, boots lose 1 enchantment. If you strike and hit, then 100%: if positively enchanted, weapon lose 1 enchantment. Damage->0",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -236,7 +236,7 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "20%: nothing; 80%: Damage->2d6 (fire). Burn away slime; If Lv>=d20, destroy Damage/5 items without additional \ndamage: Potions, Scrolls, Spellbooks, Green slime globs. Separate roll: if Lv>=d20, burn one (organic) item for one grade. How item is selected:\n1. Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
+        "explanation": "20%: nothing; 80%: Damage->2d6 (fire). Burn away slime; If Lv>=d20, destroy Damage/5 items without additional damage: Potions, Scrolls, Spellbooks, Green slime globs. Separate roll: if Lv>=d20, burn one (organic) item for one grade. How item is selected:\n1. Choose helmet, body (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n2. If body is selected, then stop regardless of item material.\n3. Test, if item can be eroded.\n4. If item can't be eroded, go to 1.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -328,7 +328,7 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: destroy Damage/5 items with no additional damage: Wands, metallic \nrings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: destroy Damage/5 items with no additional damage: Wands, metallic rings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -337,7 +337,7 @@
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "Poison with no additinal damage: (a) 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage \nreceived, -1 Co, -3 Dx. (b) 60.0% of 5+d10 additional damage (c) 33.3% of -1 Dx.",
+        "explanation": "Poison with no additinal damage: (a) 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. (b) 60.0% of 5+d10 additional damage (c) 33.3% of -1 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -451,7 +451,7 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "If Lv>=d20, destroy Damage/5 items with \nadditional damage: Potions (d4)",
+        "explanation": "If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d4)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -595,7 +595,7 @@
         "type": "AD_SEDU",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs: if you are punished, 75% that chain is removed. Else, if your \nhave adorement rings without gloves, steal one. Else, steal one object, \nuncovered by others, then nymph teleports. Animals: Steal one object, \nuncovered by others, then monster flees.",
+        "explanation": "Nymphs: if you are punished, 75% that chain is removed. Else, if your have adorement rings without gloves, steal one. Else, steal one object, uncovered by others, then nymph teleports. Animals: Steal one object, uncovered by others, then monster flees.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -667,7 +667,7 @@
         "type": "AD_DRDX",
         "caption": "Poison -Dx",
         "caption_short": "Poison -Dx",
-        "explanation": "87.5%: ordinary damage; 12.5%: ordinary damage, then poison: (a) 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. (b) 80% of 5+d10 additional damage (c) 16.7% of \n-1 Dx.",
+        "explanation": "87.5%: ordinary damage; 12.5%: ordinary damage, then poison: (a) 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. (b) 80% of 5+d10 additional damage (c) 16.7% of -1 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true

@@ -1,5 +1,6 @@
 import itertools
 import math
+import curses as c
 
 from nhconstants_common import *
 from nhconstants_flags import *
@@ -209,7 +210,7 @@ def card_gen(mon,format_length):
 
 def card_explanation(mon,at_e,ad_e):
     global max_len_atk,max_len_res,max_len_con
-    out_line=["$"]
+    out_line=["#"]
     #Attacks
     attacks=""
     interrupted=0
@@ -232,19 +233,28 @@ def card_explanation(mon,at_e,ad_e):
             attack[x]=attack[x].strip()
         at_actual=at
         ad_actual=ad
+        attack_cur=""
         if attack[0] not in at_actual:
-            attack_s+="NOT FOUND AT:"+attack[0]+"\n"
+            attack_cur="NOT FOUND AT:"+attack[0]+"\n"
         else:
             if attack[1] not in ad_actual:
-                attack_s+="NOT FOUND AD:"+attack[1]+"\n"
+                attack_cur="NOT FOUND AD:"+attack[1]+"\n"
             else:#normal flow
                 if(attack[2]=="0" and attack[3]=="0"):
                     if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
-                        attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e; "#Oona special
+                        attack_cur=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e; "#Oona special
                     else:
-                        attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+"; "#0d0 is ignored
+                        attack_cur=at_actual[attack[0]]+ad_actual[attack[1]]+"; "#0d0 is ignored
                 else:
-                    attack_s+=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+"; "
+                    attack_cur=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+"; "
+        flags_dict=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]
+        attack_flags=""
+        attack_flags+="|"+("Yes " if flags_dict["resisted"] else "No  ")
+        attack_flags+="|"+("Yes " if flags_dict["can_be_cancelled"] else "No  ")
+        attack_flags+="|"+("Yes " if flags_dict["mc"] else "No  ")
+        attack_flags+="|"
+        spaces=c.COLS-len(attack_flags)-len(attack_cur)
+        attack_s+=attack_cur+" "*spaces+attack_flags
 
         if len(attack)>8:#dNetHack
             lev=0 if len(attack[4])==0 else int(attack[4])
@@ -287,6 +297,8 @@ def card_explanation(mon,at_e,ad_e):
 
         attack_e_list=attack_e.split("\n")
         for i in range(len(attack_e_list)):
+            if len(attack_e_list[i])>0 and (attack_e_list[i][0] not in ["#","$","^"]):#new line in text
+                attack_e_list[i]="^    "+attack_e_list[i]
             attack_e_list[i]=split_line3(attack_e_list[i],SCR_WIDTH)
         attack_e="\n".join(attack_e_list)
         #attack_es=split_line3(attack_e,SCR_WIDTH)
@@ -294,14 +306,16 @@ def card_explanation(mon,at_e,ad_e):
     
     if attacks.endswith(", "):
         attacks=attacks[:-2]
-    if len(attacks)>max_len_atk:
+    if len(attacks)>max_len_atk:        
         max_len_atk=len(attacks)
     
     attacks_list=attacks.split(",")
     attacks_list_condensed=[]
     cnt=0
-
-    attacks_list="Attacks:"+", ".join(attacks_list)+"\n"
+    header="Analysis of attacks:"
+    flags_header="|Res |Cncl|MC  |"
+    spaces=c.COLS-len(header)-len(flags_header)
+    attacks_list=header+" "*spaces+flags_header+", ".join(attacks_list)+"\n"
     attacks_list=attacks_list.replace(",  ",", ")#double space after joining with ", " is very likely
     #sl=split_line(attacks_list,SCR_WIDTH)
     #sl2=split_line2(attacks_list,SCR_WIDTH)
