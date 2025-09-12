@@ -33,6 +33,7 @@ Also, you can type part of name and still find your monster in search results.
 **Up**			Show less information  
 **Esc**			Clear search lines  
 **Left, Right**	Scroll through search results  
+**Ctrl+A**		Show attacks analysis window (Press Esc to return to card)  
 **F10**			Exit  
   
 **1-6**			Change colors  
