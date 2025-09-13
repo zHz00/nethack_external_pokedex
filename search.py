@@ -40,7 +40,8 @@ SELECT_SORT2=7
 FILTERS=8
 SELECT_RES=9
 SELECT_PARAM=10
-EXPLANATION=11
+EXPLANATION_CARD=11
+EXPLANATION_SEARCH=12
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -56,9 +57,9 @@ max_len_con=0
 
 table=dict()
 table_temp=[]
-explanation_at=dict()
-explanation_ad=dict()
-explanation_offset=0
+e_at=dict()
+e_ad=dict()
+e_offset=0
 disable_sorting=False
 data_folder="data/"
 ver_list=[]
@@ -410,7 +411,7 @@ def read_monsters(file):
     global table,table_temp
     global disable_sorting
     global wingy
-    global explanation_at,explanation_ad
+    global e_at,e_ad
     wingy=False
     table=dict()
     table_temp=[]
@@ -443,11 +444,11 @@ def read_monsters(file):
         attacks_file=open(data_folder+base_name+".attacks.json","r")
         explanation_attacks=json.load(attacks_file)
         attacks_file.close()
-        explanation_at=explanation_attacks["at"]
-        explanation_ad=explanation_attacks["ad"]
+        e_at=explanation_attacks["at"]
+        e_ad=explanation_attacks["ad"]
     except FileNotFoundError as e:
-        explanation_at=dict()
-        explanation_ad=dict()
+        e_at=dict()
+        e_ad=dict()
         for mon_name in table.keys():
             mon=table[mon_name]
             for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
@@ -459,17 +460,17 @@ def read_monsters(file):
                 attack=attack.split(",")
                 at_cur=attack[0].strip()
                 ad_cur=attack[1].strip()
-                if at_cur not in explanation_at:
+                if at_cur not in e_at:
                     at_item=dict()
                     at_item["type"]=at_cur
                     at_item["caption"]=at[at_cur].strip()
                     at_item["caption_short"]=at_short[at_cur].strip()
                     at_item["explanation"]="DUMMY"#at[at_cur].strip()
                     at_item["ad_list_name"]=at_cur
-                    explanation_at[at_cur]=at_item
-                if at_cur not in explanation_ad:
-                    explanation_ad[at_cur]=dict()
-                if ad_cur not in explanation_ad[at_cur]:
+                    e_at[at_cur]=at_item
+                if at_cur not in e_ad:
+                    e_ad[at_cur]=dict()
+                if ad_cur not in e_ad[at_cur]:
                     ad_item=dict()
                     ad_item["type"]=ad_cur
                     ad_item["caption"]=ad[ad_cur].strip()
@@ -478,14 +479,15 @@ def read_monsters(file):
                     ad_item["resisted"]=False
                     ad_item["can_be_cancelled"]=False
                     ad_item["mc"]=False
-                    explanation_ad[at_cur][ad_cur]=ad_item
+                    e_ad[at_cur][ad_cur]=ad_item
                 #ad=mon[attack_n][1]
         explanation_attacks=dict()
-        explanation_attacks["at"]=explanation_at
-        explanation_attacks["ad"]=explanation_ad
+        explanation_attacks["at"]=e_at
+        explanation_attacks["ad"]=e_ad
         attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
         json.dump(explanation_attacks,attacks_file,indent=1)
         attacks_file.close()
+    set_at_ad(e_at,e_ad)
 
 BK=20
 INV=21
@@ -685,8 +687,17 @@ def show_card_upper(search_win,results,mon_name):
 
     search_win.erase()
 
-    search_win.addstr(0,0,"Monster:"+mon_name,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(1,0,f"Esc: Back to list",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
+        addition=f"[Lv:{table[mon_name][rows['level']]}]"
+    else:
+        addition=""
+
+    search_win.addstr(0,0,"Monster:"+mon_name+addition,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    if mode in [EXPLANATION_SEARCH,EXPLANATION_CARD]:
+        hint="Esc:Back to card"
+    else:
+        hint="Esc:Back to list"
+    search_win.addstr(1,0,hint,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
     show_ver_format(search_win)
     disable_cursor()
@@ -717,16 +728,44 @@ def show_list(card_win,search_win,results):
     card_win.refresh()
     show_list_upper(search_win,results,selected_mon_name)
 
+EX_NORMAL = 30
+EX_HEADER = 31
+EX_BOLD = 32
+EX_ITALIC = 33
+EX_NAME = 34
+
+modes_bk={
+    EX_NORMAL:BK_CARD,
+    EX_HEADER:INV_CARD,
+    EX_BOLD:INV_CARD,
+    EX_ITALIC:SEPARATOR_BK,
+    EX_NAME:INV_CARD}
+modes_inv={
+    EX_NORMAL:INV_CARD,
+    EX_HEADER:BK_CARD,
+    EX_BOLD:BK_CARD,
+    EX_ITALIC:SEPARATOR_INV,
+    EX_NAME:BK_CARD}
+modes_attr={
+    EX_NORMAL:0,
+    EX_HEADER:c.A_BOLD,
+    EX_BOLD:c.A_BOLD,
+    EX_ITALIC:0,
+    EX_NAME:0
+}
+
+
 def show_explanation(card_win,results,mon_name):
-    global explanation_offset
+    global e_offset
     card_win.erase()
-    attacks=card_explanation(table[mon_name],explanation_at,explanation_ad)
+    attacks=card_explanation(table[mon_name])
     card="".join(attacks).split("\n")
     cur_pair=BK_CARD
     line_n=0
-    if explanation_offset>len(card):
-        explanation_offset=0#cycle scroll
-    for i in range(explanation_offset,len(card)):
+    if e_offset>len(card):
+        e_offset=0#cycle scroll
+    mode=EX_NORMAL
+    for i in range(e_offset,len(card)):
         line=card[i]
         if len(line)==0:
             continue
@@ -752,8 +791,39 @@ def show_explanation(card_win,results,mon_name):
         line=line.rstrip()
         if len(line)>SCR_WIDTH:
             line=line[:SCR_WIDTH-1]+"!"
+        prev_ch=''
+        pos=0
         for i in range(len(line)):
-            pos=i
+            if line[i]=='\\' and prev_ch!='\\':
+                prev_ch=line[i]
+                continue
+            if line[i]=='*' and prev_ch!='\\' and mode==EX_NORMAL:
+                mode=EX_BOLD
+                prev_ch=line[i]
+                continue
+            if line[i]=='*' and prev_ch!='\\' and prev_ch!='*' and mode==EX_BOLD:
+                mode=EX_NORMAL
+                prev_ch=line[i]
+                continue
+            if line[i]=='_' and prev_ch!='\\' and mode==EX_NORMAL:
+                mode=EX_NAME
+                prev_ch=line[i]
+                continue
+            if line[i]=='_' and prev_ch!='\\' and prev_ch!='_' and mode==EX_NAME:
+                mode=EX_NORMAL
+                prev_ch=line[i]
+                continue
+            if line[i]=='*' and prev_ch=='*' and mode in [EX_NORMAL,EX_BOLD]:
+                mode=EX_ITALIC
+                prev_ch=line[i]
+                continue
+            if line[i]=='*' and prev_ch=='*' and mode==EX_ITALIC:
+                mode=EX_NORMAL
+                prev_ch=line[i]
+                continue
+            if line[i]=='*' and prev_ch!='\\':#we have asterisk that was not caught before. probably this is **. Skipping
+                prev_ch=line[i]
+                continue
             if line_n<c.LINES-2:
                 if line_n==c.LINES-3 and i>=c.COLS-1:
                     break
@@ -763,17 +833,22 @@ def show_explanation(card_win,results,mon_name):
                     else:
                         card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
                 else:
-                    card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+                    if cur_pair==BK_CARD:
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(modes_bk[mode])|(modes_attr[mode] if mode!=EX_NORMAL else attrib))
+                    else:
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(modes_inv[mode])|(modes_attr[mode] if mode!=EX_NORMAL else attrib))
             if line[i]==":":
                 attrib=0
             if line[i]=="|":
                 attrib=c.A_BOLD
+            prev_ch=line[i]
+            pos+=1
         line_n+=1
             
         #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
         card_win.chgat(-1,c.color_pair(cur_pair))
-        if line_n==c.LINES-2 or explanation_offset>0:#two or more screens
-            p=1+explanation_offset//(c.LINES-3)
+        if line_n>c.LINES-2 or e_offset>0:#two or more screens
+            p=1+e_offset//(c.LINES-3)
             p_max=1+len(card)//(c.LINES-3)
             page_n=f"[Page {p} of {p_max}. SPACE: Scroll]"
             spaces=(c.COLS-len(page_n))//2-1
@@ -958,7 +1033,7 @@ def run_tests(s):
     report_summary.write("File: "+ver_list[ver_idx]+"\n")
     for mon in table.keys():
         total+=1
-        test_e="".join(card_explanation(table[mon],explanation_at,explanation_ad))
+        test_e="".join(card_explanation(table[mon]))
         if test_e.startswith("ERROR!"):
             failed_current_monster=True
             report.write(f"EXPLANATION DICT FAIL:{mon}: {test_e}\n")
@@ -1148,7 +1223,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         list_mode_sel=0
         list_mode_skip=0
     if key=="^A":
-        mode=EXPLANATION
+        mode=EXPLANATION_SEARCH
     if key=="KEY_F(1)":
         utils.show_message("Quick help:\n\
 \n\
@@ -1485,7 +1560,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
     global mode
     global ver_idx
     global ver_idx_temp
-    global explanation_offset
+    global e_offset
     if key=="KEY_UP" :
         format_length-=1
         if format_length<=0:
@@ -1518,11 +1593,14 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         save_settings()
         return -1
     if key==" ":
-        explanation_offset+=(c.LINES-3)
+        e_offset+=(c.LINES-3)
     if ch==27 or key=="BACKSPACE" or key=="^H":
         ver_idx_temp=-1
         read_monsters(ver_list[ver_idx])
-        mode=SEARCH
+        if mode==EXPLANATION_CARD:
+            mode=CARD
+        if mode==EXPLANATION_SEARCH:
+            mode=SEARCH
     if key=="KEY_F(1)":
         card_win.addstr(0,25,"|Attack can be resisted ------------->",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
         card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
@@ -1575,6 +1653,8 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         #reset_sort()
         if mon_name!="":
             reloaded=True
+    if key=="^A":
+        mode=EXPLANATION_CARD
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
@@ -1668,7 +1748,7 @@ def main(s):
     while True:
         results=[]
         not_found_after_reload=False
-        if mode==EXPLANATION:
+        if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
             show_card_upper(search_win,results,mon_name)
             show_explanation(card_win,results,mon_name)
         if mode==SELECT_RES:
@@ -1772,7 +1852,7 @@ def main(s):
             if res!=0:
                 break
             continue
-        if mode==EXPLANATION:
+        if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
             res=react_to_key_explanation(card_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break

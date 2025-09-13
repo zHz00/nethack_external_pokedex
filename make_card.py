@@ -9,6 +9,14 @@ from nhconstants_atk import *
 
 wingy=False
 
+at_e=dict()
+ad_e=dict()
+def set_at_ad(at_e_in,ad_e_in):
+    global at_e
+    global ad_e
+    at_e=at_e_in
+    ad_e=ad_e_in
+
 def max_val_len(d:dict())->int:
     max=0
     for k in d.keys():
@@ -208,7 +216,7 @@ def card_gen(mon,format_length):
 
     return out_line
 
-def card_explanation(mon,at_e,ad_e):
+def card_explanation(mon):
     global max_len_atk,max_len_res,max_len_con
     out_line=["#"]
     #Attacks
@@ -231,9 +239,27 @@ def card_explanation(mon,at_e,ad_e):
         attack[1]=attack[1].strip()
         for x in range(len(attack)):
             attack[x]=attack[x].strip()
+        #checking structure
+        if attack[0] not in at_e:
+            return f"ERROR! {attack[0]} not in at_e"
+        if "explanation" not in at_e[attack[0]]:
+            return f"ERROR! explanation not in at_e[{attack[0]}]"
+        if attack[1] not in ad_e[at_e[attack[0]]["ad_list_name"]]:
+            return f"ERROR! {attack[1]} not in ad_e[{attack[0]}]"
+        if "explanation" not in ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]:
+            return f"ERROR! explanation not in ad_e[{attack[0]}][{attack[1]}"
         at_actual=at
         ad_actual=ad
+        at_from_file=at_e[attack[0]]["caption"]
+        ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption"]
+        space_separator=""
+        if len(ad_from_file)>0:
+            space_separator=" "
+        else:
+            space_separator=""
+        
         attack_cur=""
+        explanation_str=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]
         if attack[0] not in at_actual:
             attack_cur="NOT FOUND AT:"+attack[0]+"\n"
         else:
@@ -242,11 +268,13 @@ def card_explanation(mon,at_e,ad_e):
             else:#normal flow
                 if(attack[2]=="0" and attack[3]=="0"):
                     if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
-                        attack_cur=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e; "#Oona special
+                        attack_cur=at_from_file+" "+ad_from_file+" Spawn v/e; "#Oona special
                     else:
-                        attack_cur=at_actual[attack[0]]+ad_actual[attack[1]]+"; "#0d0 is ignored
+                        attack_cur=at_from_file+" "+ad_from_file+"; "#0d0 is ignored
                 else:
-                    attack_cur=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+"; "
+                    attack_cur=at_from_file+" "+attack[2]+"d"+attack[3]+space_separator+ad_from_file+"; "
+        if explanation_str.find("Damage")!=-1 or explanation_str.find("XdY")!=-1:
+            attack_cur+="[Damage(XdY)="+attack[2]+"d"+attack[3]+"]"
         flags_dict=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]
         attack_flags=""
         attack_flags+="|"+("Yes " if flags_dict["resisted"] else "No  ")
@@ -254,6 +282,8 @@ def card_explanation(mon,at_e,ad_e):
         attack_flags+="|"+("Yes " if flags_dict["mc"] else "No  ")
         attack_flags+="|"
         spaces=c.COLS-len(attack_flags)-len(attack_cur)
+        if spaces<=0:
+            return "ERROR! Too long attack!: "+attack_cur
         attack_s+=attack_cur+" "*spaces+attack_flags
 
         if len(attack)>8:#dNetHack
@@ -280,20 +310,12 @@ def card_explanation(mon,at_e,ad_e):
                 ext="["+ext+"]"
                 attack_s=attack_s[:-2]
                 attack_s+=ext+", "
-        #checking structure
-        if attack[0] not in at_e:
-            return f"ERROR! {attack[0]} not in at_e"
-        if "explanation" not in at_e[attack[0]]:
-            return f"ERROR! explanation not in at_e[{attack[0]}]"
-        if attack[1] not in ad_e[at_e[attack[0]]["ad_list_name"]]:
-            return f"ERROR! {attack[1]} not in ad_e[{attack[0]}]"
-        if "explanation" not in ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]:
-            return f"ERROR! explanation not in ad_e[{attack[0]}][{attack[1]}"
-        attack_e="\n#    "+at_actual[attack[0]]+":"+at_e[attack[0]]["explanation"]
+
+        attack_e="\n#    "+at_from_file+":"+at_e[attack[0]]["explanation"]
         if len(ad_actual[attack[1]])==0:
-            attack_e+="("+ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]+")"
+            attack_e+="("+explanation_str+")"
         else:
-            attack_e+="\n#    "+ad_actual[attack[1]].strip()+":"+ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]
+            attack_e+="\n#    "+ad_from_file+":"+explanation_str
 
         attack_e_list=attack_e.split("\n")
         for i in range(len(attack_e_list)):
@@ -346,16 +368,24 @@ def card_atk(mon,format_length):
         if format_length==-1:
             at_actual=at_short
             ad_actual=ad_short
+            at_from_file=at_e[attack[0]]["caption_short"]
+            ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption_short"]
         else:
             at_actual=at
             ad_actual=ad
+            at_from_file=at_e[attack[0]]["caption"]
+            ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption"]
+        if len(ad_from_file)>0:
+            space_separator=" "
+        else:
+            space_separator=""
         if(attack[2]=="0" and attack[3]=="0"):
             if attack[0]=="AT_NONE" and attack[1]=="AD_OONA":#passive oona
-                attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+" Spawn v/e, "#Oona special
+                attack_s+=at_from_file+" "+ad_from_file+" Spawn v/e, "#Oona special
             else:
-                attack_s+=at_actual[attack[0]]+ad_actual[attack[1]]+", "#0d0 is ignored
+                attack_s+=at_from_file+" "+ad_from_file+", "#0d0 is ignored
         else:
-            attack_s+=at_actual[attack[0]]+" "+attack[2]+"d"+attack[3]+ad_actual[attack[1]]+", "
+            attack_s+=at_from_file+" "+attack[2]+"d"+attack[3]+space_separator+ad_from_file+", "
 
         if len(attack)>8:#dNetHack
             lev=0 if len(attack[4])==0 else int(attack[4])
