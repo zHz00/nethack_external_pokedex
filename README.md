@@ -17,7 +17,7 @@ dNetHack 3.24.0
 
 For Linux there is no special requirements. For Windows, though, you must install windows-curses module.
 
-To start using, run search.py.
+To start using, run main.py.
 
 Just type monster name and see its properties!
 
