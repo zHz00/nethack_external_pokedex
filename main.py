@@ -489,6 +489,54 @@ def read_monsters(file):
         attacks_file.close()
     set_at_ad(e_at,e_ad)
 
+def fill_attacks(file):
+    global e_at,e_ad
+    attacks_file=open(data_folder+file,"r")
+    explanation_attacks=json.load(attacks_file)
+    attacks_file.close()
+    e_at=explanation_attacks["at"].copy()
+    e_ad=explanation_attacks["ad"].copy()
+
+    for mon_name in table.keys():
+        mon=table[mon_name]
+        for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
+            if mon[attack_n]==NO_ATTK or len(mon[attack_n])==0:
+                continue
+            attack=mon[attack_n]
+            attack=attack[5:]
+            attack=attack[:-1]
+            attack=attack.split(",")
+            at_cur=attack[0].strip()
+            ad_cur=attack[1].strip()
+            if at_cur not in e_at:
+                at_item=dict()
+                at_item["type"]=at_cur
+                at_item["caption"]=at[at_cur].strip()
+                at_item["caption_short"]=at_short[at_cur].strip()
+                at_item["explanation"]="DUMMY"#at[at_cur].strip()
+                at_item["ad_list_name"]=at_cur
+                e_at[at_cur]=at_item
+                e_ad[at_cur]=dict()
+            at_cur=e_at[at_cur]["ad_list_name"]
+            if ad_cur not in e_ad[at_cur]:
+                ad_item=dict()
+                ad_item["type"]=ad_cur
+                ad_item["caption"]=ad[ad_cur].strip()
+                ad_item["caption_short"]=ad_short[ad_cur].strip()
+                ad_item["explanation"]="DUMMY"#ad[ad_cur].strip()
+                ad_item["resisted"]=False
+                ad_item["can_be_cancelled"]=False
+                ad_item["mc"]=False
+                e_ad[at_cur][ad_cur]=ad_item
+    explanation_attacks=dict()
+    explanation_attacks["at"]=e_at
+    explanation_attacks["ad"]=e_ad
+    base_name=ver_list[ver_idx].replace(".csv","")
+    attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
+    json.dump(explanation_attacks,attacks_file,indent=1)
+    attacks_file.close()
+    utils.show_message("DONE")
+
 BK=20
 INV=21
 BK_CARD=22
@@ -1155,7 +1203,16 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             s.addstr("\n")
         
         s.refresh()
-        s.getch()
+        ch=s.getch()
+        if ch==ord("f"):
+            s.addstr(15,15,"Enter file name to fill attacks:")
+            file=utils.textpad(s,16,15,20).strip()
+            if len(file)>0:
+                if file.endswith(".json")==False:
+                    file+=".json"
+                fill_attacks(file)
+                set_at_ad(e_at,e_ad)
+        
         reset_colors()
         utils.init_pairs()
 
@@ -1223,7 +1280,8 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         list_mode_sel=0
         list_mode_skip=0
     if key=="^A":
-        mode=EXPLANATION_SEARCH
+        if len(in_str)>0 and len(mon_name)>0:
+            mode=EXPLANATION_SEARCH
     if key=="KEY_F(1)":
         utils.show_message("Quick help:\n\
 \n\
