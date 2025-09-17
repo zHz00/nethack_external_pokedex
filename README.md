@@ -28,7 +28,7 @@ Also, you can type part of name and still find your monster in search results.
 ## Controls
 
 ### Search mode (default)
-**F1**			Show quick help
+**F1**			Show quick help  
 **Tab**			Switch to LIST mode  
 **[, ]**		Switch variant  
 **Ctrl+O**		Select variant from list  
@@ -51,7 +51,7 @@ Also, you can type part of name and still find your monster in search results.
 **Shift+F2**	Show every card in quick succession. WARNING, this is debug feature. This process cannot be interrupted. You just have to watch.
 
 ### List mode
-**F1**			Show quick help
+**F1**			Show quick help  
 **Tab**			Switch back to SERACH mode  
 **UP, DOWN**	Scroll through list  
 **PgUp, PgDn**	Scroll, but faster  
@@ -77,7 +77,7 @@ Also, you can type part of name and still find your monster in search results.
 
 Now, only 4 types of filters are supported. Press enter while filter is selected, enter parameter and press enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
 
-**Letter:**		Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to <any> state, you must enter asterisk (\*) as a parameter.  
+**Letter:**		Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to \<any\> state, you must enter asterisk (\*) as a parameter.  
 **Name:**		Show monsters, specified by part of their name. This is similar to SEARCH mode, but you see results as a list. To switch this filter to <any> state, you must enter a space in the edit field.  
 **Conveyed:**	This filter enables you to view monsters that can give you some intrinsic property. Beware, you'll get a monster even if it does not leave a corpse. You can still get a resist if you eat this monster alive, e.g. if you polymorph yourself to a purple worm.  
 **Param:**		You can select any parameter from the table, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter is in range from first value (included) to second value (also included).
