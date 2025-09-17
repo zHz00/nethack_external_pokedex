@@ -1666,7 +1666,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         card_win.refresh()
         utils.show_message("Quick help:\n\
 \n\
-_Esc:_           Return to lilst\n\
+_Esc:_           Return to card\n\
 _[, ]:_          Switch variant\n\
 (Variant will be reverted when you press Esc)\n\
 \n\
