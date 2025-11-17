@@ -7,6 +7,7 @@ CONT_IMAGE_TAG = nethack_external_pokedex_ssh
 CONT_IIDFILE = $(CONT_IMAGE_TAG).iidfile
 CONT_PORT_ARGS = -p 3722:22
 PROJECT_ROOT = ..
+CONT_BUILD_CTX = $(PROJECT_ROOT)
 SRC_DIR = $(PROJECT_ROOT)
 SOURCES = \
 	$(SRC_DIR)/main.py \
@@ -39,6 +40,6 @@ container_image: $(CONT_IIDFILE)
 $(CONT_IIDFILE): $(DEPLOY_DIR)/Containerfile $(SOURCES) $(DATA_FILES)
 	$(CONT_BUILDER) build -t $(CONT_IMAGE_TAG) -f "$(DEPLOY_DIR)/Containerfile" \
 	    --iidfile "$(CONT_IIDFILE)" \
-		"$(PROJECT_ROOT)"
+		"$(CONT_BUILD_CTX)"
 clean:
 	rm -f "$(CONT_IIDFILE)"
