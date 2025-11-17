@@ -2,9 +2,10 @@
 
 FROM alpine
 
-RUN apk add --no-cache \
-    dropbear \
-    python3
+RUN apk update
+RUN apk add dropbear python3
+RUN apk search -qe '*-terminfo' | xargs apk add
+RUN rm -rf /var/cache/apk/*
 
 RUN adduser -D pokedex
 RUN passwd -d pokedex
