@@ -1,3 +1,5 @@
+# WARNING: This container exposes a passwordless account over SSH. Be careful.
+
 FROM alpine
 
 RUN apk add --no-cache \
