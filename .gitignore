@@ -2,3 +2,4 @@ default.txt
 __pycache__/
 data/*.attacks.json
 .ssh/
+**.iidfile
