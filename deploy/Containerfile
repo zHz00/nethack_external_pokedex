@@ -15,4 +15,4 @@ RUN chmod +x main.py
 
 USER root
 ENTRYPOINT [ "/usr/sbin/dropbear", "-FREBw", "-T", "1", \
-    "-c", "exec /usr/bin/python3 main.py"]
+    "-c", "/usr/bin/python3 main.py"]
