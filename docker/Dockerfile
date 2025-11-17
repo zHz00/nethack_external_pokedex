@@ -1,0 +1,18 @@
+FROM alpine
+
+RUN apk add --no-cache \
+    dropbear \
+    python3
+
+RUN adduser -D pokedex
+RUN passwd -d pokedex
+USER pokedex
+
+WORKDIR /home/pokedex
+ADD --chown=pokedex:pokedex *.py .
+ADD --chown=pokedex:pokedex data data
+RUN chmod +x main.py
+
+USER root
+ENTRYPOINT [ "/usr/sbin/dropbear", "-FREBw", "-T", "1", \
+    "-c", "exec /usr/bin/python3 main.py"]
