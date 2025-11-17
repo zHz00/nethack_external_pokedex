@@ -25,12 +25,12 @@ jobs:
       - name: build the version
         run: >-
           buildah bud --layers --format oci --tls-verify=true
-          -t ${IMAGE_NAME}:latest
+          -t ${IMAGE}:latest
           -f deploy/Containerfile .
 
       - name: push to registry
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
         with:
-          image: "${{ env.IMAGE }}"
+          tags: "${{ env.IMAGE }}:latest"
           username: ${{ github.actor }}
           password: ${{ github.token }}
