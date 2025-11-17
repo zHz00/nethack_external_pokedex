@@ -12,7 +12,7 @@ on:
 
 env:
   IMAGE_NAME: nethack_external_pokedex_ssh
-  IMAGE: ghcr.io/${{ github.repository_owner }}/nethack_external_pokedex_ssh
+  IMAGE: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}
 
 jobs:
   build:
@@ -31,5 +31,6 @@ jobs:
       - name: push to registry
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
         with:
+          image: "${{ env.IMAGE }}"
           username: ${{ github.actor }}
           password: ${{ github.token }}
