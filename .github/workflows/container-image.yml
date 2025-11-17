@@ -12,7 +12,7 @@ on:
 
 env:
   IMAGE_NAME: nethack_external_pokedex_ssh
-  IMAGE: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE }}
+  IMAGE: ghcr.io/${{ github.repository_owner }}/nethack_external_pokedex_ssh
 
 jobs:
   build:
