@@ -32,7 +32,7 @@ DATA_FILES = \
 	$(DATA_DIR)/xnh9.csv
 DEPLOY_DIR = $(PROJECT_ROOT)/deploy
 
-.PHONY: container_image all clean run
+.PHONY: container_image all clean git-clean run
 all: container_image
 run: container_image
 	$(CONT_RUNNER) run $(CONT_PORT_ARGS) $(CONT_IMAGE_TAG)
@@ -43,3 +43,5 @@ $(CONT_IIDFILE): $(DEPLOY_DIR)/Containerfile $(SOURCES) $(DATA_FILES)
 		"$(CONT_BUILD_CTX)"
 clean:
 	rm -f "$(CONT_IIDFILE)"
+git-clean:
+	git clean -Xfd
