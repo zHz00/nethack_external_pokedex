@@ -1,0 +1,36 @@
+name: build NetHack External Pokedex container image
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - deploy/Containerfile
+      - .github/workflows/container-image.yml
+      - "*.py"
+      - data/
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: nethack_external_pokedex_ssh
+  IMAGE: ghcr.io/${{ github.repository_owner }}/nethack_external_pokedex_ssh
+
+jobs:
+  build:
+    name: build container image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: build the version
+        run: >-
+          buildah bud --layers --format oci --tls-verify=true
+          -t ${IMAGE}:latest
+          -f deploy/Containerfile .
+
+      - name: push to registry
+        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
+        with:
+          tags: "${{ env.IMAGE }}:latest"
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
