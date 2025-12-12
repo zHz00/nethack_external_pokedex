@@ -22,7 +22,7 @@ jobs:
         env:
           OWNER: "${{ github.repository_owner }}"
         run: |
-          printf 'OWNER_LOWERCASE=%s\b' "${OWNER,,}"                      >> ${GITHUB_ENV}
+          printf 'OWNER_LOWERCASE=%s\n' "${OWNER,,}"                      >> ${GITHUB_ENV}
           printf 'IMAGE_NAME=%s\n' nethack_external_pokedex_ssh           >> ${GITHUB_ENV}
 
       - name: set environment variables (full image name)
