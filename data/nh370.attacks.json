@@ -263,7 +263,7 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ aside from rare stoning resistance (provided by yellow dragon scales/mail), you can protect yourself with blindfold or some reflecting item.",
+        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ aside from rare stoning resistance (provided by yellow dragon scales/mail), you can protect yourself with blindfold or some reflecting item. Furthermore, if you are hallucinating, then you are protected 75% of time",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -328,7 +328,7 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: Wands, (metallic) Rings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: Wands, (metallic) Rings (if ring can be charged, 66.7% chance of charging it instead of destroying). Set blind timer to Xd50 turns if not resisted. _Resistance item:_ worn blindfold (for blindness only)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -337,7 +337,7 @@
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "Poison with no additional damage: _(a)_ 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -1 Dx.",
+        "explanation": "Poison with no additional damage: _(a)_ 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -2d2 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -478,7 +478,7 @@
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 St. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -1 St.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 St. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 St.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -667,7 +667,7 @@
         "type": "AD_DRDX",
         "caption": "Poison -Dx",
         "caption_short": "Poison -Dx",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -1 Dx.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -676,7 +676,7 @@
         "type": "AD_DRCO",
         "caption": "Poison -Co",
         "caption_short": "Poison -Co",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -3 Co. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -1 Co.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -3 Co. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 Co.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true

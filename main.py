@@ -1,7 +1,6 @@
 import csv
 import curses as c
 import os
-import datetime
 import time
 import json
 
@@ -42,6 +41,7 @@ SELECT_RES=9
 SELECT_PARAM=10
 EXPLANATION_CARD=11
 EXPLANATION_SEARCH=12
+SHOW_ALL_EXPL=13
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -150,7 +150,10 @@ def show_ver_format(search_win):
     search_win.addstr(0,x2,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if ver_idx_temp!=-1:
         search_win.addstr(0,x1,"|Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
+            search_win.addstr(1,x1-5,"(Card Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        else:
+            search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
         if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM]:
@@ -652,27 +655,32 @@ def show_hello_msg(card_win):
             "F10, Ctrl+Q: Exit"]
     col1=10
     col2=45
-    card_win.chgat(-1,c.color_pair(BK_CARD))
+    card_win.bkgd(' ',c.color_pair(BK_CARD))
+    card_win.chgat(0,0,-1,c.color_pair(INV_CARD))
+    card_win.chgat(1,0,-1,c.color_pair(INV_CARD))
     card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
     card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],c.color_pair(INV_CARD))
+    card_win.chgat(2,0,-1,c.color_pair(BK_CARD))
+    card_win.chgat(3,0,-1,c.color_pair(BK_CARD))
+    card_win.chgat(4,0,-1,c.color_pair(BK_CARD))
     for i in range(len(block1)):
-        card_win.addstr(i+2,col1,block1[i])
-        card_win.addstr(i+2,col2,block2[i])
+        card_win.addstr(i+2,col1,block1[i],c.color_pair(BK_CARD))
+        card_win.addstr(i+2,col2,block2[i],c.color_pair(BK_CARD))
 
     if len(in_str)==0:
 
-        card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-        card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
         card_win.addstr(2,0,"+---------",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
 
-        card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
-        card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
         card_win.addstr(2,SCR_WIDTH-7,"---+ |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
         card_win.addstr(3,SCR_WIDTH-12,"----------+",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
     card_win.refresh()
 
 def show_not_found_msg(card_win,mon_name):
-    msg=[f"'{mon_name}' does not extist in current version.","Try another search or switch version."]
+    msg=[f"'{mon_name}' does not exist in selected variant.","Try another search or switch variant."]
     card_win.chgat(-1,c.color_pair(BK_CARD))
     card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
     card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
@@ -735,11 +743,10 @@ def show_card_upper(search_win,results,mon_name):
 
     search_win.erase()
 
+    addition=""
     if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
-        addition=f"[Lv:{table[mon_name][rows['level']]}]"
-    else:
-        addition=""
-
+        if mon_name in table:
+            addition=f"[Lv:{table[mon_name][rows['level']]}]"
     search_win.addstr(0,0,"Monster:"+mon_name+addition,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if mode in [EXPLANATION_SEARCH,EXPLANATION_CARD]:
         hint="Esc:Back to card"
@@ -754,9 +761,9 @@ def show_card_upper(search_win,results,mon_name):
 def show_list(card_win,search_win,results):
     global selected_mon_name
     selected_mon_name=""
-    card_win.bkgd(' ',c.color_pair(BK_CARD))
+    card_win.bkgd(' ',c.color_pair(SEPARATOR_INV))
     card_win.erase()
-    card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_BK))
+    card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_INV))
     for x in range(LIST_LINES):
         if x+list_mode_skip>=len(list_mode_mons):
             break
@@ -785,15 +792,16 @@ EX_NAME = 34
 modes_bk={
     EX_NORMAL:BK_CARD,
     EX_HEADER:INV_CARD,
-    EX_BOLD:INV_CARD,
+    EX_BOLD:BK_CARD,
     EX_ITALIC:SEPARATOR_BK,
     EX_NAME:INV_CARD}
 modes_inv={
     EX_NORMAL:INV_CARD,
     EX_HEADER:BK_CARD,
-    EX_BOLD:BK_CARD,
+    EX_BOLD:INV_CARD,
     EX_ITALIC:SEPARATOR_INV,
-    EX_NAME:BK_CARD}
+    EX_NAME:BK_CARD,
+}
 modes_attr={
     EX_NORMAL:0,
     EX_HEADER:c.A_BOLD,
@@ -806,7 +814,10 @@ modes_attr={
 def show_explanation(card_win,results,mon_name):
     global e_offset
     card_win.erase()
-    attacks=card_explanation(table[mon_name])
+    if mon_name in table:
+        attacks=card_explanation(table[mon_name])
+    else:
+        attacks="(none)"
     card="".join(attacks).split("\n")
     cur_pair=BK_CARD
     line_n=0
@@ -935,7 +946,7 @@ def show_card(card_win,results,mon_name):
                 card_win.addch(c.ACS_LLCORNER,c.color_pair(SEPARATOR_BLACK))
                 card_win.addch(c.ACS_HLINE,c.color_pair(SEPARATOR_BLACK))
                 card_win.addch(c.ACS_LRCORNER,c.color_pair(SEPARATOR_BLACK))
-            if check_monster(table[mon_name])==True:
+            if check_monster(table[mon_name],ver_list[ver_idx])==True:
                 card=make_card(table[mon_name],format_length)
             else:
                 card="Error making card: "+mon_name
@@ -1002,109 +1013,7 @@ def show_card(card_win,results,mon_name):
             show_not_found_msg(card_win,mon_name)
         else:
             show_hello_msg(card_win)
-def run_tests(s):
-    os.makedirs("reports",exist_ok=True)
-    s.erase()
-    file_suffixes=["short","long","ext"]
-    name_longest=0
-    name_longest_name=""
-    for f_length in range(3):
-        failed_lines=0
-        failed_monsters=0
-        error_cards=0
-        total=0
-        failed_current_monster=False
-        report=open("reports/report-"+ver_list[ver_idx]+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
-        report_summary=open("report.log","a",encoding="utf-8")
-        report_summary.write("==========\n")
-        report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
-        report_summary.write("File: "+ver_list[ver_idx]+"\n")
-        for mon in table.keys():
-            total+=1
-            if len(mon)>20:
-                report_summary.write(f"long name({len(mon)}):{mon}\n")
-            if len(mon)>name_longest:
-                name_longest=len(mon)
-                name_longest_name=mon
-            if check_monster(table[mon])==False:
-                report.write("Error making card: "+mon+"\n")
-                error_cards+=1
-                continue
-            test=make_card(table[mon],format_length=f_length)
-            test=test.split("\n")
-            if check_formatting(test)==False:
-                report.write("Error formatting card: "+mon+"\n")
-                error_cards+=1
-            if len(test)>c.LINES-2:
-                report.write(f"MANY LINES({len(test)}):{mon}\n")
-                report.write(ln[:test_len]+"\n===\n")
-            for i in range(len(test)):
-                ln=test[i]
-                if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
-                    ln=ln[1:]
-                len_test=len(ln)
-                if f_length!=2:
-                    if i==0:
-                        test_len=SCR_WIDTH-1
-                    else:
-                        test_len=SCR_WIDTH
-                if f_length==2:
-                    if i in [0,1,2]:
-                        test_len=SCR_WIDTH-3
-                    else:
-                        test_len=SCR_WIDTH
-                if len_test>test_len:
-                    failed_lines+=1
-                    failed_current_monster=True
-                    report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
-                    report.write(ln[:test_len]+"\n===\n")
 
-            if failed_current_monster==True:
-                failed_monsters+=1
-                failed_current_monster=False
-        report.close()
-        result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
-        report_summary.write(result_str)
-        report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
-        report_summary.close()
-        s.addstr(result_str)
-    #explanation testing now is a separate process
-    failed_lines=0
-    failed_monsters=0
-    error_cards=0
-    total=0
-    failed_current_monster=False
-    report=open("reports/report-"+ver_list[ver_idx]+"-"+"EXPL"+".txt","w",encoding="utf-8")
-    report_summary=open("report.log","a",encoding="utf-8")
-    report_summary.write("==========\n")
-    report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
-    report_summary.write("File: "+ver_list[ver_idx]+"\n")
-    for mon in table.keys():
-        total+=1
-        test_e="".join(card_explanation(table[mon]))
-        if test_e.startswith("ERROR!"):
-            failed_current_monster=True
-            report.write(f"EXPLANATION DICT FAIL:{mon}: {test_e}\n")
-            report.write(ln[:test_len]+"\n===\n")
-        if test_e.find("DUMMY")!=-1:
-            failed_current_monster=True
-            report.write(f"EXPLANATION DUMMY:{mon}\n")
-            report.write(ln[:test_len]+"\n===\n")
-        test_e=test_e.split("\n")
-        if len(test_e)>c.LINES-2:
-            failed_current_monster=True
-            report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
-            report.write(ln[:test_len]+"\n===\n")
-            
-        if failed_current_monster==True:
-            failed_monsters+=1
-            failed_current_monster=False
-    report.close()
-    result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
-    report_summary.write(result_str)
-    report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
-    report_summary.close()
-    s.addstr(result_str)
 
 def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global reloaded
@@ -1169,8 +1078,12 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         mode=SHOW_ALL
         current_mon=0
         return 0
+    if key=="KEY_F(15)":
+        mode=SHOW_ALL_EXPL
+        current_mon=0
+        return 0
     if key=="KEY_F(3)":
-        run_tests(s)
+        run_tests(s,table,ver_list[ver_idx])
         for x in range(1,17):
             s.addstr(f"TEST:{(x-1):2} ",c.color_pair(x))
             if x==8:
@@ -1808,7 +1721,11 @@ def main(s):
         not_found_after_reload=False
         if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
             show_card_upper(search_win,results,mon_name)
-            show_explanation(card_win,results,mon_name)
+            if mon_name in table:
+                show_explanation(card_win,results,mon_name)
+            else:
+                card_win.erase()
+                show_not_found_msg(card_win,mon_name)
         if mode==SELECT_RES:
             show_select_res(card_win)
         if mode==SELECT_PARAM:
@@ -1843,6 +1760,14 @@ def main(s):
             show_card(card_win,results,mon_name)
         if mode==SHOW_ALL:
             show_card(card_win,table,mon_name)
+            time.sleep(0.05)
+            mon_name=list(table.keys())[current_mon]
+            current_mon+=1
+            if current_mon>=len(table)-1:
+                mode=SEARCH
+            continue
+        if mode==SHOW_ALL_EXPL:
+            show_explanation(card_win,table,mon_name)
             time.sleep(0.05)
             mon_name=list(table.keys())[current_mon]
             current_mon+=1

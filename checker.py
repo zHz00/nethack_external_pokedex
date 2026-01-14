@@ -1,9 +1,15 @@
 import itertools
+import os
+import datetime
+import curses as c
+
 
 from nhconstants_common import *
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
 from nhconstants_atk import *
+from make_card import *
+
 
 def check_formatting(card):
     for line in card:
@@ -31,7 +37,7 @@ def check_formatting(card):
             return False
     return True
 
-def check_monster(mon):
+def check_monster(mon,ver_name):
     flags1=mon[rows["flags1"]].split("|")
     flags2=mon[rows["flags2"]].split("|")
     flags3=mon[rows["flags3"]].split("|")
@@ -94,7 +100,111 @@ def check_monster(mon):
 
     if len(report)>0:
         report_file=open("errors.log","a",encoding="utf-8")
-        report_file.write("=== FILE: "+ver_list[ver_idx]+"\n")
+        report_file.write("=== FILE: "+ver_name+"\n")
         report_file.writelines(report)
         report_file.close()
     return all_ok
+
+def run_tests(s,table,ver_name):
+    os.makedirs("reports",exist_ok=True)
+    s.erase()
+    file_suffixes=["short","long","ext"]
+    name_longest=0
+    name_longest_name=""
+    for f_length in range(3):
+        failed_lines=0
+        failed_monsters=0
+        error_cards=0
+        total=0
+        failed_current_monster=False
+        report=open("reports/report-"+ver_name+"-"+file_suffixes[f_length]+".txt","w",encoding="utf-8")
+        report_summary=open("report.log","a",encoding="utf-8")
+        report_summary.write("==========\n")
+        report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+        report_summary.write("File: "+ver_name+"\n")
+        for mon in table.keys():
+            total+=1
+            if len(mon)>20:
+                report_summary.write(f"long name({len(mon)}):{mon}\n")
+            if len(mon)>name_longest:
+                name_longest=len(mon)
+                name_longest_name=mon
+            if check_monster(table[mon],ver_name)==False:
+                report.write("Error making card: "+mon+"\n")
+                error_cards+=1
+                continue
+            test=make_card(table[mon],format_length=f_length)
+            test=test.split("\n")
+            if check_formatting(test)==False:
+                report.write("Error formatting card: "+mon+"\n")
+                error_cards+=1
+            if len(test)>c.LINES-2:
+                report.write(f"MANY LINES({len(test)}):{mon}\n")
+                report.write(ln[:test_len]+"\n===\n")
+            for i in range(len(test)):
+                ln=test[i]
+                if len(ln)>0 and (ln[0]=="#" or ln[0]=="$"):
+                    ln=ln[1:]
+                len_test=len(ln)
+                if f_length!=2:
+                    if i==0:
+                        test_len=SCR_WIDTH-1
+                    else:
+                        test_len=SCR_WIDTH
+                if f_length==2:
+                    if i in [0,1,2]:
+                        test_len=SCR_WIDTH-3
+                    else:
+                        test_len=SCR_WIDTH
+                if len_test>test_len:
+                    failed_lines+=1
+                    failed_current_monster=True
+                    report.write(f"LONG({len_test}):{mon}|[{ln[test_len:]}]\n")
+                    report.write(ln[:test_len]+"\n===\n")
+
+            if failed_current_monster==True:
+                failed_monsters+=1
+                failed_current_monster=False
+        report.close()
+        result_str="DONE-"+file_suffixes[f_length].upper()+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+        report_summary.write(result_str)
+        report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+        report_summary.close()
+        s.addstr(result_str)
+    #explanation testing now is a separate process
+    failed_lines=0
+    failed_monsters=0
+    error_cards=0
+    total=0
+    failed_current_monster=False
+    report=open("reports/report-"+ver_name+"-"+"EXPL"+".txt","w",encoding="utf-8")
+    report_summary=open("report.log","a",encoding="utf-8")
+    report_summary.write("==========\n")
+    report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+    report_summary.write("File: "+ver_name+"\n")
+    for mon in table.keys():
+        total+=1
+        test_e="".join(card_explanation(table[mon]))
+        if test_e.startswith("ERROR!"):
+            failed_current_monster=True
+            report.write(f"EXPLANATION DICT FAIL:{mon}: {test_e}\n")
+            report.write(ln[:test_len]+"\n===\n")
+        if test_e.find("DUMMY")!=-1:
+            failed_current_monster=True
+            report.write(f"EXPLANATION DUMMY:{mon}\n")
+            report.write(ln[:test_len]+"\n===\n")
+        test_e=test_e.split("\n")
+        if len(test_e)>c.LINES-2:
+            failed_current_monster=True
+            report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
+            report.write(ln[:test_len]+"\n===\n")
+            
+        if failed_current_monster==True:
+            failed_monsters+=1
+            failed_current_monster=False
+    report.close()
+    result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+    report_summary.write(result_str)
+    report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+    report_summary.close()
+    s.addstr(result_str)
