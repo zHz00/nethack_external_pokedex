@@ -1,0 +1,4 @@
+default.txt
+__pycache__/
+.ssh/
+**.iidfile
