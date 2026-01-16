@@ -905,7 +905,7 @@
         "type": "AD_SPEL",
         "caption": "Mage",
         "caption_short": "Mage",
-        "explanation": "Psi bolt (Lv>=1, D), Cure self (2, U), Haste self (3, U), Stun (4, D), Disappear (5, U), Drain strength (7, D), Destroy armor (9, D), Curse items (11, D), Aggravate (14, U), Summon nasties (16, U), Touch of death (21, D), Double Trouble (19, only for Wizard of Yendor)",
+        "explanation": "<LIST>",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -923,7 +923,7 @@
         "type": "AD_CLRC",
         "caption": "Clerical",
         "caption_short": "Cler",
-        "explanation": "Open wounds (Lv>=1, D), Cure self (2, U), Confuse (3, D), Paralyze (5, D), Blind (6, D), Summon insects (9, U), Curse items (10, D), Lightning (12, D), Fire pillar (13, D), Geyser (14, D)",
+        "explanation": "<LIST>",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -967,5 +967,165 @@
         "mc": false
       }
     }
-  }
+  },
+  "AD_SPEL_LIST":
+  [
+	{
+		"name":"Psi bolt",
+		"level":1,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Cure self",
+		"level":2,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Haste self",
+		"level":3,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Stun",
+		"level":4,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Disappear",
+		"level":5,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Drain strength",
+		"level":7,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Destroy armor",
+		"level":9,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Curse items",
+		"level":11,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Aggravate",
+		"level":14,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Summon nasties",
+		"level":16,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Touch of death",
+		"level":21,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Double trouble",
+		"level":19,
+		"dir":"U",
+		"owner":["Wizard of Yendor"],
+		"explanation":""
+	}
+  ],
+  "AD_CLRC_LIST":
+  [
+	{
+		"name":"Open wounds",
+		"level":1,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Cure self",
+		"level":2,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Confuse",
+		"level":3,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Paralyze",
+		"level":5,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Blind",
+		"level":6,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Summon insects",
+		"level":9,
+		"dir":"U",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Curse items",
+		"level":10,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Lightning",
+		"level":12,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Fire pillar",
+		"level":13,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	},
+	{
+		"name":"Geyser",
+		"level":14,
+		"dir":"D",
+		"owner":[],
+		"explanation":""
+	}
+  ]
 }

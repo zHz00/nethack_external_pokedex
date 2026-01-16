@@ -11,11 +11,17 @@ wingy=False
 
 at_e=dict()
 ad_e=dict()
-def set_at_ad(at_e_in,ad_e_in):
+e_AD_SPEL_LIST=[]
+e_AD_CLRC_LIST=[]
+def set_at_ad(at_e_in,ad_e_in,e_AD_SPEL_LIST_in,e_AD_CLRC_LIST_in):
     global at_e
     global ad_e
+    global e_AD_SPEL_LIST
+    global e_AD_CLRC_LIST
     at_e=at_e_in
     ad_e=ad_e_in
+    e_AD_SPEL_LIST=e_AD_SPEL_LIST_in
+    e_AD_CLRC_LIST=e_AD_CLRC_LIST_in
 
 def max_val_len(d:dict())->int:
     max=0
@@ -216,12 +222,37 @@ def card_gen(mon,format_length):
 
     return out_line
 
+def spell_to_str(spell):
+    spell_str=""
+    spell_str+=spell["name"]
+    spell_str+="(Lv>="+str(spell["level"])+","
+    spell_str+=("Directed" if spell['dir']=="D" else "Undirected")+")"
+    return spell_str
+
+def make_spell_list(name,level,type):
+    spell_list=[]
+    spell_list_str=""
+    if type=="AD_SPEL":
+        spell_list=e_AD_SPEL_LIST
+    if type=="AD_CLRC":
+        spell_list=e_AD_CLRC_LIST
+    for spell in spell_list:
+        if len(spell["owner"])>0:#special spell for only certain mobs
+            if name not in spell["owner"]:
+                continue
+        if int(level)+5>=spell["level"]:
+            spell_list_str+=spell_to_str(spell)+", "
+    spell_list_str=spell_list_str[:-2]
+    return spell_list_str
+
+
 def card_explanation(mon):
     global max_len_atk,max_len_res,max_len_con
     out_line=["#"]
     #Attacks
     attacks=""
     interrupted=0
+    explanation_str_prev=""
     for attack_n in itertools.chain(range(rows["attack1"],rows["attack6"]+1),range(rows["attack7"],rows["attack10"])):
         attack=mon[attack_n]
         attack_s=""
@@ -260,6 +291,14 @@ def card_explanation(mon):
         
         attack_cur=""
         explanation_str=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["explanation"]
+        if explanation_str=="<LIST>":
+            #explanation_str="<TEST>"
+            explanation_str=make_spell_list(mon[rows["name"]],mon[rows["level"]],attack[1])
+        if explanation_str==explanation_str_prev:
+            if len(explanation_str)>30:
+                explanation_str="<Same as previous>"
+        else:
+            explanation_str_prev=explanation_str
         if attack[0] not in at_actual:
             attack_cur="NOT FOUND AT:"+attack[0]+"\n"
         else:
@@ -440,6 +479,10 @@ def card_atk(mon,format_length):
                             attacks_list_condensed.append(attacks_list[x-1]+f" (x{cnt+1})")
                         else:
                             attacks_list_condensed.append(attacks_list[x-1]+f" x{cnt+1}")
+                        #tmpf=open("tmp2.txt","a",encoding="utf-8")
+                        #tmpf.write("multi:"+mon[rows["name"]]+"|"+attacks_list_condensed[-1]+"\n")
+                        #tmpf.close()
+                        #debug file to see, who has multiple similar attacks
                         cnt=0
         attacks_condensed=", ".join(attacks_list_condensed)
         attacks_list="Atk:"+attacks_condensed+"\n"

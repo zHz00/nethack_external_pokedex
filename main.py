@@ -59,6 +59,8 @@ table=dict()
 table_temp=[]
 e_at=dict()
 e_ad=dict()
+e_AD_SPEL_LIST=[]
+e_AD_CLRC_LIST=[]
 e_offset=0
 disable_sorting=False
 data_folder="data/"
@@ -415,6 +417,7 @@ def read_monsters(file):
     global disable_sorting
     global wingy
     global e_at,e_ad
+    global e_AD_SPEL_LIST,e_AD_CLRC_LIST
     wingy=False
     table=dict()
     table_temp=[]
@@ -449,6 +452,14 @@ def read_monsters(file):
         attacks_file.close()
         e_at=explanation_attacks["at"]
         e_ad=explanation_attacks["ad"]
+        if "AD_SPEL_LIST" in explanation_attacks:
+            e_AD_SPEL_LIST=explanation_attacks["AD_SPEL_LIST"]
+        else:
+            e_AD_SPEL_LIST=[]
+        if "AD_CLRC_LIST" in explanation_attacks:
+            e_AD_CLRC_LIST=explanation_attacks["AD_CLRC_LIST"]
+        else:
+            e_AD_CLRC_LIST=[]
     except FileNotFoundError as e:
         e_at=dict()
         e_ad=dict()
@@ -490,7 +501,7 @@ def read_monsters(file):
         attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
         json.dump(explanation_attacks,attacks_file,indent=1)
         attacks_file.close()
-    set_at_ad(e_at,e_ad)
+    set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
 
 def fill_attacks(file):
     global e_at,e_ad
@@ -1124,7 +1135,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
                 if file.endswith(".json")==False:
                     file+=".json"
                 fill_attacks(file)
-                set_at_ad(e_at,e_ad)
+                set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
         
         reset_colors()
         utils.init_pairs()
