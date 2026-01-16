@@ -238,8 +238,15 @@ def make_spell_list(name,level,type):
         spell_list=e_AD_CLRC_LIST
     for spell in spell_list:
         if len(spell["owner"])>0:#special spell for only certain mobs
-            if name not in spell["owner"]:
+            if "!"+name in spell["owner"]:
                 continue
+            exception_list=False
+            for n in spell["owner"]:
+                if n[0]=="!":#this is exception list
+                    exception_list=True
+                    break
+            if exception_list==False and name not in spell["owner"]:
+                continue#skip if this is owner list, and current monster is not an owner
         if int(level)+5>=spell["level"]:
             spell_list_str+=spell_to_str(spell)+", "
     spell_list_str=spell_list_str[:-2]

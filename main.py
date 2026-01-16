@@ -1207,7 +1207,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         if len(in_str)>0 and len(mon_name)>0:
             mode=EXPLANATION_SEARCH
     if key=="KEY_F(1)":
-        utils.show_message("Quick help:\n\
+        utils.show_message("Quick help: Search mode\n\
 \n\
 _Ctrl+O:_        Select NetHack variant to search\n\
 _[, ]:_          Switch to next NetHack variant\n\
@@ -1518,7 +1518,7 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
         save_settings()
         return -1
     if key=="KEY_F(1)":
-        utils.show_message("Quick help:\n\
+        utils.show_message("Quick help: List mode\n\
 \n\
 _Tab:_           Switch to **Search** mode\n\
 _Ctrl+O:_        Select NetHack variant to view\n\
@@ -1588,7 +1588,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
         card_win.addstr(2,25,"|Attack can be prevented by magic cancellation ----+",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
         card_win.refresh()
-        utils.show_message("Quick help:\n\
+        utils.show_message("Quick help: Attacks analysis\n\
 \n\
 _Esc:_           Return to card\n\
 _[, ]:_          Switch variant\n\
@@ -1645,7 +1645,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         read_monsters(ver_list[ver_idx])
         mode=LIST
     if key=="KEY_F(1)":
-        utils.show_message("Quick help:\n\
+        utils.show_message("Quick help: Card, opened from list\n\
 \n\
 _Esc:_           Return to list\n\
 _[, ]:_          Switch variant\n\
@@ -1654,6 +1654,7 @@ _[, ]:_          Switch variant\n\
 _Ctrl+O:_        Nothing. Use square brackets!\n\
 _Up:_            Show less information\n\
 _Down:_          Show more information\n\
+_Ctrl+A:_        Show attacks analysis windows\n\
 _F10 or Ctrl+Q:_ Exit")
 
     return 0

@@ -15,7 +15,7 @@ dNetHack 3.24.0
 
 ## Quick Start
 
-For Linux there is no special requirements. For Windows, though, you must install windows-curses module. Plese use this command:
+For Linux there is no special requirements. For Windows, though, you must install windows-curses module. Please use this command:
 
 pip install windows-curses
 
@@ -89,7 +89,7 @@ You can reduce output to 7 lines, but the program is designed to run in 80x25 mo
 ## Licence and author information
 
 MIT Licence. See LICENCE.txt file for details.  
-(C) 2022-2025 zHz  
+(C) 2022-2026 zHz  
 You can contact me via Telegram @zHz01  
 Also, please visit project's github page:  
 https://github.com/zHz00/nethack_external_pokedex
