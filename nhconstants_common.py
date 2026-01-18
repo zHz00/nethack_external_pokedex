@@ -168,10 +168,11 @@ filters_mode_param_str={
 "Move Speed":"speed",
 "AC":"ac",
 "MR":"mr",
+"Frequency":"geno",#there is no separate freq field, it is part of geno field, int((table[x][rows["geno"]].split("|"))[-1])
 "Alignment":"alignment",
 "Weight":"weight",
 "Nutrition":"nutrition",
-
+"Size":"size",
 "Insight required":"insight",
 "Light radius":"light_radius",
 }
@@ -186,9 +187,11 @@ filter_mode_param_short_str=[
     "Speed",
     "AC",
     "MR",
+    "Freq",
     "Ali",
     "Weight",
     "Nutr.",
+    "Size",
     "Inisght",
     "Light"
 ]

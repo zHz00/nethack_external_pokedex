@@ -4,6 +4,9 @@ from nhconstants_flags import *
 
 def make_letter_filter(fname,letter):    
     field=dict()
+    field["name"]="Letter"
+    field["name_short"]="Letter"
+    field["variant"]=[""]
     field["type"]="include"
     field["field"]="symbol"
     field["value"]=letter
@@ -18,6 +21,9 @@ def make_letter_filter(fname,letter):
 
 def make_name_filter(fname,name):
     field=dict()
+    field["name"]="Name"
+    field["name_short"]="Name"
+    field["variant"]=[""]
     field["type"]="include"
     field["field"]="name"
     field["value"]=name
@@ -32,6 +38,9 @@ def make_name_filter(fname,name):
 
 def make_conveyed_filter(fname,res):
     field=dict()
+    field["name"]="Conveyed"
+    field["name_short"]="Conv"
+    field["variant"]=[""]
     field["type"]="include"
     field["field"]="prob"
     field["value"]=res
@@ -46,6 +55,9 @@ def make_conveyed_filter(fname,res):
 
 def make_param_filter(fname,param,min,max):
     field=dict()
+    field["name"]="Parameter"
+    field["name_short"]="Param"
+    field["variant"]=[""]
     field["type"]="include"
     field["field"]=param
     field["min"]=min
@@ -82,7 +94,15 @@ def test_monster_one_field(mon,field):
             if len(mon[rows[f]])==0:#empty value, this is not dNetHack, but we are testing insight or something similar
                 test=False
             else:
-                test_value=int(mon[rows[f]])
+                test_value=None
+                try:
+                    test_value=int(mon[rows[f]])
+                except:
+                    pass#we'll get exception later if not special cases will be applied
+                if f=="geno":#freq
+                    test_value=int((mon[rows["geno"]].split("|"))[-1])
+                if f=="size":
+                    test_value=szs_order[mon[rows[f]]]
                 min=field["min"]
                 max=field["max"]
                 test=(test_value>=min and test_value<=max)

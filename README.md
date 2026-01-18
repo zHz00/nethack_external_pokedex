@@ -2,6 +2,8 @@
 
 This is terminal-based utility to see properties of monsters in NetHack. It uses curses library for beautiful output.
 
+Please note that this utility have nothing to do with Pokemons, it uses Pokedex in title only because everyone knows what Pokedex is.
+
 ## Variants included
 
 NetHack 3.4.3  
@@ -19,9 +21,9 @@ For Linux there is no special requirements. For Windows, though, you must instal
 
 pip install windows-curses
 
-To start using, run main.py.
+To start using, run main.py. Also, docker image is available, see deploy folder for details.
 
-Just type monster name and see its properties!
+When script is started, just type monster name and see its properties!
 
 Also, you can type part of name and still find your monster in search results.
 
