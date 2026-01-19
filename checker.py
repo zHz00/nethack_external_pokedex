@@ -173,6 +173,7 @@ def run_tests(s,table,ver_name):
         s.addstr(result_str)
     #explanation testing now is a separate process
     failed_lines=0
+    failed_screens=0
     failed_monsters=0
     error_cards=0
     total=0
@@ -198,12 +199,13 @@ def run_tests(s,table,ver_name):
             failed_current_monster=True
             report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
             report.write(ln[:test_len]+"\n===\n")
+            failed_screens+=1
             
         if failed_current_monster==True:
             failed_monsters+=1
             failed_current_monster=False
     report.close()
-    result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, error:{error_cards}\n"
+    result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, many screens: {failed_screens}, error:{error_cards}\n"
     report_summary.write(result_str)
     report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
     report_summary.close()

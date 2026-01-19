@@ -379,7 +379,7 @@
         "caption_short": "Cold",
         "explanation": "Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Potions. Also destroy items on the floor.",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_FIRE": {
@@ -388,7 +388,7 @@
         "caption_short": "Fire",
         "explanation": "Burn away slime. Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Potions, Scrolls, Spellbooks, Green slime globs. Also destroy items on the floor. Burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_ELEC": {
@@ -397,16 +397,16 @@
         "caption_short": "Shock",
         "explanation": "Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Wands, (metallic) Rings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_BLND": {
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "Set blindness timer to Damage turns, then Damage->0. If you didn't see the monster, then set timer to d(Damage/2). _Resistance item:_ worn blindfold. **Note:** only player is affected",
+        "explanation": "Set blindness timer to Damage turns, then Damage->0. If you didn't see the monster, then set timer to Damage/2 if d(Damage/2) is greater than your level. _Resistance item:_ worn blindfold. **Note:** only player is affected",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_HALU": {
@@ -415,7 +415,7 @@
         "caption_short": "Hallu",
         "explanation": "Increase hallucination timer by Damage turns, then Damage->0. **Note:** only player is affected",
         "resisted": false,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       }
     },
@@ -577,7 +577,7 @@
         "type": "AD_SGLD",
         "caption": "Steal gold",
         "caption_short": "Steal gold",
-        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else steal 10%...100% of your gold, uniformly distributed. Then monster teleports away if he can, or flee if he can't",
+        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else **20%**: steal gold on the floor; **80%**: steal 10%...100% of your gold in inventory, uniformly distributed. Then monster teleports away if he can, or flee if he can't",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -712,7 +712,7 @@
         "type": "AD_SSEX",
         "caption": "Seduce",
         "caption_short": "Seduce",
-        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor absent, then _2._ Sex occurs: _(a)_ if d35-1>min(32, Ch+Wi) then you get one of negative effects: -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 Pw and +d5 MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp",
+        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ if d35-1>min(32, Ch+Wi) then you get one of negative effects: -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 Pw and +d5 MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
