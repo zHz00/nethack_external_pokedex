@@ -1,0 +1,332 @@
+[
+  {
+    "group_title": "Quest monsters",
+    "filters_list": [
+      {
+        "name": "Archeologist",
+        "name_short": "Arc",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Minion of Huhetotl"
+        ],
+        "monsters": [
+          "Lord Carnarvon",
+          "Minion of Huhetotl",
+          "student",
+          "S",
+          "M",
+          "giant eel",
+          "watchman"
+        ]
+      },
+      {
+        "name": "Barbarian",
+        "name_short": "Bar",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Thoth Amon"
+        ],
+        "monsters": [
+          "Pelias",
+          "Thoth Amon",
+          "chieftain",
+          "O",
+          "T"
+        ]
+      },
+      {
+        "name": "Caveman",
+        "name_short": "Cav",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Chromatic Dragon"
+        ],
+        "monsters": [
+          "Shaman Karnov",
+          "Chromatic Dragon",
+          "neanderthal",
+          "h",
+          "H",
+          "aligned priest",
+          "shrieker"
+        ]
+      },
+      {
+        "name": "Healer",
+        "name_short": "Hea",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Cyclops"
+        ],
+        "monsters": [
+          "Hippocrates",
+          "Cyclops",
+          "attendant",
+          "r",
+          "Y",
+          "snake",
+          ";",
+          "D",
+          "aligned priest"
+        ]
+      },
+      {
+        "name": "Knight",
+        "name_short": "Kni",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Ixoth"
+        ],
+        "monsters": [
+          "King Arthur",
+          "Ixoth",
+          "page",
+          "i",
+          "j",
+          "knight",
+          "aligned priest"
+        ]
+      },
+      {
+        "name": "Monk",
+        "name_short": "Mon",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Master Kaen"
+        ],
+        "monsters": [
+          "Grand Master",
+          "Master Kaen",
+          "abbot",
+          "E",
+          "X"
+        ]
+      },
+      {
+        "name": "Priest",
+        "name_short": "Pri",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Nalzok"
+        ],
+        "monsters": [
+          "Arch Priest",
+          "Nalzok",
+          "acolyte",
+          "Z",
+          "W",
+          "aligned priest"
+        ]
+      },
+      {
+        "name": "Ranger",
+        "name_short": "Ran",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Scorpius"
+        ],
+        "monsters": [
+          "Orion",
+          "Scorpius",
+          "hunter",
+          "C",
+          "s",
+          "minotaur",
+          "wumpus"
+        ]
+      },
+      {
+        "name": "Rogue",
+        "name_short": "Rog",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Master Assassin"
+        ],
+        "monsters": [
+          "Master of Thieves",
+          "Master Assassin",
+          "thug",
+          "n",
+          "N",
+          "leprechaun",
+          "chameleon",
+          "m",
+          "shark"
+        ]
+      },
+      {
+        "name": "Samurai",
+        "name_short": "Sam",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Ashikaga Takauji"
+        ],
+        "monsters": [
+          "Lord Sato",
+          "Ashikaga Takauji",
+          "roshi",
+          "d",
+          "E",
+          "ninja",
+          "samurai"
+        ]
+      },
+      {
+        "name": "Tourist",
+        "name_short": "Tou",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Master of Thieves"
+        ],
+        "monsters": [
+          "Twoflower",
+          "Master of Thieves",
+          "guide",
+          "s",
+          "C",
+          "giant eel",
+          "piranha",
+          "kraken",
+          "watchman",
+          "shopkeeper",
+          "H",
+          "soldier",
+          "lieutenant",
+          "sergeant",
+          "captain",
+          "V",
+          "Z",
+          "M",
+          "&",
+          "aligned priest",
+          "K"
+        ]
+      },
+      {
+        "name": "Valkyrie",
+        "name_short": "Val",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Lord Surtur"
+        ],
+        "monsters": [
+          "Norn",
+          "Lord Surtur",
+          "warrior",
+          "a",
+          "H"
+        ]
+      },
+      {
+        "name": "Wizard",
+        "name_short": "Wiz",
+        "type": "monsters_list",
+        "variant": [
+          ""
+        ],
+        "highlight": [
+          "Dark One"
+        ],
+        "monsters": [
+          "Neferet The Green",
+          "Dark One",
+          "apprentice",
+          "B",
+          "W",
+          "xorn",
+          "i",
+          "giant eel",
+          "rogue",
+          "gnomish wizard",
+          "owlbear",
+          "wizard",
+          "prisoner",
+          "hill giant",
+          "Grey-elf"
+        ]
+      }
+    ]
+  },
+  {
+    "group_title": "Dangerous to eat",
+    "filters_list": [
+      {
+        "name": "human cannibalism",
+        "name_short": "Hum",
+        "type": "include",
+        "variant": [
+          ""
+        ],
+        "field": "eat_danger",
+        "value": "HUMAN"
+      }
+    ]
+  },
+  {
+    "group_title": "Dangerous attacks",
+    "filters_list": [
+      {
+        "name": "Stoning",
+        "name_short": "Ston",
+        "type": "include",
+        "variant": [
+          ""
+        ],
+        "field": "attack",
+        "value": "AD_STON"
+      }
+    ]
+  },
+  {
+    "group_title": "other",
+    "filters_list": [
+      {
+        "name": "Monsters that need insight",
+        "name_short": "Ins",
+        "type": "include",
+        "variant": [
+          "dnh"
+        ],
+        "field": "insight",
+        "min": "1",
+        "max": "99999"
+      }
+    ]
+  }
+]
