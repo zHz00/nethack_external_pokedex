@@ -358,10 +358,13 @@ def card_explanation(mon):
                 attack_s+=ext+", "
 
         attack_e="\n#    "+at_from_file+":"+at_e[attack[0]]["explanation"]
-        if len(ad_actual[attack[1]])==0:
+        if len(ad_actual[attack[1]])==0 and len(explanation_str)<30:
             attack_e+="("+explanation_str+")"
         else:
-            attack_e+="\n#    "+ad_from_file+":"+explanation_str
+            if len(ad_actual[attack[1]])==0:
+                attack_e+="\n#    Physical:"+explanation_str
+            else:
+                attack_e+="\n#    "+ad_from_file+":"+explanation_str
 
         attack_e_list=attack_e.split("\n")
         for i in range(len(attack_e_list)):

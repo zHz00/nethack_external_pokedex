@@ -2,3 +2,5 @@ default.txt
 __pycache__/
 .ssh/
 **.iidfile
+reports/
+data/data_dummy/
