@@ -10,7 +10,8 @@ from nhconstants_atk import *
 from nhconstants_common import *
 from checker import *
 from make_card import *
-from filters import *
+#from filters import *
+import filters as fs
 import utils
 
 colors_table={
@@ -24,7 +25,7 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
-filter_list=[make_letter_filter("Letter",""),make_name_filter("Name",""),make_conveyed_filter("Conveyed",""),make_param_filter("Param","",0,0)]
+filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_conveyed_filter("Conveyed",""),fs.make_param_filter("Param","",0,0)]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -43,6 +44,7 @@ EXPLANATION_CARD=11
 EXPLANATION_SEARCH=12
 SHOW_ALL_EXPL=13
 ENTER_NUMERIC_PARAM=14
+SELECT_FILTER_GROUP=15
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -73,6 +75,7 @@ ver_idx_temp=-1
 ver_selector_idx=0
 format_length=0
 list_mode_mons=[]
+list_mode_mons_highlight=[]
 list_mode_sel=0
 list_mode_skip=0
 list_mode_max=0
@@ -81,6 +84,8 @@ sort_mode2=0
 sort_mode_sel=0
 sort_dir1=0
 sort_dir2=0
+filters_group_names=[]
+filters_group_sel=0
 
 filter_mode_sel=0
 filters_edits_offset_x=0
@@ -120,10 +125,14 @@ def active_filters(f_on,f_list):
 def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
     global list_mode_max
+    global list_mode_mons_highlight
     list_mode_mons=[]
+    list_mode_mons_highlight=[]
     for mon in table.keys():
-        if test_monster(table[mon],filters):
+        if fs.test_monster(table[mon],filters):
             list_mode_mons.append(mon)
+        if fs.test_monster_hl(table[mon],filters):
+            list_mode_mons_highlight.append(mon)
     list_mode_max=len(list_mode_mons)
 
     list_mode_mons=\
@@ -159,19 +168,29 @@ def show_ver_format(search_win):
             search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM]:
+        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP]:
             search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
             last_filter=0
             for x in range(len(filter_on)):
-                if filter_on[x] and filter_list[x]["short_name"]!="<any>":
-                    last_filter=x
-                    num_filters+=1
+                if filter_list[x]["type"]=="group":
+                    if filter_on[x] and filter_list[x]["index"]!=-1:
+                        last_filter=x
+                        num_filters+=1
+                else:
+                    if filter_on[x] and filter_list[x]["short_name"]!="<any>":
+                        last_filter=x
+                        num_filters+=1
             if num_filters==0:
                 search_win.addstr(1,x2,"|Filter:Ctrl+F",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters==1:
-                search_win.addstr(1,x2,"|Filter:"+filter_list[last_filter]["short_name"],c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+                name_short="<?>"
+                if filter_list[last_filter]["type"]=="group":
+                    name_short=fs.groups_filters[filter_list[last_filter]["name"]][filter_list[last_filter]["index"]]["name_short"]
+                else:
+                    name_short=filter_list[last_filter]["short_name"]
+                search_win.addstr(1,x2,"|Filter:"+name_short,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters>1:
                 search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
@@ -207,8 +226,8 @@ def show_select_ver(s,sel:int):
 def show_filters(s,sel:int):
     global filters_edits_offset_x,filters_edits_offset_y
     w1=2
-    w2=15
-    w3=40
+    w2=25
+    w3=35
     cap1="ON"
     cap2="Filter"
     cap3="Value"
@@ -242,6 +261,12 @@ def show_filters(s,sel:int):
                 value="<any>"
             else:
                 value=f"{param_mode_list[field['field']]}={field['min']}...{field['max']}"
+        if "index" in filter:
+            if filter["index"]==-1:
+                value="(none)"
+            else:
+                filter_indexed=fs.groups_filters[filter["name"]][filter["index"]]
+                value=filter_indexed["name"]
         
         info=f"|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
         if y==sel:
@@ -374,6 +399,7 @@ def read_monsters(file):
     global wingy
     global e_at,e_ad
     global e_AD_SPEL_LIST,e_AD_CLRC_LIST
+    global filter_list,filter_on
     wingy=False
     table=dict()
     table_temp=[]
@@ -458,6 +484,7 @@ def read_monsters(file):
         json.dump(explanation_attacks,attacks_file,indent=1)
         attacks_file.close()
     set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
+    fs.load_filters(ver_list[ver_idx].split(".")[0])
 
 def fill_attacks(file):
     global e_at,e_ad
@@ -725,6 +752,11 @@ def show_card_upper(search_win,results,mon_name):
     disable_cursor()
     search_win.refresh()
 
+def show_full_line(card_win,y,line,color):
+    card_win.addstr(y+1,1,line[:SCR_WIDTH-2],color)
+    if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
+        card_win.insch(y+1,SCR_WIDTH-1,line[SCR_WIDTH-2],color)
+
 def show_list(card_win,search_win,results):
     global selected_mon_name
     selected_mon_name=""
@@ -740,13 +772,12 @@ def show_list(card_win,search_win,results):
         line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
         if x==list_mode_sel:
             selected_mon_name=list_mode_mons[x+list_mode_skip]
-            card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
-            if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
-                card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(BK_CARD)|c.A_BOLD)
+            show_full_line(card_win,x,line,c.color_pair(BK_CARD)|c.A_BOLD)
         else:
-            card_win.addstr(x+1,1,line[:SCR_WIDTH-2],c.color_pair(INV_CARD))
-            if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
-                card_win.insch(x+1,SCR_WIDTH-1,line[SCR_WIDTH-2],c.color_pair(INV_CARD))
+            if current_mon[rows["name"]] in list_mode_mons_highlight:
+                show_full_line(card_win,x,line,c.color_pair(INV_CARD)|c.A_BOLD)
+            else:
+                show_full_line(card_win,x,line,c.color_pair(INV_CARD))
     card_win.refresh()
     show_list_upper(search_win,results,selected_mon_name)
 
@@ -1215,8 +1246,9 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
 def enter_numeric_param(card_win,search_win):
     global mode
     global list_mode_sel,list_mode_skip
+    global sort_mode1,sort_mode2,sort_dir1,sort_dir2
     param_caption=list(filters_mode_param_str.keys())[param_mode_sel]
-    filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],0,0)
+    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],0,0)
     filter_on[filter_mode_sel]=True
     show_list(card_win,search_win,[])
     show_filters(card_win,filter_mode_sel)
@@ -1239,7 +1271,7 @@ def enter_numeric_param(card_win,search_win):
         show_filters(card_win,filter_mode_sel)
         mode=FILTERS
         return 0
-    filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],int(min),0)
+    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],int(min),0)
     show_filters(card_win,filter_mode_sel)
     max=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1+3+len(min),6).strip()
     if max=="":
@@ -1253,7 +1285,14 @@ def enter_numeric_param(card_win,search_win):
         show_filters(card_win,filter_mode_sel)
         mode=FILTERS
         return 0
-    filter_list[filter_mode_sel]=make_param_filter("Param",filters_mode_param_str[param_caption],int(min),int(max))
+    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],int(min),int(max))
+    if param_mode_sel+2<len(sort_mode_str):#+2 is letter and name, which have separate filter
+        sort_mode1=param_mode_sel+2
+    else:
+        sort_mode1=0
+    sort_mode2=0
+    sort_dir1=0
+    sort_dir2=0
     prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
     list_mode_sel=0
     list_mode_skip=0
@@ -1267,6 +1306,8 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
     global reloaded
     global sort_mode1, sort_mode2
     global list_mode_sel,list_mode_skip
+    global filters_group_sel
+    global filter_list
     if ch==27:
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             mode=LIST
@@ -1311,10 +1352,13 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
             sort_mode2=idx
             mode=LIST
         if mode==SELECT_RES:
-            filter_list[filter_mode_sel]=make_conveyed_filter("Conveyed",list(resists_conv.keys())[idx])
+            filter_list[filter_mode_sel]=fs.make_conveyed_filter("Conveyed",list(resists_conv.keys())[idx])
+            filter_on[filter_mode_sel]=True
+        if mode==SELECT_FILTER_GROUP:
+            filter_list[filter_mode_sel]["index"]=idx-1
             filter_on[filter_mode_sel]=True
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
-        if mode==SELECT_RES:
+        if mode==SELECT_RES or mode==SELECT_FILTER_GROUP:
             list_mode_sel=0
             list_mode_skip=0
             show_list(card_win,search_win,[])
@@ -1330,7 +1374,9 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global reloaded
     global filter_list
     global list_mode_sel,list_mode_skip
+    global filters_group_names,filters_group_sel
     f=filter_list[filter_mode_sel]["fields"][0]
+
     if ch==27:
         mode=LIST
     if key=="KEY_UP" :
@@ -1358,10 +1404,18 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
         #prepare_list(0,0,0,0,[f])
         #reset_sort()
         #prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,[])
+        if f["field"]=="group":#group
+            filters_in_group=fs.groups_filters[filter_list[filter_mode_sel]["name"]]
+            filters_group_names=["(none)"]
+            for filter in filters_in_group:
+                filters_group_names.append(filter["name"])
+            filters_group_sel=filter_list[filter_mode_sel]["index"]+1
+            mode=SELECT_FILTER_GROUP
+            return 0
         if f["field"]=="symbol":
             new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,2)
             if len(new)>0:
-                filter_list[filter_mode_sel]=make_letter_filter("Letter",new[0])
+                filter_list[filter_mode_sel]=fs.make_letter_filter("Letter",new[0])
                 filter_on[filter_mode_sel]=True
                 prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
                 list_mode_sel=0
@@ -1371,7 +1425,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
         if f["field"]=="name":
             new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,20)
             if len(new)>0:
-                filter_list[filter_mode_sel]=make_name_filter("Name",new.strip())
+                filter_list[filter_mode_sel]=fs.make_name_filter("Name",new.strip())
                 filter_on[filter_mode_sel]=True
                 prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
                 list_mode_sel=0
@@ -1658,6 +1712,8 @@ def main(s):
     global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
     global sel,skip
     global sort_mode_sel,res_mode_sel,param_mode_sel
+    global filter_mode_sel
+    global filters_group_names,filters_group_sel
     if c.COLORS<16:
         bold=1
     else:
@@ -1723,6 +1779,8 @@ def main(s):
         if mode==ENTER_NUMERIC_PARAM:
             enter_numeric_param(card_win,search_win)
             continue
+        if mode==SELECT_FILTER_GROUP:
+            show_select_list(card_win,filter_list[filter_mode_sel]["name"],filters_group_names,filters_group_sel)
 
         if mode==SEARCH:
             for mon in table.keys():
@@ -1825,6 +1883,13 @@ def main(s):
             if res!=0:
                 break
             continue
+        if mode==SELECT_FILTER_GROUP:
+            #res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
+            res,filters_group_sel=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,filters_group_names,filters_group_sel)
+            
+            if res!=0:
+                break
+            continue
         if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
             res=react_to_key_explanation(card_win,ch,key,alt_ch,mon_name)
             if res!=0:
@@ -1851,6 +1916,9 @@ if __name__=="__main__":
     except:
         pass
     read_monsters(ver_list[ver_idx])
+    for g in fs.groups_titles:#appending groups only on first loading, bc no groups are variant-exclusive
+        filter_list.append(fs.make_group_filter(g,-1))
+    filter_on=[False]*len(filter_list)
     reset_sort()
     reset_filters()
     os.environ.setdefault('ESCDELAY', '25')

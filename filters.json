@@ -6,8 +6,8 @@
         "name": "Archeologist",
         "name_short": "Arc",
         "type": "monsters_list",
-        "variant": [
-          ""
+        "variants": [
+          "!xnh9"
         ],
         "highlight": [
           "Minion of Huhetotl"
@@ -23,10 +23,30 @@
         ]
       },
       {
+        "name": "Archeologist",
+        "name_short": "Arc",
+        "type": "monsters_list",
+        "variants": [
+          "xnh9"
+        ],
+        "highlight": [
+          "Schliemann"
+        ],
+        "monsters": [
+          "Lord Carnarvon",
+          "Schliemann",
+          "student",
+          "S",
+          "M",
+          "giant eel",
+          "watchman"
+        ]
+      },
+      {
         "name": "Barbarian",
         "name_short": "Bar",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -44,19 +64,19 @@
         "name": "Caveman",
         "name_short": "Cav",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
-          "Chromatic Dragon"
+          "Chromatic Dragon","Tiamat"
         ],
         "monsters": [
           "Shaman Karnov",
-          "Chromatic Dragon",
+          "Chromatic Dragon|Tiamat",
           "neanderthal",
           "h",
           "H",
-          "aligned priest",
+          "aligned cleric|aligned priest",
           "shrieker"
         ]
       },
@@ -64,7 +84,7 @@
         "name": "Healer",
         "name_short": "Hea",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -79,14 +99,14 @@
           "snake",
           ";",
           "D",
-          "aligned priest"
+          "aligned cleric|aligned priest"
         ]
       },
       {
         "name": "Knight",
         "name_short": "Kni",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -99,21 +119,21 @@
           "i",
           "j",
           "knight",
-          "aligned priest"
+          "aligned cleric|aligned priest"
         ]
       },
       {
         "name": "Monk",
         "name_short": "Mon",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
           "Master Kaen"
         ],
         "monsters": [
-          "Grand Master",
+          "Grand Master|Chan-Sune Lama",
           "Master Kaen",
           "abbot",
           "E",
@@ -124,7 +144,7 @@
         "name": "Priest",
         "name_short": "Pri",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -136,14 +156,14 @@
           "acolyte",
           "Z",
           "W",
-          "aligned priest"
+          "aligned cleric|aligned priest"
         ]
       },
       {
         "name": "Ranger",
         "name_short": "Ran",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -163,7 +183,7 @@
         "name": "Rogue",
         "name_short": "Rog",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -185,7 +205,7 @@
         "name": "Samurai",
         "name_short": "Sam",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -205,7 +225,7 @@
         "name": "Tourist",
         "name_short": "Tou",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -231,7 +251,7 @@
           "Z",
           "M",
           "&",
-          "aligned priest",
+          "aligned cleric|aligned priest",
           "K"
         ]
       },
@@ -239,7 +259,7 @@
         "name": "Valkyrie",
         "name_short": "Val",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
@@ -257,15 +277,16 @@
         "name": "Wizard",
         "name_short": "Wiz",
         "type": "monsters_list",
-        "variant": [
+        "variants": [
           ""
         ],
         "highlight": [
-          "Dark One"
+          "Dark One",
+		  "Anaraxis the Black"
         ],
         "monsters": [
-          "Neferet The Green",
-          "Dark One",
+          "Neferet the Green",
+          "Dark One|Anaraxis the Black",
           "apprentice",
           "B",
           "W",
@@ -290,7 +311,7 @@
         "name": "human cannibalism",
         "name_short": "Hum",
         "type": "include",
-        "variant": [
+        "variants": [
           ""
         ],
         "field": "eat_danger",
@@ -305,7 +326,7 @@
         "name": "Stoning",
         "name_short": "Ston",
         "type": "include",
-        "variant": [
+        "variants": [
           ""
         ],
         "field": "attack",
@@ -320,7 +341,7 @@
         "name": "Monsters that need insight",
         "name_short": "Ins",
         "type": "include",
-        "variant": [
+        "variants": [
           "dnh"
         ],
         "field": "insight",

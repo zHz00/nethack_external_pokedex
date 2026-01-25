@@ -1,8 +1,58 @@
 from nhconstants_atk import *
 from nhconstants_common import *
 from nhconstants_flags import *
+import json
 
-def make_letter_filter(fname,letter):    
+groups_titles=[]
+groups_filters=dict()
+
+def load_filters(variant):
+    global groups_titles
+    global groups_filters
+    f=open("filters.json",encoding="utf-8")
+    filters_all=json.load(f)
+    groups_titles=[]
+    groups_filters=dict()
+    for g in filters_all:
+        groups_titles.append(g["group_title"])
+        groups_filters[g["group_title"]]=[]
+        for f in g["filters_list"]:
+            variants=f["variants"]
+            good=False
+            if len(variants[0])==0:#all include
+                good=True
+            else:
+                exclude_mode=False
+                for v in variants:
+                    if v[0]=="!":
+                        exclude_mode=True#if some elements have ! and other don't have, then this is an error in filters.json. now it is not checked
+                if exclude_mode==False:#include mode
+                    if variant in variants:
+                        good=True
+                if exclude_mode==True:
+                    if "!"+variant not in variants:
+                        good=True
+            if good:
+                groups_filters[g["group_title"]].append(f)
+    #print(filters_all)
+
+def make_group_filter(name,idx):
+    field=dict()
+    field["name"]="group"
+    field["name_short"]="group"
+    field["variant"]=[""]
+    field["type"]="include"
+    field["field"]="group"
+    field["value"]=0
+    f=dict()
+    f["name"]=name
+    f["short_name"]="<none>" if idx==-1 else groups_filters[idx]["short_name"]
+    f["index"]=idx
+    f["type"]="group"#not real filter, only index
+    f["fields"]=[field]
+    return f
+
+def make_letter_filter(fname,letter):
     field=dict()
     field["name"]="Letter"
     field["name_short"]="Letter"
@@ -16,6 +66,7 @@ def make_letter_filter(fname,letter):
         f["short_name"]=f"('{letter}')"
     else:
         f["short_name"]="<any>"
+    f["type"]="check_fields"
     f["fields"]=[field]
     return f
 
@@ -33,6 +84,7 @@ def make_name_filter(fname,name):
         f["short_name"]=f"*{name[:9]}*"
     else:
         f["short_name"]="<any>"
+    f["type"]="check_fields"
     f["fields"]=[field]
     return f
 
@@ -50,6 +102,7 @@ def make_conveyed_filter(fname,res):
         f["short_name"]=resists_conv_short[list(resists_conv.keys()).index(res)]
     else:
         f["short_name"]="<any>"
+    f["type"]="check_fields"
     f["fields"]=[field]
     return f
 
@@ -68,6 +121,7 @@ def make_param_filter(fname,param,min,max):
         f["short_name"]=filter_mode_param_short_str[list(param_mode_list.keys()).index(param)]
     else:
         f["short_name"]="<any>"
+    f["type"]="check_fields"
     f["fields"]=[field]
     return f
 
@@ -109,12 +163,65 @@ def test_monster_one_field(mon,field):
                 
     return test
 def test_monster_one_filter(mon,f):
-    for field in f["fields"]:
-        if test_monster_one_field(mon,field)==False:
-            return False
+    if "index" in f:#group filter
+        if f["index"]==-1:#not selected
+            return True
+        if test_monster_one_filter(mon,groups_filters[f["name"]][f["index"]])==True:
+            return True
+    if f["type"]=="monsters_list":
+        m_list=f["monsters"]
+        for m in m_list:
+            if len(m)==1:#monster class
+                if monsym[mon[rows["symbol"]]]==m and int((mon[rows["geno"]].split("|"))[-1])!=0:#not randomly generated monsters are excluded
+                    return True
+            else:
+                names=m.split("|")
+                if mon[rows["name"]] in names:
+                    return True
+        return False
+    if f["type"]=="check_fields":#if more than one field present, fields are ORed       
+        for field in f["fields"]:
+            if test_monster_one_field(mon,field)==True:
+                return True
+    return False
+
+def test_monster_one_filter_hl(mon,f):
+    if "index" in f:#group filter
+        if test_monster_one_filter_hl(mon,groups_filters[f["name"]][f["index"]])==True:
+            return True
+    if f["type"]!="monsters_list":
+        return False
+    m_list=f["highlight"]
+    for m in m_list:
+        names=m.split("|")
+        if mon[rows["name"]] in names:
+            return True
+    return False
+
+def check_monster_list(monlist,f):
+    absent=[]
+    if f["type"]!="monsters_list":
+        raise
+    m_list=f["monsters"]
+    for m in m_list:
+        if len(m)>1:#real monster
+            names=m.split("|")
+            found=False
+            for name in names:
+                if name in monlist:
+                    found=True
+            if found==False:
+                absent.append(m)
+    return absent
 
 def test_monster(mon,filters):
     for f in filters:
-        if test_monster_one_filter(mon,f)==False:
+        if test_monster_one_filter(mon,f)==False:#several filters are ANDed
             return False
     return True
+
+def test_monster_hl(mon,filters):
+    for f in filters:
+        if test_monster_one_filter_hl(mon,f)==True:#highlight can be only one, but other filters can be in the list, so several filters are ORed
+            return True
+    return False

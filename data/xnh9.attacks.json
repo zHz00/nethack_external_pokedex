@@ -46,7 +46,7 @@
       "type": "AT_HUGS",
       "caption": "Hug",
       "caption_short": "Hug",
-      "explanation": "50%: stick [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt)]",
+      "explanation": "50%: stick [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
       "ad_list_name": "AT_COMMON"
     },
     "AT_SPIT": {
@@ -95,7 +95,7 @@
       "type": "AT_TENT",
       "caption": "Suck",
       "caption_short": "Suck",
-      "explanation": "Prevented by helmet 87.5%, by greased helmet 100%, but 50% wear off",
+      "explanation": "Prevented by helmet 87.5%, by greased helmet 100%, but 50% wear off; cursed helmet: 33% fail",
       "ad_list_name": "AT_COMMON"
     },
     "AT_WEAP": {
@@ -595,7 +595,7 @@
         "type": "AD_LEGS",
         "caption": "Legs",
         "caption_short": "Legs",
-        "explanation": "_1._ If levitating, flying or riding: nothing;\n_2._ If dwarvish boots or low boots: 60%: ordinary damage; 40%: nothing;\n_3._ Other cases: ordinary damage, then set wounded legs timeout for d(60-Dx) turns, but if current timeout is already greater, then just ordinary damage",
+        "explanation": "_1._ If levitating, flying or riding: nothing, but only if monster can't fly (xan *can* fly);\n_2._ If iron shoes or low boots: 60%: ordinary damage; 40%: nothing;\n_3._ Other cases: ordinary damage, then set wounded legs timeout for d(60-Dx) turns, but if current timeout is already greater, then just ordinary damage",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -604,7 +604,7 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "**66.7%** (at new moon) or **96.7%** (other moon phases): ordinary damage; **33.3%** (at new moon) or **3.3%** (other moon phases): ordinary damage, then lose intrinsic speed, then begin 5-turns *petrification* process, but you can act only for first two turns. _Resistance item:_ yellow dragon scales/mail. Also immune if deaf or hallucinating",
+        "explanation": "**66.7%** (at new moon) or **96.7%** (other moon phases): ordinary damage; **33.3%** (at new moon) or **3.3%** (other moon phases): ordinary damage, then lose intrinsic speed, then begin 5-turns *petrification* process, but you can act only for first two turns. No effect if already stoning. _Resistance item:_ yellow dragon scales/mail. Also immune if deaf or hallucinating",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -622,7 +622,7 @@
         "type": "AD_SGLD",
         "caption": "Steal gold",
         "caption_short": "Steal gold",
-        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else **20%**: steal gold or gold object on the floor; **80%**: steal any gold object or 10%...100% of your gold in inventory, uniformly distributed. All gold objects are equal targets, and all gold pieces are treated as one object. Then monster teleports away if he can, or flee if he can't",
+        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else **20%**: steal gold on the floor (or 0% if no gold no the floor); **80%** (or 100% if no gold on the floor): steal any gold object or 10%...100% of your gold in inventory, uniformly distributed; if you have more than 10k, than steal 5k+d(5k). All gold objects are equal targets, and all gold pieces are treated as one object. Then monster teleports away if he can, or flee if he can't",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -631,7 +631,7 @@
         "type": "AD_SITM",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished, 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees.",
+        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -640,7 +640,7 @@
         "type": "AD_SEDU",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished, 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees.",
+        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -694,7 +694,7 @@
         "type": "AD_WRAP",
         "caption": "Drown",
         "caption_short": "Drown",
-        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt), but if you are already stuck, this will not help.",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -757,7 +757,7 @@
         "type": "AD_SSEX",
         "caption": "Seduce",
         "caption_short": "Seduce",
-        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ Threshold=25+5*Lv+20 in Gehennom, otherwise Threshold=25+5*Lv. If d(Threshold)-1>Ch+Wi then you get one of negative effects: -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 Pw and +d5 MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp",
+        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ Threshold=25+5\\*Lv+20 in Gehennom, otherwise Threshold=25+5\\*Lv. If d(Threshold)-1>Ch+Wi then you get one of negative effects: Pw->0 and -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 MAX Pw and Pw->MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp _3._ If d20-1>=Ch, demon will take your money, minimum 500, but if you have less, demon will take all the money",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -793,7 +793,7 @@
         "type": "AD_FAMN",
         "caption": "Plus hunger",
         "caption_short": "+hunger",
-        "explanation": "If you are not fainted, lose 40+d40 nutrition",
+        "explanation": "If you are not fainted, lose 39+d40 nutrition",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -802,7 +802,7 @@
         "type": "AD_SLIM",
         "caption": "Slime",
         "caption_short": "Slime",
-        "explanation": "Set sliming timer to 10 turns. _Resistance item:_ amulet of unchanging. If you got unchanging from polyinit mode, or from \"arising\" as vampire, mummy, wraith, ghoul, zombie or mummy, then you are not protected from sliming.",
+        "explanation": "Set sliming timer to 10 turns. No effect if already sliming. _Resistance item:_ amulet of unchanging. If you got unchanging from polyinit mode, or from \"arising\" as vampire, mummy, wraith, ghoul, zombie or mummy, then you are not protected from sliming.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true

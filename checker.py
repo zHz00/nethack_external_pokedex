@@ -9,6 +9,7 @@ from nhconstants_flags_raw import *
 from nhconstants_flags import *
 from nhconstants_atk import *
 from make_card import *
+import filters as fs
 
 
 def check_formatting(card):
@@ -206,6 +207,26 @@ def run_tests(s,table,ver_name):
             failed_current_monster=False
     report.close()
     result_str="DONE-"+"EXPL"+f". Failed: {failed_monsters} of {total}, long lines: {failed_lines}, many screens: {failed_screens}, error:{error_cards}\n"
+    report_summary.write(result_str)
+    report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
+    report_summary.close()
+
+    report=open("reports/report-"+ver_name+"-"+"FILT"+".txt","w",encoding="utf-8")
+    report_summary=open("report.log","a",encoding="utf-8")
+    report_summary.write("==========\n")
+    report_summary.write(datetime.datetime.now().strftime("%d-%b-%Y (%H:%M:%S.%f)")+"\n")
+    report_summary.write("File: "+ver_name+"\n")
+    failed_filters=0
+    total_filters=len(fs.groups_filters["Quest monsters"])
+    for f in fs.groups_filters["Quest monsters"]:
+        absent=fs.check_monster_list(table,f)
+        if len(absent)>0:
+            failed_filters+=1
+            report.write(f"FILTER MONSTERS ABSENT:"+str(absent)+"\n")
+            report.write(ln[:test_len]+"\n===\n")
+
+    report.close()
+    result_str="DONE-"+"FILT"+f". Failed: {failed_filters} of {total_filters}\n"
     report_summary.write(result_str)
     report_summary.write(f"longest name: {name_longest}, {name_longest_name}\n")
     report_summary.close()
