@@ -46,6 +46,7 @@ at={'AT_CLAW':'Claw',
 "AT_TAIL":"Tail",
 "AT_TONG":"Tongue",
 "AT_VOMT":"Vomit",
+"AT_JUGL":"Juggle",
 "AT_XWEP":"Offhand Weapon",
 "AT_MARI":"Extra Weapon",
 "AT_BRSH":"Splash",
@@ -99,6 +100,7 @@ at_short={'AT_CLAW':'Claw',
 "AT_TAIL":"Tail",
 "AT_TONG":"Tongue",
 "AT_VOMT":"Vomit",
+"AT_JUGL":"Juggle",
 "AT_XWEP":"Offh Weap",
 "AT_MARI":"Xtra Weap",
 "AT_BRSH":"Splash",
@@ -276,6 +278,13 @@ ad={'AD_PHYS':'',
 "AD_LICK":" Pull&Immobilize&Cold+Acid",
 "AD_PFBT":" Rot+Poison",
 "AD_OMUD":" Acid+bone daggers",
+"AD_PSH3":" Push d3 squares",
+"AD_BLED":" Bleed",
+"AD_UHCD":" Unholy cold",
+"AD_GMLD":" Gray mold spores",
+"AD_SONC":" Sonic",
+
+
 "AD_DUNSTAN":" Stones throw themselves at target",#player only?
 "AD_IRIS":" Iridescent tentacles",#player only?
 "AD_NABERIUS":" Tarnished bloody fangs",#player only?
@@ -464,6 +473,12 @@ ad_short={'AD_PHYS':'',
 "AD_LICK":" Pull&Immobilize&Cold+Acid",
 "AD_PFBT":" Rot+Poison",
 "AD_OMUD":" Acid+bone daggers",
+"AD_PSH3":" Push d3 squares",
+"AD_BLED":" Bleed",
+"AD_UHCD":" Unholy cold",
+"AD_GMLD":" Gray mold spores",
+"AD_SONC":" Sonic",
+
 "AD_DUNSTAN":" Stones throw themselves at target",#player only?
 "AD_IRIS":" Iridescent tentacles",#player only?
 "AD_NABERIUS":" Tarnished bloody fangs",#player only?

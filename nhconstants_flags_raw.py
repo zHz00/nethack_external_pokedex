@@ -57,6 +57,7 @@ flags1_str={
 "M1_NOGLOVES":"M1_NOGLOVES",#+
 "M1_NOHAT":"M1_NOHAT",#+
 "M1_SKELETAL":"M1_SKELETAL",#+
+"M1_ORGANIC":"M1_ORGANIC",
 
 "":""
 

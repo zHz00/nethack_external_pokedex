@@ -187,6 +187,8 @@ def test_monster_one_filter(mon,f):
 
 def test_monster_one_filter_hl(mon,f):
     if "index" in f:#group filter
+        if f["index"]==-1:#not selected
+            return False
         if test_monster_one_filter_hl(mon,groups_filters[f["name"]][f["index"]])==True:
             return True
     if f["type"]!="monsters_list":

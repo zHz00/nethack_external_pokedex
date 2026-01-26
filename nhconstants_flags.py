@@ -433,6 +433,7 @@ flags_perks={
 "M1_DOORBUST":"Breaks doors",
 "G_SPCORPSE":"Corpse non-wishable",
 "M1_SKELETAL":"Has skeletal body",
+"M1_ORGANIC":"Has organic body",
 "M3_OPAQUE":"Blocks sight",
 "M3_NOSPELLCOOLDOWN":"Fast caster",
 "M3_NOWISH":"Non-wishable",

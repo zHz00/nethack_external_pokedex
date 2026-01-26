@@ -25,7 +25,7 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
-filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_conveyed_filter("Conveyed",""),fs.make_param_filter("Param","",0,0)]
+filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_conveyed_filter("Conveyed",""),fs.make_param_filter("Parameter","",0,0)]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -86,6 +86,7 @@ sort_dir1=0
 sort_dir2=0
 filters_group_names=[]
 filters_group_sel=0
+filters_group_skip=0
 
 filter_mode_sel=0
 filters_edits_offset_x=0
@@ -145,6 +146,7 @@ def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
             reverse=bool(dir1))
 
 MAX_SEARCH=40
+MAX_LINES_LIST=18
 
 def show_ver_format(search_win):
     x1=50
@@ -190,6 +192,7 @@ def show_ver_format(search_win):
                     name_short=fs.groups_filters[filter_list[last_filter]["name"]][filter_list[last_filter]["index"]]["name_short"]
                 else:
                     name_short=filter_list[last_filter]["short_name"]
+                name_short=name_short[:8]
                 search_win.addstr(1,x2,"|Filter:"+name_short,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters>1:
                 search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
@@ -276,12 +279,22 @@ def show_filters(s,sel:int):
     s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w1+w2+w3+3}}|",c.color_pair(BK)|c.A_BOLD)
     s.refresh()
 
-def show_select_list(s,cap,op_list,idx):
+def show_select_list(s,cap,op_list,idx,skip):
     w1=20
     w2=0
     w3=0
     cap1=cap
-    l=len(op_list)
+    lines=len(op_list)
+    if lines>MAX_LINES_LIST:
+        lines=MAX_LINES_LIST
+
+    if idx>=MAX_LINES_LIST:
+        skip+=idx-MAX_LINES_LIST+1
+        idx=MAX_LINES_LIST-1
+    global filters_group_sel,filters_group_skip
+    if mode==SELECT_FILTER_GROUP:
+        filters_group_sel=idx
+        filters_group_skip=skip
     w1=len(cap)
     for op in op_list:
         if len(op)>w1:
@@ -290,15 +303,16 @@ def show_select_list(s,cap,op_list,idx):
     w1+=w_fast#for fast-select numbers
     h=c.LINES-2-1#one for header
     offset_y=0
-    if l>=h:
+    if lines>=h:
         offset_y=0
     else:
-        offset_y=int((h-l)/2)
+        offset_y=int((h-lines)/2)
     offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
     header=f"|{cap1:{w1}}|"
     s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
-    for y in range(len(op_list)):
-        op=op_list[y]
+
+    for y in range(lines):
+        op=op_list[y+skip]
         fast_sel="?"
         if y<=8:
             fast_sel=chr(48+1+y)
@@ -1248,7 +1262,7 @@ def enter_numeric_param(card_win,search_win):
     global list_mode_sel,list_mode_skip
     global sort_mode1,sort_mode2,sort_dir1,sort_dir2
     param_caption=list(filters_mode_param_str.keys())[param_mode_sel]
-    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],0,0)
+    filter_list[filter_mode_sel]=fs.make_param_filter("Parameter",filters_mode_param_str[param_caption],0,0)
     filter_on[filter_mode_sel]=True
     show_list(card_win,search_win,[])
     show_filters(card_win,filter_mode_sel)
@@ -1271,7 +1285,7 @@ def enter_numeric_param(card_win,search_win):
         show_filters(card_win,filter_mode_sel)
         mode=FILTERS
         return 0
-    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],int(min),0)
+    filter_list[filter_mode_sel]=fs.make_param_filter("Parameter",filters_mode_param_str[param_caption],int(min),0)
     show_filters(card_win,filter_mode_sel)
     max=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x+len(param_caption)+1+3+len(min),6).strip()
     if max=="":
@@ -1285,7 +1299,7 @@ def enter_numeric_param(card_win,search_win):
         show_filters(card_win,filter_mode_sel)
         mode=FILTERS
         return 0
-    filter_list[filter_mode_sel]=fs.make_param_filter("Param",filters_mode_param_str[param_caption],int(min),int(max))
+    filter_list[filter_mode_sel]=fs.make_param_filter("Parameter",filters_mode_param_str[param_caption],int(min),int(max))
     if param_mode_sel+2<len(sort_mode_str):#+2 is letter and name, which have separate filter
         sort_mode1=param_mode_sel+2
     else:
@@ -1301,13 +1315,14 @@ def enter_numeric_param(card_win,search_win):
 
     mode=FILTERS
 
-def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,idx):
+def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,idx,skip):
     global mode
     global reloaded
     global sort_mode1, sort_mode2
     global list_mode_sel,list_mode_skip
-    global filters_group_sel
+    global filters_group_sel,filters_group_skip
     global filter_list
+
     if ch==27:
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             mode=LIST
@@ -1333,16 +1348,32 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
         if idx>0:
             idx-=1
         else:
-            idx=len(op_list)-1
+            if skip>0:
+                skip-=1
+            else:
+                if len(op_list)>MAX_LINES_LIST:
+                    idx=MAX_LINES_LIST-1
+                    skip=len(op_list)-MAX_LINES_LIST
+                else:
+                    idx=len(op_list)-1
     if key=="KEY_DOWN" :
+
         if idx+1<len(op_list):
             idx+=1
-        else:
-            idx=0
+        if idx>=MAX_LINES_LIST:
+            idx-=1
+            skip+=1
+            if idx+skip>=len(op_list):
+                idx=0
+                skip=0
     if key=="KEY_HOME":
         idx=0
+        skip=0
     if key=="KEY_END":
         idx=len(op_list)-1
+        if idx>=MAX_LINES_LIST:
+            idx=MAX_LINES_LIST-1
+            skip=len(op_list)-MAX_LINES_LIST
     if key=="^M" or key=="^J":
         if mode==SELECT_SORT1:
             reset_sort()
@@ -1355,7 +1386,7 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
             filter_list[filter_mode_sel]=fs.make_conveyed_filter("Conveyed",list(resists_conv.keys())[idx])
             filter_on[filter_mode_sel]=True
         if mode==SELECT_FILTER_GROUP:
-            filter_list[filter_mode_sel]["index"]=idx-1
+            filter_list[filter_mode_sel]["index"]=idx+skip-1
             filter_on[filter_mode_sel]=True
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
         if mode==SELECT_RES or mode==SELECT_FILTER_GROUP:
@@ -1365,7 +1396,7 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
             mode=FILTERS
         if mode==SELECT_PARAM:
             mode=ENTER_NUMERIC_PARAM
-    return (0,idx)
+    return (0,idx,skip)
 
 def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global filter_mode_sel
@@ -1374,7 +1405,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global reloaded
     global filter_list
     global list_mode_sel,list_mode_skip
-    global filters_group_names,filters_group_sel
+    global filters_group_names,filters_group_sel,filters_group_skip
     f=filter_list[filter_mode_sel]["fields"][0]
 
     if ch==27:
@@ -1410,6 +1441,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             for filter in filters_in_group:
                 filters_group_names.append(filter["name"])
             filters_group_sel=filter_list[filter_mode_sel]["index"]+1
+            filters_group_skip=0
             mode=SELECT_FILTER_GROUP
             return 0
         if f["field"]=="symbol":
@@ -1713,7 +1745,7 @@ def main(s):
     global sel,skip
     global sort_mode_sel,res_mode_sel,param_mode_sel
     global filter_mode_sel
-    global filters_group_names,filters_group_sel
+    global filters_group_names,filters_group_sel,filters_group_skip
     if c.COLORS<16:
         bold=1
     else:
@@ -1765,22 +1797,22 @@ def main(s):
                 card_win.erase()
                 show_not_found_msg(card_win,mon_name)
         if mode==SELECT_RES:
-            show_select_list(card_win,"Conveyed",list(res_mode_list.keys()),res_mode_sel)
+            show_select_list(card_win,"Conveyed",list(res_mode_list.keys()),res_mode_sel,0)
         if mode==SELECT_PARAM:
-            show_select_list(card_win,"Numeric parameters",list(filters_mode_param_str.keys()),param_mode_sel)
+            show_select_list(card_win,"Numeric parameters",list(filters_mode_param_str.keys()),param_mode_sel,0)
         if mode==FILTERS:
             show_filters(card_win,filter_mode_sel)
         if mode==SELECT_SORT1:
-            show_select_list(card_win,"Sort field (1)",sort_mode_str,sort_mode_sel)
+            show_select_list(card_win,"Sort field (1)",sort_mode_str,sort_mode_sel,0)
         if mode==SELECT_SORT2:
-            show_select_list(card_win,"Sort field (2)",sort_mode_str,sort_mode_sel)
+            show_select_list(card_win,"Sort field (2)",sort_mode_str,sort_mode_sel,0)
         if mode==LIST:
             show_list(card_win,search_win,results)
         if mode==ENTER_NUMERIC_PARAM:
             enter_numeric_param(card_win,search_win)
             continue
         if mode==SELECT_FILTER_GROUP:
-            show_select_list(card_win,filter_list[filter_mode_sel]["name"],filters_group_names,filters_group_sel)
+            show_select_list(card_win,filter_list[filter_mode_sel]["name"],filters_group_names,filters_group_sel,filters_group_skip)
 
         if mode==SEARCH:
             for mon in table.keys():
@@ -1862,13 +1894,13 @@ def main(s):
             continue
         if mode==SELECT_RES:
             #res=react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name)
-            res,res_mode_sel=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,list(res_mode_list.keys()),res_mode_sel)
+            res,res_mode_sel,notused=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,list(res_mode_list.keys()),res_mode_sel,0)
             if res!=0:
                 break
             continue
         if mode==SELECT_PARAM:
             #res=react_to_key_select_param(card_win,search_win,ch,key,alt_ch,mon_name)
-            res,param_mode_sel=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,list(param_mode_list.keys()),param_mode_sel)
+            res,param_mode_sel,notused=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,list(param_mode_list.keys()),param_mode_sel,0)
             if res!=0:
                 break
             continue
@@ -1879,13 +1911,13 @@ def main(s):
             continue
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             #res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
-            res,sort_mode_sel=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,sort_mode_str,sort_mode_sel)
+            res,sort_mode_sel,notused=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,sort_mode_str,sort_mode_sel,0)
             if res!=0:
                 break
             continue
         if mode==SELECT_FILTER_GROUP:
             #res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
-            res,filters_group_sel=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,filters_group_names,filters_group_sel)
+            res,filters_group_sel,filters_group_skip=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,filters_group_names,filters_group_sel,filters_group_skip)
             
             if res!=0:
                 break
