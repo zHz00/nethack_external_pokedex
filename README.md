@@ -8,12 +8,12 @@ Please note that this utility have nothing to do with Pokemons, it uses Pokedex 
 
 NetHack 3.4.3  
 NetHack 3.6.7  
-NetHack 3.7.0-dev  
-xNetHack 9.0  
+NetHack 5.0.0  
+xNetHack 9.1  
 UnNetHack 6.0.14  
 EvilHack 0.9.1  
 SLASH'EM 0.0.7  
-dNetHack 3.24.0  
+dNetHack 3.26.0  
 
 ## Quick Start
 
