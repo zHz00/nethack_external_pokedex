@@ -273,7 +273,7 @@ flags_body={
 ("M1_ANIMAL",):"Animal",
 ("M1_SLITHY",):"Serpent",
 ("M1_UNSOLID",):"Whirly",
-("M3_NONCORPOREAL",):"Ghost",
+("M3_NONCORPOREAL",):"Ghost"
 }
 
 flags_eyes={
@@ -298,12 +298,15 @@ flags_head={
     tuple():"head:Y",
     ("M1_LONGHEAD",):"head:Y,long",
     ("M1_NOHAT",):"head:Y,no hat",
+    ("M1_HORNS",):"head:Y, has horns",
+    ("M1_HORNS","M1_LONGHEAD"):"head:Y, long, has horns",
     ("M1_LONGNECK",):"head:Y,long neck",
     ("M1_LONGHEAD","M1_LONGNECK"):"head:Y,long,with long neck",
     ("M1_LONGHEAD","M1_NOHAT"):"head:Y,long,no hat",
     ("M1_LONGNECK","M1_NOHAT"):"head:Y,long neck,no hat",
     ("M1_LONGHEAD","M1_LONGNECK","M1_NOHAT"):"head:Y,long,long neck,no hat",
     ("M1_NOHEAD",):"head:N",
+    ("M1_NOHEAD","M1_HORNS"):"head:N, only horns",
     ("M1_NOHEAD","M1_CAN_AMULET"):"head:N,amulet:Y"
 }
 

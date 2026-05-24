@@ -318,8 +318,22 @@ def show_select_list(s,cap,op_list,idx,skip):
             fast_sel=chr(48+1+y)
         else:
             fast_sel=chr(65+y-9)
+        finalizer="|"
+        if y==lines-1:#last line
+            if len(op_list)>MAX_LINES_LIST:#scrolling
+                if y+skip<len(op_list)-1:#there are more lines
+                    finalizer="V"
+                else:
+                    finalizer="|"
+        if y==0:#first line
+            if len(op_list)>MAX_LINES_LIST:#scrolling
+                if y+skip>0:#there are more lines
+                    finalizer="^"
+                else:
+                    finalizer="|"
+
         info=f"[{fast_sel}]{op}"
-        info="|"+f"{info:{w1}}"+"|"
+        info="|"+f"{info:{w1}}"+finalizer
         if y==idx:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
         else:
@@ -499,6 +513,9 @@ def read_monsters(file):
         attacks_file.close()
     set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
     fs.load_filters(ver_list[ver_idx].split(".")[0])
+    for f in filter_list:
+        if f["type"]=="group":
+            f["index"]=-1#number of filters in each group list may differ so we have to reset counters
 
 def fill_attacks(file):
     global e_at,e_ad
@@ -656,8 +673,8 @@ def show_hello_msg(card_win):
     #"ESC: Clear search; F10: Exit"
 
     block1=["LEFT, RIGHT: Scroll results",
-            "ESC: Clear search",
-            "Tab: Switch to List mode"]
+            "Tab: Switch to List mode",
+            "F1: Extended help"]
     block2=["[, ], Ctrl+O: Choose variant",
             "UP, DOWN: Change format",
             "F10, Ctrl+Q: Exit"]

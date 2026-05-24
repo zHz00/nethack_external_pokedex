@@ -2692,6 +2692,432 @@
                     "Mother Hydra",
                     "Great Cthulhu"
                 ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Arch",
+                "name_short": "Arch",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Lord Carnarvon",
+                    "student",
+                    "watchman",
+                    "giant eel",
+                    "S",
+                    "M",
+                    "human mummy",
+                    "Schliemann"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Barb",
+                "name_short": "Barb",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Pelias",
+                    "chieftain",
+                    "giant eel",
+                    "ogre",
+                    "O",
+                    "T",
+                    "rock troll",
+                    "Thoth Amon"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Caveman",
+                "name_short": "Caveman",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "aligned priest|aligned cleric",
+                    "Shaman Karnov",
+                    "neanderthal",
+                    "bugbear",
+                    "h",
+                    "H",
+                    "hill giant",
+                    "Tiamat",
+                    "shrieker"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Convict",
+                "name_short": "Convict",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "aligned priest|aligned cleric",
+                    "Robert the Lifer",
+                    "inmate",
+                    "giant mimic",
+                    "shopkeeper",
+                    "soldier",
+                    "lieutenant",
+                    "sergeant",
+                    "captain",
+                    "Keystone Kop",
+                    "Kop Sergeant",
+                    "Kop Lieutenant",
+                    "Kop Kaptain",
+                    "iron golem",
+                    "lava demon",
+                    "Warden Arianna",
+                    "ghost",
+                    "skeleton",
+                    "pit viper",
+                    "xan",
+                    "miner",
+                    "xorn",
+                    "earth elemental"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Healer",
+                "name_short": "Healer",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Hippocrates",
+                    "attendant",
+                    "rabid rat",
+                    "giant eel",
+                    "shark",
+                    ";",
+                    "D",
+                    "S",
+                    "aligned priest|aligned cleric",
+                    "r",
+                    "kraken",
+                    "Cyclops",
+                    "electric eel"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Knight",
+                "name_short": "Knight",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "King Arthur",
+                    "knight",
+                    "page",
+                    "quasit",
+                    "aligned priest|aligned cleric",
+                    "i",
+                    "j",
+                    "ochre jelly",
+                    "Ixoth"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Monk",
+                "name_short": "Monk",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Grand Master",
+                    "abbot",
+                    "earth elemental",
+                    "xorn",
+                    "Master Kaen",
+                    "E",
+                    "X"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Priest",
+                "name_short": "Priest",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Arch Priest",
+                    "acolyte",
+                    "human zombie",
+                    "V",
+                    "Z",
+                    "&",
+                    "ghost",
+                    "wraith",
+                    "aligned priest|aligned cleric",
+                    "aligned priest",
+                    "Nalzok",
+                    "W"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Ranger",
+                "name_short": "Ranger",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Orion",
+                    "hunter",
+                    "minotaur",
+                    "forest centaur",
+                    "plains centaur",
+                    "scorpion",
+                    "wumpus",
+                    "giant bat",
+                    "mountain centaur",
+                    "s",
+                    "Scorpius",
+                    "C"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Rogue",
+                "name_short": "Rogue",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "giant mimic",
+                    "large mimic",
+                    "small mimic",
+                    "Master of Thieves",
+                    "thug",
+                    "leprechaun",
+                    "water nymph",
+                    "chameleon",
+                    "l",
+                    "guardian naga",
+                    "N",
+                    "Master Assassin",
+                    "shark"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Samurai",
+                "name_short": "Samurai",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Lord Sato",
+                    "roshi",
+                    "ninja",
+                    "wolf",
+                    "stalker",
+                    "d",
+                    "samurai",
+                    "Ashikaga Takauji"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Tourist",
+                "name_short": "Tourist",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "V",
+                    "Z",
+                    "&",
+                    "ghost",
+                    "wraith",
+                    "giant spider",
+                    "s",
+                    "forest centaur",
+                    "C",
+                    "Twoflower",
+                    "guide",
+                    "watchman",
+                    "giant eel",
+                    "piranha",
+                    "kraken",
+                    "shopkeeper",
+                    "soldier",
+                    "lieutenant",
+                    "sergeant",
+                    "captain",
+                    "Master of Thieves",
+                    "succubus",
+                    "incubus",
+                    "Kop Kaptain",
+                    "Kop Lieutenant",
+                    "Keystone Kop",
+                    "prisoner",
+                    "H"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Valkyrie",
+                "name_short": "Valkyrie",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Norn",
+                    "warrior",
+                    "fire ant",
+                    "fire giant",
+                    "a",
+                    "H",
+                    "Lord Surtur"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "Wizard",
+                "name_short": "Wizard",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Neferet the Green",
+                    "apprentice",
+                    "giant eel",
+                    "B",
+                    "W",
+                    "i",
+                    "vampire bat",
+                    "Anaraxis the Black",
+                    "rogue",
+                    "owlbear",
+                    "wizard",
+                    "Grey-elf",
+                    "hill giant",
+                    "gnomish wizard",
+                    "prisoner",
+                    "X"
+                ]
+            },
+            {
+                "variants": [
+                    "un6"
+                ],
+                "name": "dragons",
+                "name_short": "dragons",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "D",
+                    "w",
+                    "chromatic dragon"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "beholder",
+                "name_short": "beholder",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Beholder",
+                    "gas spore",
+                    "a"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "frnknstn",
+                "name_short": "frnknstn",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Doctor Frankenstein",
+                    "flesh golem",
+                    "genetic engineer",
+                    "quantum mechanic",
+                    "'",
+                    "Frankenstein's Monster",
+                    "a"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "lich",
+                "name_short": "lich",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "Vecna",
+                    "L",
+                    "W",
+                    "V",
+                    "Z"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "nightmar",
+                "name_short": "nightmar",
+                "type": "monsters_list",
+                "highlight": [],
+                "monsters": [
+                    "imp",
+                    "large pile of killer coins",
+                    "killer food ration",
+                    "@",
+                    "maggot",
+                    "S",
+                    "s",
+                    "aligned priest",
+                    "electric eel",
+                    "air elemental",
+                    "fire elemental",
+                    "earth elemental",
+                    "water elemental",
+                    "stalker",
+                    "gremlin",
+                    "mind flayer",
+                    "Nightmare",
+                    "black unicorn",
+                    "gray unicorn",
+                    "white unicorn",
+                    "wood nymph",
+                    "brownie",
+                    "pixie",
+                    "quickling",
+                    "black light",
+                    "shadow"
+                ]
             }
         ]
     },
