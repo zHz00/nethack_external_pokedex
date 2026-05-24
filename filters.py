@@ -2,6 +2,7 @@ from nhconstants_atk import *
 from nhconstants_common import *
 from nhconstants_flags import *
 import json
+import utils
 
 groups_titles=[]
 groups_filters=dict()
@@ -10,7 +11,12 @@ def load_filters(variant):
     global groups_titles
     global groups_filters
     f=open("filters.json",encoding="utf-8")
-    filters_all=json.load(f)
+    try:
+        filters_all=json.load(f)
+    except Exception as e:
+        print("Error loading filters.json! Message:\n"+str(e))
+        input()
+        return
     groups_titles=[]
     groups_filters=dict()
     for g in filters_all:
@@ -134,12 +140,36 @@ def test_monster_one_field(mon,field):
             test=(monsym[mon[rows[f]]]==field["value"] or field["value"]=="*" or field["value"]=="")
         if f=="name":
             test=(mon[rows[f]].lower().find(field["value"].lower())!=-1 or field["value"]=="*")
-        if f=="prob":
+        if f=="prob" or f=="conv_special":
             ress_with_prob=mon[rows[f]].split("|")
             ress_names=[]
             for r in ress_with_prob:
                 ress_names.append(r.split("=")[0])
             test=(field["value"] in ress_names or len(field["value"])==0 or field["value"] in mon[rows["flags1"]])
+        if f=="eat_danger":
+            dangers=mon[rows[f]].split("|")
+            dangers_names=[]
+            for d in dangers:
+                dangers_names.append(d.split("=")[0])
+            test=(field["value"] in dangers_names)
+        if f=="attack":
+            attacks_fields=["attack1","attack2","attack3","attack4","attack5","attack6","attack7","attack8","attack9","attack10"]
+            test=False
+            for a in attacks_fields:
+                if mon[rows[a]].find(field["value"])!=-1:
+                    test=True
+                    break
+        if f=="flag":
+            flags_fields=["flags1","flags2","flags3","flags4"]
+            test=False
+            for f in flags_fields:
+                if mon[rows[f]].find(field["value"])!=-1:
+                    test=True
+                    break
+        if f=="geno":
+            test=False
+            if mon[rows["geno"]].find(field["value"])!=-1:
+                test=True
     if "min" in field:
         #param test
         if len(f)==0:#empty parameter
@@ -157,8 +187,8 @@ def test_monster_one_field(mon,field):
                     test_value=int((mon[rows["geno"]].split("|"))[-1])
                 if f=="size":
                     test_value=szs_order[mon[rows[f]]]
-                min=field["min"]
-                max=field["max"]
+                min=int(field["min"])
+                max=int(field["max"])
                 test=(test_value>=min and test_value<=max)
                 
     return test
@@ -179,10 +209,19 @@ def test_monster_one_filter(mon,f):
                 if mon[rows["name"]] in names:
                     return True
         return False
+    if mon[rows["name"]=="mumak"]:
+        f=""
     if f["type"]=="check_fields":#if more than one field present, fields are ORed       
+        include_field_present=False
         for field in f["fields"]:
+            if field["type"]=="include":
+                include_field_present=True
+            if test_monster_one_field(mon,field)==True and field["type"]=="exclude":
+                return False
             if test_monster_one_field(mon,field)==True:
                 return True
+        if include_field_present==False:#exclude did'nt work => include
+            return True
     return False
 
 def test_monster_one_filter_hl(mon,f):

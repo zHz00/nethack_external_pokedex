@@ -3722,13 +3722,331 @@
             {
                 "name": "human cannibalism",
                 "name_short": "Hum",
-                "type": "include",
+                "type": "check_fields",
                 "variants": [
                     ""
                 ],
-                "field": "eat_danger",
-                "value": "HUMAN"
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "HUMAN"
+                    }
+                ]
+            },
+            {
+                "name": "elf cannibalism",
+                "name_short": "Elf",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "ELF"
+                    }
+                ]
+            },
+            {
+                "name": "Gnome cannibalism",
+                "name_short": "Gno",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "GNOME"
+                    }
+                ]
+            },
+            {
+                "name": "Dwarf cannibalism",
+                "name_short": "Dwa",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "DWARF"
+                    }
+                ]
+            },
+            {
+                "name": "Tortle cannibalism",
+                "name_short": "Tortle",
+                "type": "check_fields",
+                "variants": [
+                    "eh09"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "TORTLE"
+                    }
+                ]
+            },
+            {
+                "name": "Yuki-onna cannibalism",
+                "name_short": "Fey",
+                "type": "check_fields",
+                "variants": [
+                    "dnh"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "FAIRY"
+                    }
+                ]
+            },
+            {
+                "name": "chiropteran cannibalism",
+                "name_short": "Animal",
+                "type": "check_fields",
+                "variants": [
+                    "dnh"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "ANIMAL"
+                    }
+                ]
+            },
+            {
+                "name": "half-dragon cannibalism",
+                "name_short": "D",
+                "type": "check_fields",
+                "variants": [
+                    "dnh"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "DRAGON"
+                    }
+                ]
+            },
+            {
+                "name": "Acidic to eat",
+                "name_short": "Acid",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "ACID"
+                    }
+                ]
+            },
+            {
+                "name": "Poisonous to eat",
+                "name_short": "Poison",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "POISON"
+                    }
+                ]
+            },
+            {
+                "name": "Instantly FATAL or petrify",
+                "name_short": "FATAL",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "FATAL"
+                    },
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "PETRIFY"
+                    }
+                ]
+            },
+            {
+                "name": "Hot to eat",
+                "name_short": "Hot",
+                "type": "check_fields",
+                "variants": [
+                    "dnh"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "HOT"
+                    }
+                ]
+            },
+            {
+                "name": "Cold to eat",
+                "name_short": "Cold",
+                "type": "check_fields",
+                "variants": [
+                    "dnh"
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "COLD"
+                    }
+                ]
+            },
+            {
+                "name": "Stun or hallu when eaten",
+                "name_short": "Stun",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "STUN"
+                    },
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "HALLU"
+                    }
+                ]
+            },
+            {
+                "name": "Mimic, polyself, lycantropy",
+                "name_short": "Poly",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "MIMIC"
+                    },
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"conv_special",
+                        "type":"include",
+                        "value": "POLYSELF"
+                    },
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "LYCANTROPY"
+                    }
+                ]
+            },
+            {
+                "name": "Aggravate",
+                "name_short": "Aggr",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "AGGRAVATE"
+                    }
+                ]
+            },
+            {
+                "name": "Sliming or illness",
+                "name_short": "Ill",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "SLIME"
+                    },
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"eat_danger",
+                        "type":"include",
+                        "value": "ILL"
+                    }
+                ]
             }
+
+
+
+
         ]
     },
     {
@@ -3737,28 +4055,325 @@
             {
                 "name": "Stoning",
                 "name_short": "Ston",
-                "type": "include",
                 "variants": [
                     ""
                 ],
-                "field": "attack",
-                "value": "AD_STON"
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AD_STON"
+                    }
+                ]
+            },
+            {
+                "name": "Drown",
+                "name_short": "Drown",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "attack",
+                        "value": "AT_ENGL"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AD_WRAP"
+                    }
+                ]
+            },
+            {
+                "name": "Paralyze",
+                "name_short": "Prlz",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AD_PLYS"
+                    }
+                ]
+            },
+            {
+                "name": "Disease",
+                "name_short": "Disease",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AD_DISE"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AD_PEST"
+                    }
+                ]
+            },
+            {
+                "name": "Spellcasters",
+                "name_short": "Spell",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AT_MAGC"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "attack",
+                        "value": "AT_MMGC"
+                    }
+                ]
             }
+
         ]
     },
     {
-        "group_title": "other",
+        "group_title": "Other",
         "filters_list": [
             {
-                "name": "Monsters that need insight",
-                "name_short": "Ins",
-                "type": "include",
+                "name": "Polyself possible",
+                "name_short": "Poly",
                 "variants": [
-                    "dnh"
+                    ""
                 ],
-                "field": "insight",
-                "min": "1",
-                "max": "99999"
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "flag",
+                        "value": "M2_NOPOLY"
+                    }
+                ]
+            },
+            {
+                "name": "Polyself impossible",
+                "name_short": "Nopoly",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M2_NOPOLY"
+                    }
+                ]
+            },
+            {
+                "name": "Unique",
+                "name_short": "Unique",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "geno",
+                        "value": "G_UNIQ"
+                    }
+                ]
+            },
+            {
+                "name": "Poly, can hold weapon",
+                "name_short": "Weap",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "flag",
+                        "value": "M1_NOHANDS"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "flag",
+                        "value": "M1_NOLIMBS"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "size",
+                        "min": "0",
+                        "max": "0"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "exclude",
+                        "field": "flag",
+                        "value": "M2_NOPOLY"
+                    }
+                ]
+            },
+            {
+                "name": "Eat metal",
+                "name_short": "Metal",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M1_METALLIVORE"
+                    }
+                ]
+            },
+            {
+                "name": "Covetous",
+                "name_short": "Covet",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M3_WANTSAMUL"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M3_WANTSCAND"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M3_WANTSBOOK"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M3_WANTSBELL"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M3_WANTSARTI"
+                    }
+                ]
+            },
+            {
+                "name": "Sees invisible",
+                "name_short": "See I.",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M1_SEE_INVIS"
+                    }
+                ]
+            },
+            {
+                "name": "Unbreathing/amphibious",
+                "name_short": "Unbreath",
+                "variants": [
+                    ""
+                ],
+                "type": "check_fields",
+                "fields":[
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M1_AMPHIBIOUS"
+                    },
+                    {
+                        "name":"t",
+                        "short_name":"t",
+                        "type": "include",
+                        "field": "flag",
+                        "value": "M1_BREATHLESS"
+                    }
+                ]
+            },
+            {
+                "name": "Rideable",
+                "name_short": "Ride",
+                "variants": [
+                    ""
+                ],
+                "type": "monsters_list",
+                "highlight":[],
+                "monsters":[
+                    "u",
+                    "q",
+                    "C",
+                    "D",
+                    "J",
+                    "ki-rin",
+                    "couatl"
+                ]
             }
         ]
     }
