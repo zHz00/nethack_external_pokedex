@@ -58,12 +58,14 @@ Also, you can type part of name and still find your monster in search results.
 **UP, DOWN**	Scroll through list  
 **PgUp, PgDn**	Scroll, but faster  
 **Home, End**	Scroll with the speed of light  
+**Left, Right**	View dNetHack special columns: Insight required and light raduis  
 **Enter**		View selected monster's card (Press Esc to return to list)  
 **Ctrl+S**		Select sorting field  
 **Ctrl+D**		Change sorting direction  
 **Shift+S**		Select secondary sorting field (only available if first field is active)  
 **Shift+D**		Change secondary sorting direction  
-**Ctrl+F**		Show filters menu
+**Shift+F**		Show filters menu  
+**Ctrl+F**		Quick filter by name  
 
 **[, ]**		Switch variant  
 **Ctrl+O**		Select variant from list  
@@ -77,12 +79,19 @@ Also, you can type part of name and still find your monster in search results.
 
 ## Using filters
 
-Now, only 4 types of filters are supported. Press enter while filter is selected, enter parameter and press enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
+There are now 8 types of filters. First group are parametric filters and requires entering values on keyboard. Press Enter while filter is selected, enter parameter value(s) and press Enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
 
-**Letter:**		Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to \<any\> state, you must enter asterisk (\*) as a parameter.  
-**Name:**		Show monsters, specified by part of their name. This is similar to SEARCH mode, but you see results as a list. To switch this filter to <any> state, you must enter a space in the edit field.  
-**Conveyed:**	This filter enables you to view monsters that can give you some intrinsic property. Beware, you'll get a monster even if it does not leave a corpse. You can still get a resist if you eat this monster alive, e.g. if you polymorph yourself to a purple worm.  
-**Param:**		You can select any parameter from the table, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter is in range from first value (included) to second value (also included).
+**Letter:**			Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to \<any\> state, you must enter asterisk (\*) as a value.  
+**Name:**			Show monsters, specified by part of their name. This is similar to SEARCH mode, but you see results as a list. To switch this filter to <any> state, you must enter a space in the edit field. You can quickly call this filter using Ctrl+F instead of Shift+F.  
+**Parameter:**		You can select any parameter from the list, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter in range from first value (included) to second value (also included).
+
+Second group of filters shows monsters which have specific property. There are several lists of properties:
+
+**Conveyed:**			This filter enables you to view monsters that can give you some intrinsic property. Beware, you'll get a monster even if it does not leave a corpse. You can still get a resist if you eat this monster alive, e.g. if you polymorph yourself to a purple worm.  
+**Quest monsters:**		You can view monsters that appears in Quest of each role. Quest nemesis is highlighted. Also, some other monsters can be highlighted, for alignment quests of dNeHack, for example.
+**Dangerous to eat:**	You can view monsters that counts as cannibalism for specific race, are acidic or poisonous to eat etc.
+**Dangerous attacks:**	You can view monsters that can drown, petrify player etc.
+**Other:**				Examine this category by yourself.
 
 ## Screen size
 

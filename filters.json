@@ -6,10 +6,10 @@
                 "variants": [
                     "nh343"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Huhetotl"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -25,10 +25,10 @@
                 "variants": [
                     "nh343"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -45,9 +45,9 @@
                     "nh343"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Chromatic Dragon"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -65,9 +65,9 @@
                     "nh343"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -89,9 +89,9 @@
                     "nh343"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -109,9 +109,9 @@
                     "nh343"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -127,9 +127,9 @@
                     "nh343"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -150,9 +150,9 @@
                     "nh343"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -173,9 +173,9 @@
                     "nh343"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -197,9 +197,9 @@
                     "nh343"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -216,9 +216,9 @@
                     "nh343"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -255,9 +255,9 @@
                     "nh343"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -273,9 +273,9 @@
                     "nh343"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -299,10 +299,10 @@
                 "variants": [
                     "nh367"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Huhetotl"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -318,10 +318,10 @@
                 "variants": [
                     "nh367"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -338,9 +338,9 @@
                     "nh367"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Chromatic Dragon"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -358,9 +358,9 @@
                     "nh367"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -382,9 +382,9 @@
                     "nh367"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -402,9 +402,9 @@
                     "nh367"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -419,9 +419,9 @@
                     "nh367"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -442,9 +442,9 @@
                     "nh367"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -465,9 +465,9 @@
                     "nh367"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -489,9 +489,9 @@
                     "nh367"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -508,9 +508,9 @@
                     "nh367"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -547,9 +547,9 @@
                     "nh367"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -567,7 +567,7 @@
                 "name": "Wizard",
                 "name_short": "Wizard",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -591,10 +591,10 @@
                 "variants": [
                     "eh09"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Huhetotl"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -610,10 +610,10 @@
                 "variants": [
                     "eh09"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -630,9 +630,9 @@
                     "eh09"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Annam"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -651,9 +651,9 @@
                     "eh09"
                 ],
                 "name": "Convict",
-                "name_short": "Convict",
+                "name_short": "Con",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Warden Arianna"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Robert the Lifer",
@@ -690,7 +690,7 @@
                 "name": "Druid",
                 "name_short": "Druid",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Baba Yaga"],
                 "monsters": [
                     "Elanee",
                     "aspirant",
@@ -719,9 +719,9 @@
                     "eh09"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -745,9 +745,9 @@
                     "eh09"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -765,9 +765,9 @@
                     "eh09"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Master Po",
                     "abbot",
@@ -783,9 +783,9 @@
                     "eh09"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -806,9 +806,9 @@
                     "eh09"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -829,9 +829,9 @@
                     "eh09"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -853,9 +853,9 @@
                     "eh09"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -872,9 +872,9 @@
                     "eh09"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -912,9 +912,9 @@
                     "eh09"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -931,9 +931,9 @@
                     "eh09"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -962,7 +962,7 @@
                 "name": "Infidel",
                 "name_short": "Infidel",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Paladin"],
                 "monsters": [
                     "Archbishop of Moloch",
                     "cultist",
@@ -988,10 +988,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Huhetotl"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -1007,10 +1007,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -1027,9 +1027,9 @@
                     "se007"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Chromatic Dragon"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -1046,10 +1046,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Flame",
-                "name_short": "Flame",
+                "name": "Flame mage",
+                "name_short": "Flame M.",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Water Mage"],
                 "monsters": [
                     "High Flame Mage",
                     "igniter",
@@ -1065,9 +1065,9 @@
                     "se007"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -1088,10 +1088,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Ice",
-                "name_short": "Ice",
+                "name": "Ice Mage",
+                "name_short": "Ice M.",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Earth Mage"],
                 "monsters": [
                     "High Ice Mage",
                     "froster",
@@ -1107,9 +1107,9 @@
                     "se007"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -1127,9 +1127,9 @@
                     "se007"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -1144,10 +1144,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Necro",
+                "name": "Necromancer",
                 "name_short": "Necro",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Maugneshaagar"],
                 "monsters": [
                     "Dark Lord",
                     "embalmer",
@@ -1165,9 +1165,9 @@
                     "se007"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -1188,9 +1188,9 @@
                     "se007"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -1211,9 +1211,9 @@
                     "se007"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -1235,9 +1235,9 @@
                     "se007"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -1253,10 +1253,10 @@
                 "variants": [
                     "se007"
                 ],
-                "name": "Slayer",
-                "name_short": "Slayer",
+                "name": "Undead Slayer",
+                "name_short": "U.Slayer",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Count Dracula"],
                 "monsters": [
                     "Van Helsing",
                     "exterminator",
@@ -1278,9 +1278,9 @@
                     "se007"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -1317,9 +1317,9 @@
                     "se007"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -1335,9 +1335,9 @@
                     "se007"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -1364,7 +1364,7 @@
                 "name": "Yeoman",
                 "name_short": "Yeoman",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Colonel Blood"],
                 "monsters": [
                     "raven",
                     "large dog",
@@ -1393,14 +1393,81 @@
             },
             {
                 "variants": [
+                    "se007"
+                ],
+                "name": "Beholder (Neutral quest)",
+                "name_short": "Beholder",
+                "type": "monsters_list",
+                "highlight": ["Beholder"],
+                "monsters": [
+                    "Beholder",
+                    "gas spore",
+                    "a"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "Vecna (Chaotic quest)",
+                "name_short": "Vecna",
+                "type": "monsters_list",
+                "highlight": ["Vecna"],
+                "monsters": [
+                    "Vecna",
+                    "L",
+                    "W",
+                    "V",
+                    "Z"
+                ]
+            },
+            {
+                "variants": [
+                    "se007"
+                ],
+                "name": "Nightmare (Lawful quest)",
+                "name_short": "Nightm",
+                "type": "monsters_list",
+                "highlight": ["Nightmare"],
+                "monsters": [
+                    "imp",
+                    "large pile of killer coins",
+                    "killer food ration",
+                    "@",
+                    "maggot",
+                    "S",
+                    "s",
+                    "aligned priest",
+                    "electric eel",
+                    "air elemental",
+                    "fire elemental",
+                    "earth elemental",
+                    "water elemental",
+                    "stalker",
+                    "gremlin",
+                    "mind flayer",
+                    "Nightmare",
+                    "black unicorn",
+                    "gray unicorn",
+                    "white unicorn",
+                    "wood nymph",
+                    "brownie",
+                    "pixie",
+                    "quickling",
+                    "black light",
+                    "shadow"
+                ]
+            },
+            {
+                "variants": [
                     "dnh"
                 ],
                 "name": "Anachrononaut",
-                "name_short": "Anachrononaut",
+                "name_short": "Ana",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["elder brain"],
                 "monsters": [
-                    "Sara",
+                    "Sara, the Last Oracle",
                     "nurse",
                     "mad seer",
                     "myrkalfar warrior",
@@ -1438,7 +1505,7 @@
                 "name": "Android",
                 "name_short": "Android",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["elder brain"],
                 "monsters": [
                     "clairvoyant changed",
                     "elder brain",
@@ -1475,10 +1542,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Tezcatlipoca"],
                 "monsters": [
                     "V",
                     "Z",
@@ -1508,10 +1575,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -1527,10 +1594,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Bard",
+                "name": "Troubadour",
                 "name_short": "Bard",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Aglaope"],
                 "monsters": [
                     "Pindar",
                     "rhymer",
@@ -1552,9 +1619,9 @@
                     "dnh"
                 ],
                 "name": "Binder",
-                "name_short": "Binder",
+                "name_short": "Bin",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Acererak"],
                 "monsters": [
                     "V",
                     "Z",
@@ -1584,9 +1651,9 @@
                     "dnh"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Chromatic Dragon"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -1614,9 +1681,9 @@
                     "dnh"
                 ],
                 "name": "Convict",
-                "name_short": "Convict",
+                "name_short": "Con",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Warden Arianna"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Robert the Lifer",
@@ -1653,7 +1720,7 @@
                 "name": "Drow",
                 "name_short": "Drow",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Seyll Auzkovyn"],
                 "monsters": [
                     "Eclavdra",
                     "drow matron-mother",
@@ -1679,10 +1746,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "DrowHealer",
-                "name_short": "DrowHealer",
+                "name": "Drow Healer",
+                "name_short": "D.Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Blibdoolpoolp's mindgraven champion","Blibdoolpoolp, graven-into-flesh","Mad Grazi"],
                 "monsters": [
                     "shrieker",
                     "manes",
@@ -1756,20 +1823,21 @@
                     "hostile mindless justice archon",
                     "hostile mindless white unicorn",
                     "hostile white unicorn cordyceps",
-                    "Blibdoolpoolp",
                     "Mad Grazi",
                     "mind flayer",
-                    "edderkop"
+                    "edderkop",
+                    "Blibdoolpoolp, graven-into-flesh",
+                    "Blibdoolpoolp's mindgraven champion"
                 ]
             },
             {
                 "variants": [
                     "dnh"
                 ],
-                "name": "DrowNoble",
-                "name_short": "DrowNoble",
+                "name": "Drow Noble",
+                "name_short": "D.Noble",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["A'gone"],
                 "monsters": [
                     "Mother",
                     "sister",
@@ -1804,7 +1872,7 @@
                 "name": "Elf",
                 "name_short": "Elf",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Necromancer"],
                 "monsters": [
                     "Galadriel",
                     "Celeborn",
@@ -1835,10 +1903,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Erebor",
+                "name": "Dwarf Noble A: Erebor",
                 "name_short": "Erebor",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Smaug","Bolg"],
                 "monsters": [
                     "Thorin II Oakenshield",
                     "dwarf warrior",
@@ -1861,10 +1929,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "GnomeRanger",
-                "name_short": "GnomeRanger",
+                "name": "Gnome Ranger",
+                "name_short": "G.Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Great High Shaman of Kurtulmak"],
                 "monsters": [
                     "Ruggo the Gnome High King",
                     "damaged arcadian avenger",
@@ -1885,10 +1953,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "HalfDragonFemaleNoble",
-                "name_short": "HalfDragonFemaleNoble",
+                "name": "Half-Dragon Female Noble",
+                "name_short": "HDFN",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Bastard of the Boreal Valley","Watchdog of the Boreal Valley"],
                 "monsters": [
                     "wolf",
                     "warg",
@@ -1913,9 +1981,9 @@
                     "dnh"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "rabid rat",
                     "giant eel",
@@ -1941,7 +2009,7 @@
                 "name": "Hedrow",
                 "name_short": "Hedrow",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Daruth Xaxox"],
                 "monsters": [
                     "drow matron",
                     "drow captain",
@@ -1974,10 +2042,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "HedrowNoble",
-                "name_short": "HedrowNoble",
+                "name": "Hedrow Noble",
+                "name_short": "H.Noble",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["A'salom"],
                 "monsters": [
                     "drow novice",
                     "aligned priest|aligned cleric",
@@ -2003,7 +2071,7 @@
                 "name": "Kensei",
                 "name_short": "Kensei",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["blue-eyed fox"],
                 "monsters": [
                     "Hermit Master",
                     "disciple",
@@ -2067,9 +2135,9 @@
                     "dnh"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "King Arthur",
@@ -2089,9 +2157,9 @@
                     "dnh"
                 ],
                 "name": "Madman",
-                "name_short": "Madman",
+                "name_short": "Mad",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Doctor Archer"],
                 "monsters": [
                     "Lady Constance",
                     "Cassilda the Iron Maiden",
@@ -2112,9 +2180,9 @@
                     "dnh"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -2138,10 +2206,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Moria",
+                "name": "Dwarf Noble B: Moria",
                 "name_short": "Moria",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Durin's Bane"],
                 "monsters": [
                     "Dain II Ironfoot",
                     "dwarf warrior",
@@ -2168,7 +2236,7 @@
                 "name": "Noble",
                 "name_short": "Noble",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Rebel Ringleader"],
                 "monsters": [
                     "old fortune teller",
                     "knight",
@@ -2199,9 +2267,9 @@
                     "dnh"
                 ],
                 "name": "Pirate",
-                "name_short": "Pirate",
+                "name_short": "Pir",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Blackbeard's Ghost"],
                 "monsters": [
                     "sergeant",
                     "soldier",
@@ -2228,9 +2296,9 @@
                     "dnh"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Legion"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -2251,9 +2319,9 @@
                     "dnh"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -2274,9 +2342,9 @@
                     "dnh"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -2298,9 +2366,9 @@
                     "dnh"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -2317,9 +2385,9 @@
                     "dnh"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -2353,10 +2421,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "UndeadHunter",
-                "name_short": "UndeadHunter",
+                "name": "Undead Hunter",
+                "name_short": "U.Hun",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Moon's Chosen"],
                 "monsters": [
                     "V",
                     "Z",
@@ -2387,9 +2455,9 @@
                     "dnh"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -2405,9 +2473,9 @@
                     "dnh"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -2426,10 +2494,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "chaos",
-                "name_short": "chaos",
+                "name": "Chaos quest 1",
+                "name_short": "chaos1",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lich, the Fiend of Earth","Kary, the Fiend of Fire","Kraken, the Fiend of Water","Tiamat, the Fiend of Wind","Sir Garland","Garland","Nightmare"],
                 "monsters": [
                     "acid blob",
                     "hobgoblin",
@@ -2454,21 +2522,21 @@
                     "vampire lord",
                     "vampire",
                     "earth elemental",
-                    "Lich",
+                    "Lich, the Fiend of Earth",
                     "fire giant",
                     "salamander",
                     "i",
-                    "Kary",
+                    "Kary, the Fiend of Fire",
                     "winter wolf",
                     "water troll",
                     "python",
                     "water moccasin",
                     "giant eel",
                     "shark",
-                    "Kraken",
+                    "Kraken, the Fiend of Water",
                     "iron golem",
                     "air elemental",
-                    "Tiamat",
+                    "Tiamat, the Fiend of Wind",
                     "retriever",
                     "Garland"
                 ]
@@ -2477,27 +2545,28 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "chaos2",
+                "name": "Chaos quest 2",
                 "name_short": "chaos2",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["first wraithworm","aspect of The Silence"],
                 "monsters": [
                     "acid blob",
                     "shopkeeper",
                     "Alabaster elf",
                     "alabaster cactoid",
                     "crystal ooze",
-                    "first wraithworm"
+                    "first wraithworm",
+                    "aspect of The Silence"
                 ]
             },
             {
                 "variants": [
                     "dnh"
                 ],
-                "name": "chaos3",
+                "name": "Chaos quest 3",
                 "name_short": "chaos3",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lungorthin","ogre emperor","Shelob"],
                 "monsters": [
                     "elf-lord",
                     "orc-captain",
@@ -2548,10 +2617,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "law",
-                "name_short": "law",
+                "name": "Lawful quest",
+                "name_short": "Law",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Axus","Arsenal","Oona"],
                 "monsters": [
                     "quinon",
                     "quaton",
@@ -2579,10 +2648,10 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "neutrality",
-                "name_short": "neutrality",
+                "name": "Neutral quest",
+                "name_short": "Neu",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Great Cthulhu","Father Dagon","Mother Hydra","alhoon","Center of All","Hmnyw-Pharaoh","Nitocris","Good Neighbor"],
                 "monsters": [
                     "shrieker",
                     "soldier",
@@ -2694,17 +2763,19 @@
                     "star spawn",
                     "Father Dagon",
                     "Mother Hydra",
-                    "Great Cthulhu"
+                    "Great Cthulhu",
+                    "Center of All",
+                    "Nitocris"
                 ]
             },
             {
                 "variants": [
                     "un6"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Schliemann"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -2720,10 +2791,10 @@
                 "variants": [
                     "un6"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -2740,9 +2811,9 @@
                     "un6"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Tiamat"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -2760,9 +2831,9 @@
                     "un6"
                 ],
                 "name": "Convict",
-                "name_short": "Convict",
+                "name_short": "Con",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Warden Arianna"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Robert the Lifer",
@@ -2794,9 +2865,9 @@
                     "un6"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -2818,9 +2889,9 @@
                     "un6"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -2838,9 +2909,9 @@
                     "un6"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -2856,9 +2927,9 @@
                     "un6"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -2879,9 +2950,9 @@
                     "un6"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -2902,9 +2973,9 @@
                     "un6"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -2926,9 +2997,9 @@
                     "un6"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -2945,9 +3016,9 @@
                     "un6"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -2984,9 +3055,9 @@
                     "un6"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -3002,9 +3073,9 @@
                     "un6"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Anaraxis the Black"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -3028,7 +3099,7 @@
                 "variants": [
                     "un6"
                 ],
-                "name": "dragons",
+                "name": "Dragon Caves",
                 "name_short": "dragons",
                 "type": "monsters_list",
                 "highlight": [],
@@ -3040,87 +3111,54 @@
             },
             {
                 "variants": [
-                    "se007"
+                    "un6"
                 ],
-                "name": "beholder",
-                "name_short": "beholder",
+                "name": "Moria's Ruins",
+                "name_short": "moria",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Watcher in the Water","Durin's Bane"],
                 "monsters": [
-                    "Beholder",
-                    "gas spore",
-                    "a"
-                ]
-            },
-            {
-                "variants": [
-                    "se007"
-                ],
-                "name": "frnknstn",
-                "name_short": "frnknstn",
-                "type": "monsters_list",
-                "highlight": [],
-                "monsters": [
-                    "Doctor Frankenstein",
-                    "flesh golem",
-                    "genetic engineer",
-                    "quantum mechanic",
-                    "'",
-                    "Frankenstein's Monster",
-                    "a"
-                ]
-            },
-            {
-                "variants": [
-                    "se007"
-                ],
-                "name": "lich",
-                "name_short": "lich",
-                "type": "monsters_list",
-                "highlight": [],
-                "monsters": [
-                    "Vecna",
-                    "L",
-                    "W",
+                    "Durin's Bane",
+                    "iron golem",
+                    "deep orc",
+                    "hill orc",
+                    "orc-captain",
+                    "bat",
+                    "B",
+                    "T",
+                    "dwarf",
                     "V",
-                    "Z"
+                    "Z",
+                    "&",
+                    "ghost",
+                    "wraith",
+                    "Watcher in the Water",
+                    "swamp fern"
                 ]
             },
             {
                 "variants": [
-                    "se007"
+                    "un6"
                 ],
-                "name": "nightmar",
-                "name_short": "nightmar",
+                "name": "Sheol",
+                "name_short": "sheol",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Executioner"],
                 "monsters": [
-                    "imp",
-                    "large pile of killer coins",
-                    "killer food ration",
-                    "@",
-                    "maggot",
-                    "S",
-                    "s",
-                    "aligned priest",
-                    "electric eel",
-                    "air elemental",
-                    "fire elemental",
-                    "earth elemental",
-                    "water elemental",
-                    "stalker",
-                    "gremlin",
-                    "mind flayer",
-                    "Nightmare",
-                    "black unicorn",
-                    "gray unicorn",
-                    "white unicorn",
-                    "wood nymph",
-                    "brownie",
-                    "pixie",
-                    "quickling",
-                    "black light",
-                    "shadow"
+                    "crystal ice golem",
+                    "blue slime",
+                    "a",
+                    "chillbug",
+                    "Executioner",
+                    "P",
+                    "N",
+                    "'",
+                    "A",
+                    "Punisher",
+                    "X","T","L","'","N","x","@","V",
+                    "white naga",
+                    "ice golem",
+                    "dark Angel"
                 ]
             },
             {
@@ -3128,9 +3166,9 @@
                     "xnh9"
                 ],
                 "name": "Archeologist",
-                "name_short": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Schliemann"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -3157,9 +3195,9 @@
                     "xnh9"
                 ],
                 "name": "Barbarian",
-                "name_short": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "O",
                     "T",
@@ -3176,9 +3214,9 @@
                     "xnh9"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Tiamat"],
                 "monsters": [
                     "bugbear",
                     "o",
@@ -3196,9 +3234,9 @@
                     "xnh9"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "rabid rat",
                     "r",
@@ -3221,9 +3259,9 @@
                     "xnh9"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "quasit",
                     "i",
@@ -3242,9 +3280,9 @@
                     "xnh9"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "E",
                     "xorn",
@@ -3260,9 +3298,9 @@
                     "xnh9"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -3285,7 +3323,7 @@
                 "name": "Ranger",
                 "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "C",
                     "scorpion",
@@ -3303,9 +3341,9 @@
                     "xnh9"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "l",
                     "guardian naga",
@@ -3324,9 +3362,9 @@
                     "xnh9"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "d",
                     "stalker",
@@ -3342,9 +3380,9 @@
                     "xnh9"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "soldier",
                     "lieutenant",
@@ -3379,9 +3417,9 @@
                     "xnh9"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "fire ant",
                     "H",
@@ -3399,9 +3437,9 @@
                     "xnh9"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Anaraxis the Black"],
                 "monsters": [
                     "i",
                     "vampire bat",
@@ -3425,10 +3463,10 @@
                 "variants": [
                     "nh500"
                 ],
-                "name": "Arch",
-                "name_short": "Arch",
+                "name": "Archeologist",
+                "name_short": "Arc",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Minion of Huhetotl"],
                 "monsters": [
                     "Lord Carnarvon",
                     "student",
@@ -3444,10 +3482,10 @@
                 "variants": [
                     "nh500"
                 ],
-                "name": "Barb",
-                "name_short": "Barb",
+                "name": "Barbarian",
+                "name_short": "Bar",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Thoth Amon"],
                 "monsters": [
                     "Pelias",
                     "chieftain",
@@ -3464,9 +3502,9 @@
                     "nh500"
                 ],
                 "name": "Caveman",
-                "name_short": "Caveman",
+                "name_short": "Cav",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Chromatic Dragon"],
                 "monsters": [
                     "aligned priest|aligned cleric",
                     "Shaman Karnov",
@@ -3484,9 +3522,9 @@
                     "nh500"
                 ],
                 "name": "Healer",
-                "name_short": "Healer",
+                "name_short": "Hea",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Cyclops"],
                 "monsters": [
                     "Hippocrates",
                     "attendant",
@@ -3508,9 +3546,9 @@
                     "nh500"
                 ],
                 "name": "Knight",
-                "name_short": "Knight",
+                "name_short": "Kni",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ixoth"],
                 "monsters": [
                     "King Arthur",
                     "knight",
@@ -3529,9 +3567,9 @@
                     "nh500"
                 ],
                 "name": "Monk",
-                "name_short": "Monk",
+                "name_short": "Mon",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Kaen"],
                 "monsters": [
                     "Grand Master",
                     "abbot",
@@ -3546,9 +3584,9 @@
                     "nh500"
                 ],
                 "name": "Priest",
-                "name_short": "Priest",
+                "name_short": "Pri",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Nalzok"],
                 "monsters": [
                     "Arch Priest",
                     "acolyte",
@@ -3569,9 +3607,9 @@
                     "nh500"
                 ],
                 "name": "Ranger",
-                "name_short": "Ranger",
+                "name_short": "Ran",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Scorpius"],
                 "monsters": [
                     "Orion",
                     "hunter",
@@ -3592,9 +3630,9 @@
                     "nh500"
                 ],
                 "name": "Rogue",
-                "name_short": "Rogue",
+                "name_short": "Rog",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master Assassin"],
                 "monsters": [
                     "giant mimic",
                     "large mimic",
@@ -3616,9 +3654,9 @@
                     "nh500"
                 ],
                 "name": "Samurai",
-                "name_short": "Samurai",
+                "name_short": "Sam",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Ashikaga Takauji"],
                 "monsters": [
                     "Lord Sato",
                     "roshi",
@@ -3635,9 +3673,9 @@
                     "nh500"
                 ],
                 "name": "Tourist",
-                "name_short": "Tourist",
+                "name_short": "Tou",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Master of Thieves"],
                 "monsters": [
                     "V",
                     "Z",
@@ -3674,9 +3712,9 @@
                     "nh500"
                 ],
                 "name": "Valkyrie",
-                "name_short": "Valkyrie",
+                "name_short": "Val",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Lord Surtur"],
                 "monsters": [
                     "Norn",
                     "warrior",
@@ -3692,9 +3730,9 @@
                     "nh500"
                 ],
                 "name": "Wizard",
-                "name_short": "Wizard",
+                "name_short": "Wiz",
                 "type": "monsters_list",
-                "highlight": [],
+                "highlight": ["Dark One"],
                 "monsters": [
                     "Neferet the Green",
                     "apprentice",
@@ -3737,7 +3775,7 @@
                 ]
             },
             {
-                "name": "elf cannibalism",
+                "name": "Elf cannibalism",
                 "name_short": "Elf",
                 "type": "check_fields",
                 "variants": [
@@ -3822,7 +3860,7 @@
                 ]
             },
             {
-                "name": "chiropteran cannibalism",
+                "name": "Chiropteran cannibalism",
                 "name_short": "Animal",
                 "type": "check_fields",
                 "variants": [
@@ -3839,7 +3877,7 @@
                 ]
             },
             {
-                "name": "half-dragon cannibalism",
+                "name": "Half-dragon cannibalism",
                 "name_short": "D",
                 "type": "check_fields",
                 "variants": [

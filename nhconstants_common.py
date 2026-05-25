@@ -155,6 +155,8 @@ sort_mode_str=[
     "Weight",
     "Nutrition",
     "Size",
+    "Insight",
+    "Light R"
 ]
 
 

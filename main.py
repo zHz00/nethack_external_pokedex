@@ -14,6 +14,8 @@ from make_card import *
 import filters as fs
 import utils
 
+version="2026-05-25"
+
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
     1:c.COLOR_RED,
@@ -25,7 +27,7 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
-filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_conveyed_filter("Conveyed",""),fs.make_param_filter("Parameter","",0,0)]
+filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_param_filter("Parameter","",0,0),fs.make_conveyed_filter("Conveyed","")]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -48,6 +50,7 @@ SELECT_FILTER_GROUP=15
 
 mode=SEARCH
 mode_prev=SEARCH
+list_pg=0
 
 
 cur_len_res=66
@@ -113,6 +116,8 @@ sort_mode_lambdas=[
     lambda x:int(table[x][rows["weight"]]),#"Weight",
     lambda x:int(table[x][rows["nutrition"]]),#"Nutrition",
     lambda x:szs_order[table[x][rows["size"]]],#"Size",
+    lambda x:int(table[x][rows["insight"]]) if len(table[x][rows["insight"]])>0 else 0,#"Insight",
+    lambda x:int(table[x][rows["light_radius"]]) if len(table[x][rows["light_radius"]])>0 else 0 #"Light radius",
 ]
 
 def active_filters(f_on,f_list):
@@ -148,11 +153,11 @@ def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
 MAX_SEARCH=40
 MAX_LINES_LIST=18
 
-def show_ver_format(search_win):
+def show_ver_format_upper(search_win):
     x1=50
     x2=60
     out_mode=""
-    if mode==LIST or mode==FILTERS:
+    if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
         out_mode="|Format:list"
     else:
         if format_length==0:
@@ -170,7 +175,7 @@ def show_ver_format(search_win):
             search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP]:
+        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
             search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
@@ -185,7 +190,7 @@ def show_ver_format(search_win):
                         last_filter=x
                         num_filters+=1
             if num_filters==0:
-                search_win.addstr(1,x2,"|Filter:Ctrl+F",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+                search_win.addstr(1,x2,"|Filter:Shift+F",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters==1:
                 name_short="<?>"
                 if filter_list[last_filter]["type"]=="group":
@@ -228,9 +233,11 @@ def show_select_ver(s,sel:int):
 
 def show_filters(s,sel:int):
     global filters_edits_offset_x,filters_edits_offset_y
+    w0=1
     w1=2
     w2=25
     w3=35
+    cap0=""
     cap1="ON"
     cap2="Filter"
     cap3="Value"
@@ -241,14 +248,15 @@ def show_filters(s,sel:int):
         offset_y=0
     else:
         offset_y=int((h-l)/2)
-    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
-    filters_edits_offset_x=offset_x+w1+w2+3
+    offset_x=int((c.COLS-w0-w1-w2-w3-4)/2)#4 for |
+    filters_edits_offset_x=offset_x+w0+w1+w2+4
     filters_edits_offset_y=offset_y+1
-    header=f"|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
+    header=f"|{cap0:{w0}}|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
     s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
     for y in range(len(filter_list)):
         filter=filter_list[y]
         field=filter["fields"][0]
+        letter=chr(48+y)
         on="+" if filter_on[y] else "-"
         name=filter["name"]
         value="<any>"
@@ -271,12 +279,12 @@ def show_filters(s,sel:int):
                 filter_indexed=fs.groups_filters[filter["name"]][filter["index"]]
                 value=filter_indexed["name"]
         
-        info=f"|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
+        info=f"|{letter:{w0}}|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
         if y==sel:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
-    s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w1+w2+w3+3}}|",c.color_pair(BK)|c.A_BOLD)
+    s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w0+w1+w2+w3+4}}|",c.color_pair(BK)|c.A_BOLD)
     s.refresh()
 
 def show_select_list(s,cap,op_list,idx,skip):
@@ -418,6 +426,10 @@ def reset_sort():
 
 def reset_filters():
     global filter_on
+    global filter_list
+    for f in filter_list:
+        if f["type"]=="group":
+            f["index"]=-1
     filter_on=[False]*len(filter_on)
     
 
@@ -513,9 +525,9 @@ def read_monsters(file):
         attacks_file.close()
     set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
     fs.load_filters(ver_list[ver_idx].split(".")[0])
-    for f in filter_list:
-        if f["type"]=="group":
-            f["index"]=-1#number of filters in each group list may differ so we have to reset counters
+    #for f in filter_list:
+        #if f["type"]=="group":
+            #f["index"]=-1#number of filters in each group list may differ so we have to reset counters
 
 def fill_attacks(file):
     global e_at,e_ad
@@ -728,7 +740,7 @@ def show_search_upper(search_win,results,mon_name):
                 skip+=1
                 sel-=1
                 tries+=1
-    show_ver_format(search_win)
+    show_ver_format_upper(search_win)
     move_to_in(search_win,in_str)
     search_win.refresh()
 
@@ -751,9 +763,9 @@ def show_list_upper(search_win,results,mon_name):
     if sort_mode1!=0:
         search_win.addstr(1,0,f"Sort2(Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2(Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
-        search_win.addstr(1,0,f"Tab: Switch to search mode",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,0,f"Tab: Switch to search mode, Ctrl+F: Quick search",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
-    show_ver_format(search_win)
+    show_ver_format_upper(search_win)
     disable_cursor()
     search_win.refresh()
 
@@ -779,7 +791,7 @@ def show_card_upper(search_win,results,mon_name):
         hint="Esc:Back to list"
     search_win.addstr(1,0,hint,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
-    show_ver_format(search_win)
+    show_ver_format_upper(search_win)
     disable_cursor()
     search_win.refresh()
 
@@ -793,14 +805,14 @@ def show_list(card_win,search_win,results):
     selected_mon_name=""
     card_win.bkgd(' ',c.color_pair(SEPARATOR_INV))
     card_win.erase()
-    card_win.addstr(0,1,one_line_header_str(),c.color_pair(SEPARATOR_INV))
+    card_win.addstr(0,1,one_line_header_str(list_pg),c.color_pair(SEPARATOR_INV))
     for x in range(LIST_LINES):
         if x+list_mode_skip>=len(list_mode_mons):
             break
         current_mon=table[list_mode_mons[x+list_mode_skip]]
         card_win.move(x+1,0)
         out_symbol(card_win,current_mon)
-        line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip])#key is monster name, it can be different from "name" column
+        line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip],list_pg)#key is monster name, it can be different from "name" column
         if x==list_mode_sel:
             selected_mon_name=list_mode_mons[x+list_mode_skip]
             show_full_line(card_win,x,line,c.color_pair(BK_CARD)|c.A_BOLD)
@@ -1225,7 +1237,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         if len(in_str)>0 and len(mon_name)>0:
             mode=EXPLANATION_SEARCH
     if key=="KEY_F(1)":
-        utils.show_message("Quick help: Search mode\n\
+        utils.show_message(f"Quick help: Search mode\n\
 \n\
 _Ctrl+O:_        Select NetHack variant to search\n\
 _[, ]:_          Switch to next NetHack variant\n\
@@ -1236,7 +1248,10 @@ _Down:_          Show more information\n\
 _Ctrl+A:_        Show attacks analysis windows\n\
 _Tab:_           Switch to **List** mode\n\
 _Ctrl+Q or F10:_ Exit\n\
-_1...6:_         Change colors\n")
+_1...6:_         Change colors\n\
+\n\
+Version {version}. (C) **zHz** 2022-2026. MIT Licence.\n\
+https://github.com/zHz00/nethack\_external\_pokedex")
 
     return 0
 
@@ -1350,17 +1365,17 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
         ch=ch-49
         if ch<len(op_list):
             idx=ch
-            key="^M"#then skip to sektion below
+            key="^M"#then skip to section below
     if ch in range(65,65+26):#A-Z
         ch=ch-65+9
         if ch<len(op_list):
             idx=ch
-            key="^M"#then skip to sektion below
+            key="^M"#then skip to section below
     if ch in range(97,97+26):#A-Z
         ch=ch-97+9
         if ch<len(op_list):
             idx=ch
-            key="^M"#then skip to sektion below
+            key="^M"#then skip to section below
     if key=="KEY_UP" :
         if idx>0:
             idx-=1
@@ -1374,15 +1389,18 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
                 else:
                     idx=len(op_list)-1
     if key=="KEY_DOWN" :
-
-        if idx+1<len(op_list):
+        if len(op_list)>MAX_LINES_LIST:
+            list_len=MAX_LINES_LIST
+        else:
+            list_len=len(op_list)
+        if idx+1<list_len:
             idx+=1
-        if idx>=MAX_LINES_LIST:
-            idx-=1
-            skip+=1
-            if idx+skip>=len(op_list):
-                idx=0
-                skip=0
+        else:
+            if idx+1>=list_len:
+                skip+=1
+                if idx+skip>=len(op_list):
+                    idx=0
+                    skip=0
     if key=="KEY_HOME":
         idx=0
         skip=0
@@ -1401,10 +1419,16 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
             mode=LIST
         if mode==SELECT_RES:
             filter_list[filter_mode_sel]=fs.make_conveyed_filter("Conveyed",list(resists_conv.keys())[idx])
-            filter_on[filter_mode_sel]=True
+            if idx!=0:
+                filter_on[filter_mode_sel]=True
+            else:
+                filter_on[filter_mode_sel]=False#(none)
         if mode==SELECT_FILTER_GROUP:
             filter_list[filter_mode_sel]["index"]=idx+skip-1
-            filter_on[filter_mode_sel]=True
+            if filter_list[filter_mode_sel]["index"]!=-1:
+                filter_on[filter_mode_sel]=True
+            else:
+                filter_on[filter_mode_sel]=False#(none)
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
         if mode==SELECT_RES or mode==SELECT_FILTER_GROUP:
             list_mode_sel=0
@@ -1414,6 +1438,19 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
         if mode==SELECT_PARAM:
             mode=ENTER_NUMERIC_PARAM
     return (0,idx,skip)
+
+def enter_name_param(card_win,search_win):
+    global list_mode_sel,list_mode_skip
+    global filter_list,filter_on
+    new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,20)
+    if len(new)>0:
+        filter_list[filter_mode_sel]=fs.make_name_filter("Name",new.strip())
+        filter_on[filter_mode_sel]=True
+        prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+        list_mode_sel=0
+        list_mode_skip=0
+        show_list(card_win,search_win,[])
+    show_filters(card_win,filter_mode_sel)
 
 def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global filter_mode_sel
@@ -1427,6 +1464,10 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
 
     if ch==27:
         mode=LIST
+    if ch in range(48,48+len(filter_list)):
+        filter_mode_sel=ch-48
+        show_filters(card_win,filter_mode_sel)
+        react_to_key_filters(card_win,search_win,0,"^M",alt_ch,mon_name)
     if key=="KEY_UP" :
         if filter_mode_sel>0:
             filter_mode_sel-=1
@@ -1472,15 +1513,8 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
                 show_list(card_win,search_win,[])
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="name":
-            new=utils.textpad(card_win,filters_edits_offset_y+filter_mode_sel,filters_edits_offset_x,20)
-            if len(new)>0:
-                filter_list[filter_mode_sel]=fs.make_name_filter("Name",new.strip())
-                filter_on[filter_mode_sel]=True
-                prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
-                list_mode_sel=0
-                list_mode_skip=0
-                show_list(card_win,search_win,[])
-            show_filters(card_win,filter_mode_sel)
+            enter_name_param(card_win,search_win)
+
         if f["field"]=="prob":
             mode=SELECT_RES
         if "min" in f:#param filter
@@ -1488,7 +1522,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     return 0
 
 
-def react_to_key_list(ch,key,alt_ch,mon_name):
+def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
     global list_mode_sel
     global list_mode_skip
     global mode
@@ -1497,6 +1531,8 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
     global mode_prev
     global reloaded
     global sort_mode_sel
+    global list_pg
+    global filter_mode_sel
     if key=="]":
         ver_idx+=1
         if ver_idx>=len(ver_list):
@@ -1537,6 +1573,14 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
         else:
             if list_mode_skip+list_mode_sel<list_mode_max-1:
                 list_mode_skip+=1
+    if key=="KEY_LEFT":
+        list_pg-=1
+        if list_pg<0:
+            list_pg=len(one_line_headers)-1
+    if key=="KEY_RIGHT":
+        list_pg+=1
+        if list_pg>=len(one_line_headers):
+            list_pg=0
     if key=="KEY_PPAGE" :
         list_mode_skip-=LIST_LINES
         if list_mode_skip<0:
@@ -1566,8 +1610,13 @@ def react_to_key_list(ch,key,alt_ch,mon_name):
     if key=="^S":
         sort_mode_sel=sort_mode1
         mode=SELECT_SORT1
+    if key=="F":
+        mode=FILTERS
     if key=="^F":
         mode=FILTERS
+        filter_mode_sel=1
+        show_filters(card_win,filter_mode_sel)
+        enter_name_param(card_win,search_win)
         #f=make_letter_filter("test","b")
     if key=="S":
         if sort_mode1!=0:
@@ -1599,6 +1648,7 @@ _[, ]:_          Switch to next NetHack variant\n\
 _Up, Down:_      Scroll through list\n\
 _PgUp, PgDn:_    Scorll, but faster\n\
 _Home, End:_     Scroll with speed of light\n\
+_Left, Right:_   View dNetHack additional parameters\n\
 _Enter:_         View selected monster's card\n\
 _Ctrl+S:_        Select primary sorting field\n\
 _Ctrl+D:_        Change primary sorting direction\n\
@@ -1606,7 +1656,8 @@ _Shift+S:_       Select secondary sorting field\n\
 _Shift+D:_       Change secondary sorting direction\n\
 (You must use primary field first)\n\
 \n\
-_Ctrl+F:_        Show filters window\n\
+_Shift+F:_        Show filters window\n\
+_Ctrl+F:_         Quick filter by name\n\
 _Ctrl+Q or F10:_ Exit\n")
     return 0
 
@@ -1668,8 +1719,8 @@ _[, ]:_          Switch variant\n\
 (Variant will be reverted when you press Esc)\n\
 \n\
 _Ctrl+O:_        Nothing. Use square brackets!\n\
-_Up:_            Show less information (main screen)\n\
-_Down:_          Show more information (main screen)\n\
+_Up:_            Nothing. Show less information on main screen\n\
+_Down:_          Nothing. Show more information on main screen\n\
 _Space:_         Scroll screens if more than one available\n\
 _F10 or Ctrl+Q:_ Exit",offset=1)
 
@@ -1900,7 +1951,7 @@ def main(s):
             react_to_key_select_ver(ch,key,alt_ch,mon_name)
             continue
         if mode==LIST:
-            res=react_to_key_list(ch,key,alt_ch,mon_name)
+            res=react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name)
             if res!=0:
                 break
             continue

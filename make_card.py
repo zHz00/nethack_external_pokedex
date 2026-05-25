@@ -1128,7 +1128,8 @@ def make_card(mon,format_length=0):
     out_line_s="".join(out_line)
     return out_line_s
 
-one_line_headers={
+one_line_headers=[]
+one_line_headers.append({
     "Name":["name",0],
     "Df":["difficulty",2],
     "Lv":["level",2],
@@ -1141,19 +1142,37 @@ one_line_headers={
     "Wt":["weight",4],
     "Nut":["nutrition",4],
     "Sz":["",2],
+})
+one_line_headers.append({
+    "Name":["name",0],
+    "Df":["difficulty",2],
+    "Lv":["level",2],
+    "Exp":["exp",4],
+    "Mv":["speed",2],
+    "AC":["ac",3],
+    "MR":["mr",3],
+    "Fr":["",2],
+    "Ali":["alignment",4],
+    "Wt":["weight",4],
+    "Ins":["insight",3],
+    "Li":["light_radius",3],
 
-}
+})
 
-def make_card_one_line(mon,actual_name):
+def make_card_one_line(mon,actual_name,pg):
     gen_flags=mon[rows["geno"]].split("|")
     freq=gen_flags[-1]
     out_line=""
-    for f in one_line_headers.keys():
-        w=one_line_headers[f][1]
+    for f in one_line_headers[pg].keys():
+        w=one_line_headers[pg][f][1]
         if w==0:#skipping name
             continue
-        if one_line_headers[f][0]!="":
-            val=int(mon[rows[one_line_headers[f][0]]])
+        if one_line_headers[pg][f][0]!="":
+            s=mon[rows[one_line_headers[pg][f][0]]]
+            if len(s)>0:
+                val=int(s)
+            else:
+                val=0
             if val>9999:
                 val=int(val/1000+.5)
                 text=str(val)+"k"
@@ -1178,11 +1197,11 @@ def make_card_one_line(mon,actual_name):
     out_line=f"|{name:{max_name_l}}"+out_line
     return out_line
 
-def one_line_header_str():
+def one_line_header_str(pg):
     out_line=""
     name_header=""
-    for f in one_line_headers.keys():
-        w=one_line_headers[f][1]
+    for f in one_line_headers[pg].keys():
+        w=one_line_headers[pg][f][1]
         if w==0:#skipping name
             name_header=f
             continue
