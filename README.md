@@ -88,9 +88,9 @@ There are now 8 types of filters. First group are parametric filters and require
 Second group of filters shows monsters which have specific property. There are several lists of properties:
 
 **Conveyed:**			This filter enables you to view monsters that can give you some intrinsic property. Beware, you'll get a monster even if it does not leave a corpse. You can still get a resist if you eat this monster alive, e.g. if you polymorph yourself to a purple worm.  
-**Quest monsters:**		You can view monsters that appears in Quest of each role. Quest nemesis is highlighted. Also, some other monsters can be highlighted, for alignment quests of dNeHack, for example.
-**Dangerous to eat:**	You can view monsters that counts as cannibalism for specific race, are acidic or poisonous to eat etc.
-**Dangerous attacks:**	You can view monsters that can drown, petrify player etc.
+**Quest monsters:**		You can view monsters that appears in Quest of each role. Quest nemesis is highlighted. Also, some other monsters can be highlighted, for alignment quests of dNeHack, for example.  
+**Dangerous to eat:**	You can view monsters that counts as cannibalism for specific race, are acidic or poisonous to eat etc.  
+**Dangerous attacks:**	You can view monsters that can drown, petrify player etc.  
 **Other:**				Examine this category by yourself.
 
 ## Screen size
