@@ -1594,7 +1594,7 @@
                 "variants": [
                     "dnh"
                 ],
-                "name": "Troubadour",
+                "name": "Bard (Troubadour)",
                 "name_short": "Bard",
                 "type": "monsters_list",
                 "highlight": ["Aglaope"],
@@ -1869,6 +1869,59 @@
                 "variants": [
                     "dnh"
                 ],
+                "name": "Dwarf Noble A: Erebor",
+                "name_short": "Erebor",
+                "type": "monsters_list",
+                "highlight": ["Smaug","Bolg"],
+                "monsters": [
+                    "Thorin II Oakenshield",
+                    "dwarf warrior",
+                    "human",
+                    "orc shaman",
+                    "orc-captain",
+                    "hill orc",
+                    "V",
+                    "Z",
+                    "&",
+                    "ghost",
+                    "wraith",
+                    "Smaug",
+                    "Bolg",
+                    "T",
+                    "a"
+                ]
+            },
+            {
+                "variants": [
+                    "dnh"
+                ],
+                "name": "Dwarf Noble B: Moria",
+                "name_short": "Moria",
+                "type": "monsters_list",
+                "highlight": ["Durin's Bane"],
+                "monsters": [
+                    "Dain II Ironfoot",
+                    "dwarf warrior",
+                    "dwarf",
+                    "dwarf smith",
+                    "V",
+                    "Z",
+                    "&",
+                    "ghost",
+                    "wraith",
+                    "Watcher in the Water",
+                    "Durin's Bane",
+                    "orc-captain",
+                    "hill orc",
+                    "mirkwood spider",
+                    "mirkwood elder",
+                    "orc shaman"
+                ]
+            },
+            {
+                "variants": [
+                    "dnh"
+                ],
                 "name": "Elf",
                 "name_short": "Elf",
                 "type": "monsters_list",
@@ -1897,32 +1950,6 @@
                     "Mordor marshal",
                     "V",
                     "werewolf"
-                ]
-            },
-            {
-                "variants": [
-                    "dnh"
-                ],
-                "name": "Dwarf Noble A: Erebor",
-                "name_short": "Erebor",
-                "type": "monsters_list",
-                "highlight": ["Smaug","Bolg"],
-                "monsters": [
-                    "Thorin II Oakenshield",
-                    "dwarf warrior",
-                    "human",
-                    "orc shaman",
-                    "orc-captain",
-                    "hill orc",
-                    "V",
-                    "Z",
-                    "&",
-                    "ghost",
-                    "wraith",
-                    "Smaug",
-                    "Bolg",
-                    "T",
-                    "a"
                 ]
             },
             {
@@ -2200,33 +2227,6 @@
                     "xuenu monk",
                     "yuki-onna",
                     "E"
-                ]
-            },
-            {
-                "variants": [
-                    "dnh"
-                ],
-                "name": "Dwarf Noble B: Moria",
-                "name_short": "Moria",
-                "type": "monsters_list",
-                "highlight": ["Durin's Bane"],
-                "monsters": [
-                    "Dain II Ironfoot",
-                    "dwarf warrior",
-                    "dwarf",
-                    "dwarf smith",
-                    "V",
-                    "Z",
-                    "&",
-                    "ghost",
-                    "wraith",
-                    "Watcher in the Water",
-                    "Durin's Bane",
-                    "orc-captain",
-                    "hill orc",
-                    "mirkwood spider",
-                    "mirkwood elder",
-                    "orc shaman"
                 ]
             },
             {
@@ -4253,6 +4253,16 @@
                     }
                 ]
             },
+            {
+                "name": "Poly, wear all armor",
+                "name_short": "Armor",
+                "variants": [
+                    ""
+                ],
+                "type": "special",
+                "condition": "wear_all_armor"
+            },
+ 
             {
                 "name": "Poly, can hold weapon",
                 "name_short": "Weap",

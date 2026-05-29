@@ -39,6 +39,14 @@ def load_filters(variant):
                     if "!"+variant not in variants:
                         good=True
             if good:
+                if f["type"]=="monsters_list":#converting list to set for faster searching
+                    f["monsters_names_set"]=set()
+                    f["monsters_letters_set"]=set()
+                    for m in f["monsters"]:
+                        if len(m)==1:#full category
+                            f["monsters_letters_set"].add(m)
+                        else:
+                            f["monsters_names_set"].update(m.split("|"))
                 groups_filters[g["group_title"]].append(f)
     #print(filters_all)
 
@@ -199,15 +207,10 @@ def test_monster_one_filter(mon,f):
         if test_monster_one_filter(mon,groups_filters[f["name"]][f["index"]])==True:
             return True
     if f["type"]=="monsters_list":
-        m_list=f["monsters"]
-        for m in m_list:
-            if len(m)==1:#monster class
-                if monsym[mon[rows["symbol"]]]==m and int((mon[rows["geno"]].split("|"))[-1])!=0:#not randomly generated monsters are excluded
-                    return True
-            else:
-                names=m.split("|")
-                if mon[rows["name"]] in names:
-                    return True
+        if mon[rows["name"]] in f["monsters_names_set"]:
+            return True
+        if monsym[mon[rows["symbol"]]] in f["monsters_letters_set"] and int((mon[rows["geno"]].split("|"))[-1])!=0:
+            return True
         return False
     if mon[rows["name"]=="mumak"]:
         f=""
@@ -221,6 +224,32 @@ def test_monster_one_filter(mon,f):
             if test_monster_one_field(mon,field)==True:
                 return True
         if include_field_present==False:#exclude did'nt work => include
+            return True
+    if f["type"]=="special":#algorithm is too complex to be included in json
+        if f["condition"]=="wear_all_armor":
+            if szs_order[mon[rows["size"]]]==0:
+                return False
+            if mon[rows["flags2"]].find("M2_NOPOLY")!=-1:
+                return False
+            if mon[rows["flags1"]].find("M1_NOHANDS")!=-1:
+                return False
+            if mon[rows["name"]] in ["marilith", "winged gargoyle", "air elemental"]:#air elemental => whirly
+                return False
+            if szs_order[mon[rows["size"]]]>=3:
+                return False
+            if szs_order[mon[rows["size"]]]>=1 and mon[rows["flags1"]].find("M1_HUMANOID")==-1:#not humanoid, break armor
+                return False
+            if monsym[mon[rows["symbol"]]] in ['v', ' ']:#slip from armor: whirly, noncorporeal
+                return False
+            if szs_order[mon[rows["size"]]]<=1:#slip from armor: size
+                return False
+            if mon[rows["name"]] in ["horned devil", "minotaur", "Asmodeus","balrog","white unicorn","gray unicorn","black unicorn","ki-rin"]:#horns=>no helmet
+                return False
+            #this list has no effect bc all these monsters already can't wear body armor, except, maybe, horned devil
+            if mon[rows["flags1"]].find("M1_SLITHY")!=-1:#no boots
+                return False
+            if monsym[mon[rows["symbol"]]] in ['C']:#no boots
+                return False
             return True
     return False
 

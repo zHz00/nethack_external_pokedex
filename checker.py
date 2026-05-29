@@ -139,7 +139,7 @@ def run_tests(s,table,ver_name):
             if check_formatting(test)==False:
                 report.write("Error formatting card: "+mon+"\n")
                 error_cards+=1
-            if len(test)>c.LINES-2:
+            if len(test)>SCR_HEIGHT-2:
                 report.write(f"MANY LINES({len(test)}):{mon}\n")
                 report.write(ln[:test_len]+"\n===\n")
             for i in range(len(test)):
@@ -196,7 +196,7 @@ def run_tests(s,table,ver_name):
             report.write(f"EXPLANATION DUMMY:{mon}\n")
             report.write(ln[:test_len]+"\n===\n")
         test_e=test_e.split("\n")
-        if len(test_e)>c.LINES-2:
+        if len(test_e)>SCR_HEIGHT-2:
             failed_current_monster=True
             report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
             report.write(ln[:test_len]+"\n===\n")

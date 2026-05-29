@@ -3,6 +3,7 @@ import curses as c
 import os
 import time
 import json
+import locale
 
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
@@ -14,7 +15,7 @@ from make_card import *
 import filters as fs
 import utils
 
-version="2026-05-25"
+version="2026-05-29"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -211,13 +212,13 @@ def show_select_ver(s,sel:int):
     cap2="Variant"
     cap3="Monsters"
     l=len(ver_list)
-    h=c.LINES-2-1#one for header
+    h=SCR_HEIGHT-2-1#one for header
     offset_y=0
     if l>=h:
         offset_y=0
     else:
         offset_y=int((h-l)/2)
-    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    offset_x=int((SCR_WIDTH-w1-w2-w3-4)/2)#4 for |
     header=f"|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
     s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
     for y in range(len(ver_list)):
@@ -242,13 +243,13 @@ def show_filters(s,sel:int):
     cap2="Filter"
     cap3="Value"
     l=len(ver_list)
-    h=c.LINES-2-1#one for header
+    h=SCR_HEIGHT-2-1#one for header
     offset_y=0
     if l>=h:
         offset_y=0
     else:
         offset_y=int((h-l)/2)
-    offset_x=int((c.COLS-w0-w1-w2-w3-4)/2)#4 for |
+    offset_x=int((SCR_WIDTH-w0-w1-w2-w3-4)/2)#4 for |
     filters_edits_offset_x=offset_x+w0+w1+w2+4
     filters_edits_offset_y=offset_y+1
     header=f"|{cap0:{w0}}|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
@@ -256,7 +257,7 @@ def show_filters(s,sel:int):
     for y in range(len(filter_list)):
         filter=filter_list[y]
         field=filter["fields"][0]
-        letter=chr(48+y)
+        letter=chr(49+y)
         on="+" if filter_on[y] else "-"
         name=filter["name"]
         value="<any>"
@@ -309,13 +310,13 @@ def show_select_list(s,cap,op_list,idx,skip):
             w1=len(op)
     w_fast=5
     w1+=w_fast#for fast-select numbers
-    h=c.LINES-2-1#one for header
+    h=SCR_HEIGHT-2-1#one for header
     offset_y=0
     if lines>=h:
         offset_y=0
     else:
         offset_y=int((h-lines)/2)
-    offset_x=int((c.COLS-w1-w2-w3-4)/2)#4 for |
+    offset_x=int((SCR_WIDTH-w1-w2-w3-4)/2)#4 for |
     header=f"|{cap1:{w1}}|"
     s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
 
@@ -924,8 +925,8 @@ def show_explanation(card_win,results,mon_name):
             if line[i]=='*' and prev_ch!='\\':#we have asterisk that was not caught before. probably this is **. Skipping
                 prev_ch=line[i]
                 continue
-            if line_n<c.LINES-2:
-                if line_n==c.LINES-3 and i>=c.COLS-1:
+            if line_n<SCR_HEIGHT-2:
+                if line_n==SCR_HEIGHT-3 and i>=SCR_WIDTH-1:
                     break
                 if line[i]=="|":
                     if cur_pair==BK_CARD:
@@ -947,13 +948,13 @@ def show_explanation(card_win,results,mon_name):
             
         #card_win.addstr(line_n,1 if line_n==0 else 0,line,c.color_pair(cur_pair))
         card_win.chgat(-1,c.color_pair(cur_pair))
-        if line_n>c.LINES-2 or e_offset>0:#two or more screens
-            p=1+e_offset//(c.LINES-3)
-            p_max=1+len(card)//(c.LINES-3)
+        if line_n>SCR_HEIGHT-2 or e_offset>0:#two or more screens
+            p=1+e_offset//(SCR_HEIGHT-3)
+            p_max=1+len(card)//(SCR_HEIGHT-3)
             page_n=f"[Page {p} of {p_max}. SPACE: Scroll]"
-            spaces=(c.COLS-len(page_n))//2-1
+            spaces=(SCR_WIDTH-len(page_n))//2-1
             page_n=" "*spaces+page_n+" "*spaces
-            card_win.addstr(c.LINES-3,0,page_n,c.color_pair(SEPARATOR_BK))
+            card_win.addstr(SCR_HEIGHT-3,0,page_n,c.color_pair(SEPARATOR_BK))
     card_win.refresh()
     
 
@@ -1030,8 +1031,8 @@ def show_card(card_win,results,mon_name):
                             pos=i+3
                         else:
                             pos=i
-                    if line_n<c.LINES-2:
-                        if line_n==c.LINES-3 and i>=c.COLS-1:
+                    if line_n<SCR_HEIGHT-2:
+                        if line_n==SCR_HEIGHT and i>=SCR_WIDTH-1:
                             break
                         if line[i]=="|":
                             if cur_pair==BK_CARD:
@@ -1464,8 +1465,8 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
 
     if ch==27:
         mode=LIST
-    if ch in range(48,48+len(filter_list)):
-        filter_mode_sel=ch-48
+    if ch in range(49,49+len(filter_list)):
+        filter_mode_sel=ch-49
         show_filters(card_win,filter_mode_sel)
         react_to_key_filters(card_win,search_win,0,"^M",alt_ch,mon_name)
     if key=="KEY_UP" :
@@ -1656,8 +1657,8 @@ _Shift+S:_       Select secondary sorting field\n\
 _Shift+D:_       Change secondary sorting direction\n\
 (You must use primary field first)\n\
 \n\
-_Shift+F:_        Show filters window\n\
-_Ctrl+F:_         Quick filter by name\n\
+_Shift+F:_       Show filters window\n\
+_Ctrl+F:_        Quick filter by name\n\
 _Ctrl+Q or F10:_ Exit\n")
     return 0
 
@@ -1699,7 +1700,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         save_settings()
         return -1
     if key==" ":
-        e_offset+=(c.LINES-3)
+        e_offset+=(SCR_HEIGHT-3)
     if ch==27 or key=="BACKSPACE" or key=="^H":
         ver_idx_temp=-1
         read_monsters(ver_list[ver_idx])
@@ -1719,8 +1720,8 @@ _[, ]:_          Switch variant\n\
 (Variant will be reverted when you press Esc)\n\
 \n\
 _Ctrl+O:_        Nothing. Use square brackets!\n\
-_Up:_            Nothing. Show less information on main screen\n\
-_Down:_          Nothing. Show more information on main screen\n\
+_Up:_            Nothing. Less information on main screen\n\
+_Down:_          Nothing. More information on main screen\n\
 _Space:_         Scroll screens if more than one available\n\
 _F10 or Ctrl+Q:_ Exit",offset=1)
 
@@ -1834,8 +1835,8 @@ def main(s):
         for x in range(1,17):
             c.init_pair(x,x-1,c.COLOR_BLACK)
     c.update_lines_cols()
-    lines=c.LINES
-    cols=c.COLS
+    lines=SCR_HEIGHT
+    cols=SCR_WIDTH
     s.bkgd(' ',c.color_pair(BK))
     s.erase()
     s.refresh()
@@ -1845,12 +1846,12 @@ def main(s):
     #    if x==8:
     #        s.addstr("\n")
     s.refresh()
-    search_win=c.newwin(2,c.COLS,0,0)
+    search_win=c.newwin(2,SCR_WIDTH,0,0)
     search_win.keypad(1)
     search_win.bkgd(' ',c.color_pair(BK))
     search_win.erase()
     search_win.refresh()  
-    card_win=c.newwin(c.LINES-2,c.COLS,2,0)
+    card_win=c.newwin(SCR_HEIGHT-2,SCR_WIDTH,2,0)
     card_win.bkgd(' ',c.color_pair(BK_CARD))
     card_win.erase()
     card_win.refresh()
@@ -2022,4 +2023,5 @@ if __name__=="__main__":
     reset_sort()
     reset_filters()
     os.environ.setdefault('ESCDELAY', '25')
+    locale.setlocale(locale.LC_ALL, "")
     c.wrapper(main)

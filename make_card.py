@@ -327,7 +327,7 @@ def card_explanation(mon):
         attack_flags+="|"+("Yes " if flags_dict["can_be_cancelled"] else "No  ")
         attack_flags+="|"+("Yes " if flags_dict["mc"] else "No  ")
         attack_flags+="|"
-        spaces=c.COLS-len(attack_flags)-len(attack_cur)
+        spaces=SCR_WIDTH-len(attack_flags)-len(attack_cur)
         if spaces<=0:
             return "ERROR! Too long attack!: "+attack_cur
         attack_s+=attack_cur+" "*spaces+attack_flags
@@ -385,7 +385,7 @@ def card_explanation(mon):
     cnt=0
     header="Analysis of attacks:"
     flags_header="|Res |Cncl|MC  |"
-    spaces=c.COLS-len(header)-len(flags_header)
+    spaces=SCR_WIDTH-len(header)-len(flags_header)
     attacks_list=header+" "*spaces+flags_header+", ".join(attacks_list)+"\n"
     attacks_list=attacks_list.replace(",  ",", ")#double space after joining with ", " is very likely
     #sl=split_line(attacks_list,SCR_WIDTH)
