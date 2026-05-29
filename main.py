@@ -15,7 +15,7 @@ from make_card import *
 import filters as fs
 import utils
 
-version="2026-05-29a"
+version="2026-05-29b"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1128,7 +1128,8 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         run_tests(s,table,ver_list[ver_idx])
         c.update_lines_cols()
         if c.LINES<SCR_HEIGHT:
-            return
+            ch=s.getch()
+            return 0
         for x in range(1,17):
             s.addstr(f"TEST:{(x-1):2} ",c.color_pair(x))
             if x==8:
