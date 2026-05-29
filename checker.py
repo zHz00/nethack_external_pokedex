@@ -222,7 +222,7 @@ def run_tests(s,table,ver_name):
         absent=fs.check_monster_list(table,f)
         if len(absent)>0:
             failed_filters+=1
-            report.write(f"FILTER MONSTERS ABSENT:"+str(absent)+"\n===\n")
+            report.write(f"FILTER MONSTERS ABSENT:"+str(absent)+"; See:"+f["name"]+"\n===\n")
 
     report.close()
     result_str="DONE-"+"FILT"+f". Failed: {failed_filters} of {total_filters}\n"

@@ -15,7 +15,7 @@ from make_card import *
 import filters as fs
 import utils
 
-version="2026-05-29"
+version="2026-05-29a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1126,26 +1126,29 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         return 0
     if key=="KEY_F(3)":
         run_tests(s,table,ver_list[ver_idx])
+        c.update_lines_cols()
+        if c.LINES<SCR_HEIGHT:
+            return
         for x in range(1,17):
             s.addstr(f"TEST:{(x-1):2} ",c.color_pair(x))
             if x==8:
                 s.addstr("\n")
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BOLD)
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_STANDOUT)
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_BLINK)
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_UNDERLINE)
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_ITALIC)
-        s.addstr("\n")        
+        s.addstr("\n")
         for x in range(1,9):
             s.addstr(f"TEST:{x-1} ",c.color_pair(x)|c.A_DIM)
         s.refresh()
@@ -1837,7 +1840,7 @@ def main(s):
     c.update_lines_cols()
     lines=SCR_HEIGHT
     cols=SCR_WIDTH
-    s.bkgd(' ',c.color_pair(BK))
+    s.bkgd(' ',c.color_pair(BK_CARD))
     s.erase()
     s.refresh()
     colors_n=c.COLORS
@@ -1846,12 +1849,12 @@ def main(s):
     #    if x==8:
     #        s.addstr("\n")
     s.refresh()
-    search_win=c.newwin(2,SCR_WIDTH,0,0)
+    search_win=c.newwin(2,c.COLS,0,0)
     search_win.keypad(1)
     search_win.bkgd(' ',c.color_pair(BK))
     search_win.erase()
     search_win.refresh()  
-    card_win=c.newwin(SCR_HEIGHT-2,SCR_WIDTH,2,0)
+    card_win=c.newwin(c.LINES-2,c.COLS,2,0)
     card_win.bkgd(' ',c.color_pair(BK_CARD))
     card_win.erase()
     card_win.refresh()

@@ -1,4 +1,4 @@
-# === NetHack Externak Pokedex ===
+# === NetHack External Pokedex ===
 
 This is terminal-based utility to see properties of monsters in NetHack. It uses curses library for beautiful output.
 
@@ -17,7 +17,7 @@ dNetHack 3.26.0
 
 ## Quick Start
 
-For Linux there is no special requirements. For Windows, though, you must install windows-curses module. Please use this command:
+For Linux there are no special requirements. For Windows, though, you must install windows-curses module. Please use this command:
 
 pip install windows-curses
 
