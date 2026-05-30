@@ -831,9 +831,9 @@ def show_one_line_header(card_win,pg):
         card_win.addstr(0,pos_x,"|",c.color_pair(SEPARATOR_BK_ALT))
         pos_x+=1
         if sort_mode1==one_line_headers[pg][f][2] or sort_mode2==one_line_headers[pg][f][2]:
-            card_win.addstr(0,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+            card_win.addstr(0,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         else:
-            card_win.addstr(0,pos_x,f,c.color_pair(SEPARATOR_BK))
+            card_win.addstr(0,pos_x,f,c.color_pair(SEPARATOR_BK_ALT))
         pos_x+=w
 
 def show_list(card_win,search_win,results):
