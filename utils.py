@@ -16,8 +16,10 @@ def init_pairs():
     c.init_pair(HELP_ITALIC,c.COLOR_CYAN,c.COLOR_BLACK)
     c.init_pair(HELP_NAME,c.COLOR_YELLOW,c.COLOR_BLACK)
 
-def show_message(s,noans=False,offset=0):
+def show_message(s,noans=False,offset=0,minimal=False):
     W=60
+    if c.COLS<W:
+        W=c.COLS
     c.curs_set(0)
     max=0
     s=s.split("\n")
@@ -25,8 +27,28 @@ def show_message(s,noans=False,offset=0):
         if len(l)>max:
             max=len(l)
     H=len(s)+5
+    if c.LINES<H:
+        H=c.LINES
     w=c.newwin(H,W,int((c.LINES-H)/2)+offset,int((c.COLS-W)/2))
     w.border()
+    if minimal:
+        s_out=s[0]
+        if H>=3:
+            y_pos=1
+        else:
+            y_pos=0
+        if W>=3:
+            x_pos=1
+            s_out=s_out[:W-2]
+        else:
+            x_pos=0
+            s_out=s_out[:W]
+        w.addstr(y_pos,x_pos,s_out)
+        if noans==False:
+            w.getch()
+        del w
+        return
+        
     begin=int((W-max)/2)
     if begin<0:
         begin=0

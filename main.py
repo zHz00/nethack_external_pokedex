@@ -14,8 +14,9 @@ from make_card import *
 #from filters import *
 import filters as fs
 import utils
+import help
 
-version="2026-05-29b"
+version="2026-05-30"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -120,6 +121,22 @@ sort_mode_lambdas=[
     lambda x:int(table[x][rows["insight"]]) if len(table[x][rows["insight"]])>0 else 0,#"Insight",
     lambda x:int(table[x][rows["light_radius"]]) if len(table[x][rows["light_radius"]])>0 else 0 #"Light radius",
 ]
+
+def check_screen():
+    c.update_lines_cols()
+    if c.LINES<SCR_HEIGHT:
+        return False
+    if c.COLS<SCR_WIDTH:
+        return False
+    return True
+
+def check_screen_minimal():
+    c.update_lines_cols()
+    if c.LINES<SCR_HEIGHT_MIN:
+        return False
+    if c.COLS<SCR_WIDTH:
+        return False
+    return True
 
 def active_filters(f_on,f_list):
     active=[]
@@ -581,19 +598,23 @@ def fill_attacks(file):
 BK=20
 INV=21
 BK_CARD=22
-INV_CARD=23
+BK_ALT_CARD=23
 SEPARATOR_BK=24
-SEPARATOR_INV=25
+SEPARATOR_BK_ALT=25
 SEPARATOR_BLACK=26
+SEPARATOR_BK_INV=27
+SEPARATOR_BK_ALT_INV=28
 
 def reset_colors():
     c.init_pair(BK,cur_color_s,cur_color_bk_s)
     c.init_pair(INV,cur_color_bk_s,cur_color_s)
 
     c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-    c.init_pair(INV_CARD,cur_color2,cur_color_bk2)
+    c.init_pair(BK_ALT_CARD,cur_color2,cur_color_bk2)
     c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-    c.init_pair(SEPARATOR_INV,c.COLOR_WHITE,cur_color_bk2)
+    c.init_pair(SEPARATOR_BK_ALT,c.COLOR_WHITE,cur_color_bk2)
+    c.init_pair(SEPARATOR_BK_INV,cur_color_bk1,c.COLOR_WHITE)
+    c.init_pair(SEPARATOR_BK_ALT_INV,cur_color_bk2,c.COLOR_WHITE)
     c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
 
 
@@ -680,11 +701,6 @@ def show_hint(search_win):
 def show_hello_msg(card_win):
     hello_msg=["=== Nethack external Pokedex ===",
     "Enter monster name to see its properties. Keys:"]
-    #"Ctrl+O: Choose variant, or PgUp/PgDn to switch",
-    #"LEFT, RIGHT: Scroll search results",
-    #"UP, DOWN: Change output format",
-    #"ESC: Clear search; F10: Exit"
-
     block1=["LEFT, RIGHT: Scroll results",
             "Tab: Switch to List mode",
             "F1: Extended help"]
@@ -694,10 +710,10 @@ def show_hello_msg(card_win):
     col1=10
     col2=45
     card_win.bkgd(' ',c.color_pair(BK_CARD))
-    card_win.chgat(0,0,-1,c.color_pair(INV_CARD))
-    card_win.chgat(1,0,-1,c.color_pair(INV_CARD))
-    card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
-    card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],c.color_pair(INV_CARD))
+    card_win.chgat(0,0,-1,c.color_pair(BK_ALT_CARD))
+    card_win.chgat(1,0,-1,c.color_pair(BK_ALT_CARD))
+    card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(BK_ALT_CARD)|c.A_BOLD)
+    card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],c.color_pair(BK_ALT_CARD))
     card_win.chgat(2,0,-1,c.color_pair(BK_CARD))
     card_win.chgat(3,0,-1,c.color_pair(BK_CARD))
     card_win.chgat(4,0,-1,c.color_pair(BK_CARD))
@@ -707,12 +723,12 @@ def show_hello_msg(card_win):
 
     if len(in_str)==0:
 
-        card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-        card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(0,0,"^",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
+        card_win.addstr(1,0,"|",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         card_win.addstr(2,0,"+---------",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
 
-        card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-        card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(0,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
+        card_win.addstr(1,SCR_WIDTH-4,"| |",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         card_win.addstr(2,SCR_WIDTH-7,"---+ |",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
         card_win.addstr(3,SCR_WIDTH-12,"----------+",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
     card_win.refresh()
@@ -720,7 +736,7 @@ def show_hello_msg(card_win):
 def show_not_found_msg(card_win,mon_name):
     msg=[f"'{mon_name}' does not exist in selected variant.","Try another search or switch variant."]
     card_win.chgat(-1,c.color_pair(BK_CARD))
-    card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],c.color_pair(INV_CARD)|c.A_BOLD)
+    card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],c.color_pair(BK_ALT_CARD)|c.A_BOLD)
     card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
     card_win.refresh()
 
@@ -801,12 +817,31 @@ def show_full_line(card_win,y,line,color):
     if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
         card_win.insch(y+1,SCR_WIDTH-1,line[SCR_WIDTH-2],color)
 
+def show_one_line_header(card_win,pg):
+    props_len=0
+    for f in one_line_headers[pg].keys():
+        props_len+=1#|
+        props_len+=one_line_headers[pg][f][1]
+    max_name_l=SCR_WIDTH-1-props_len
+    pos_x=1
+    for f in one_line_headers[pg].keys():
+        w=one_line_headers[pg][f][1]
+        if w==0:
+            w=max_name_l
+        card_win.addstr(0,pos_x,"|",c.color_pair(SEPARATOR_BK_ALT))
+        pos_x+=1
+        if sort_mode1==one_line_headers[pg][f][2] or sort_mode2==one_line_headers[pg][f][2]:
+            card_win.addstr(0,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        else:
+            card_win.addstr(0,pos_x,f,c.color_pair(SEPARATOR_BK))
+        pos_x+=w
+
 def show_list(card_win,search_win,results):
     global selected_mon_name
     selected_mon_name=""
-    card_win.bkgd(' ',c.color_pair(SEPARATOR_INV))
+    card_win.bkgd(' ',c.color_pair(SEPARATOR_BK_ALT))
     card_win.erase()
-    card_win.addstr(0,1,one_line_header_str(list_pg),c.color_pair(SEPARATOR_INV))
+    show_one_line_header(card_win, list_pg)
     for x in range(LIST_LINES):
         if x+list_mode_skip>=len(list_mode_mons):
             break
@@ -819,9 +854,9 @@ def show_list(card_win,search_win,results):
             show_full_line(card_win,x,line,c.color_pair(BK_CARD)|c.A_BOLD)
         else:
             if current_mon[rows["name"]] in list_mode_mons_highlight:
-                show_full_line(card_win,x,line,c.color_pair(INV_CARD)|c.A_BOLD)
+                show_full_line(card_win,x,line,c.color_pair(BK_ALT_CARD)|c.A_BOLD)
             else:
-                show_full_line(card_win,x,line,c.color_pair(INV_CARD))
+                show_full_line(card_win,x,line,c.color_pair(BK_ALT_CARD))
     card_win.refresh()
     show_list_upper(search_win,results,selected_mon_name)
 
@@ -833,15 +868,15 @@ EX_NAME = 34
 
 modes_bk={
     EX_NORMAL:BK_CARD,
-    EX_HEADER:INV_CARD,
+    EX_HEADER:BK_ALT_CARD,
     EX_BOLD:BK_CARD,
     EX_ITALIC:SEPARATOR_BK,
-    EX_NAME:INV_CARD}
+    EX_NAME:BK_ALT_CARD}
 modes_inv={
-    EX_NORMAL:INV_CARD,
+    EX_NORMAL:BK_ALT_CARD,
     EX_HEADER:BK_CARD,
-    EX_BOLD:INV_CARD,
-    EX_ITALIC:SEPARATOR_INV,
+    EX_BOLD:BK_ALT_CARD,
+    EX_ITALIC:SEPARATOR_BK_ALT,
     EX_NAME:BK_CARD,
 }
 modes_attr={
@@ -880,7 +915,7 @@ def show_explanation(card_win,results,mon_name):
         if color in ["#","^"]:
             cur_pair=BK_CARD
         if color=="$":
-            cur_pair=INV_CARD
+            cur_pair=BK_ALT_CARD
         if len(line.strip())==0:#only special character
             continue
         if color=="^":
@@ -932,7 +967,7 @@ def show_explanation(card_win,results,mon_name):
                     if cur_pair==BK_CARD:
                         card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
                     else:
-                        card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
                 else:
                     if cur_pair==BK_CARD:
                         card_win.addstr(line_n,pos,line[i],c.color_pair(modes_bk[mode])|(modes_attr[mode] if mode!=EX_NORMAL else attrib))
@@ -1011,7 +1046,7 @@ def show_card(card_win,results,mon_name):
                 if color=="#":
                     cur_pair=BK_CARD
                 if color=="$":
-                    cur_pair=INV_CARD
+                    cur_pair=BK_ALT_CARD
                 if len(line.strip())==0:#only special character
                     continue
                 if remainder==False:
@@ -1038,7 +1073,7 @@ def show_card(card_win,results,mon_name):
                             if cur_pair==BK_CARD:
                                 card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK)|c.A_BOLD)
                             else:
-                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+                                card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
                         else:
                             card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
                     if line[i]==":":
@@ -1121,13 +1156,16 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         current_mon=0
         return 0
     if key=="KEY_F(15)":
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
         mode=SHOW_ALL_EXPL
         current_mon=0
         return 0
     if key=="KEY_F(3)":
         run_tests(s,table,ver_list[ver_idx])
         c.update_lines_cols()
-        if c.LINES<SCR_HEIGHT:
+        if not check_screen():
             ch=s.getch()
             return 0
         for x in range(1,17):
@@ -1202,6 +1240,9 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         if format_length<=0:
             format_length=0
     if key=="KEY_DOWN" :
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
         format_length+=1
         if format_length>2:
             format_length=2
@@ -1229,34 +1270,32 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         if mon_name!="":
             reloaded=True
     if key=="^O":
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
         mode_prev=SEARCH
         mode=SELECT_VER
         ver_selector_idx=ver_idx
     if key=="^I":
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
         mode=LIST
         format_length=2
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
         list_mode_sel=0
         list_mode_skip=0
     if key=="^A":
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
         if len(in_str)>0 and len(mon_name)>0:
             mode=EXPLANATION_SEARCH
     if key=="KEY_F(1)":
-        utils.show_message(f"Quick help: Search mode\n\
-\n\
-_Ctrl+O:_        Select NetHack variant to search\n\
-_[, ]:_          Switch to next NetHack variant\n\
-_Left, Right:_   Scroll through search results\n\
-_Esc:_           Clear search line\n\
-_Up:_            Show less information\n\
-_Down:_          Show more information\n\
-_Ctrl+A:_        Show attacks analysis windows\n\
-_Tab:_           Switch to **List** mode\n\
-_Ctrl+Q or F10:_ Exit\n\
-_1...6:_         Change colors\n\
-\n\
-Version {version}. (C) **zHz** 2022-2026. MIT Licence.\n\
-https://github.com/zHz00/nethack\_external\_pokedex")
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
+        utils.show_message(help.search_mode(version))
 
     return 0
 
@@ -1612,7 +1651,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
         mode=SEARCH
     if key=="^J" or key=="^M":
         mode=CARD
-    if key=="^S":
+    if key=="^S" or key=="s":
         sort_mode_sel=sort_mode1
         mode=SELECT_SORT1
     if key=="F":
@@ -1627,7 +1666,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
         if sort_mode1!=0:
             sort_mode_sel=sort_mode2
             mode=SELECT_SORT2
-    if key=="^D":
+    if key=="^D" or key=="d":
         if sort_dir1==0:
             sort_dir1=1
         else:
@@ -1645,25 +1684,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
         save_settings()
         return -1
     if key=="KEY_F(1)":
-        utils.show_message("Quick help: List mode\n\
-\n\
-_Tab:_           Switch to **Search** mode\n\
-_Ctrl+O:_        Select NetHack variant to view\n\
-_[, ]:_          Switch to next NetHack variant\n\
-_Up, Down:_      Scroll through list\n\
-_PgUp, PgDn:_    Scorll, but faster\n\
-_Home, End:_     Scroll with speed of light\n\
-_Left, Right:_   View dNetHack additional parameters\n\
-_Enter:_         View selected monster's card\n\
-_Ctrl+S:_        Select primary sorting field\n\
-_Ctrl+D:_        Change primary sorting direction\n\
-_Shift+S:_       Select secondary sorting field\n\
-_Shift+D:_       Change secondary sorting direction\n\
-(You must use primary field first)\n\
-\n\
-_Shift+F:_       Show filters window\n\
-_Ctrl+F:_        Quick filter by name\n\
-_Ctrl+Q or F10:_ Exit\n")
+        utils.show_message(help.list_mode())
     return 0
 
 def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
@@ -1713,21 +1734,11 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         if mode==EXPLANATION_SEARCH:
             mode=SEARCH
     if key=="KEY_F(1)":
-        card_win.addstr(0,25,"|Attack can be resisted ------------->",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-        card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
-        card_win.addstr(2,25,"|Attack can be prevented by magic cancellation ----+",c.color_pair(SEPARATOR_INV)|c.A_BOLD)
+        card_win.addstr(0,25,"|Attack can be resisted ------------->",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
+        card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
+        card_win.addstr(2,25,"|Attack can be prevented by magic cancellation ----+",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         card_win.refresh()
-        utils.show_message("Quick help: Attacks analysis\n\
-\n\
-_Esc:_           Return to card\n\
-_[, ]:_          Switch variant\n\
-(Variant will be reverted when you press Esc)\n\
-\n\
-_Ctrl+O:_        Nothing. Use square brackets!\n\
-_Up:_            Nothing. Less information on main screen\n\
-_Down:_          Nothing. More information on main screen\n\
-_Space:_         Scroll screens if more than one available\n\
-_F10 or Ctrl+Q:_ Exit",offset=1)
+        utils.show_message(help.aa_mode(),offset=1)
 
     return 0
 
@@ -1774,17 +1785,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         read_monsters(ver_list[ver_idx])
         mode=LIST
     if key=="KEY_F(1)":
-        utils.show_message("Quick help: Card, opened from list\n\
-\n\
-_Esc:_           Return to list\n\
-_[, ]:_          Switch variant\n\
-(Variant will be reverted when you press Esc)\n\
-\n\
-_Ctrl+O:_        Nothing. Use square brackets!\n\
-_Up:_            Show less information\n\
-_Down:_          Show more information\n\
-_Ctrl+A:_        Show attacks analysis windows\n\
-_F10 or Ctrl+Q:_ Exit")
+        utils.show_message(help.card_mode())
 
     return 0
 
@@ -1844,6 +1845,12 @@ def main(s):
     s.bkgd(' ',c.color_pair(BK_CARD))
     s.erase()
     s.refresh()
+    if check_screen_minimal()==False:
+        s_out="Minimal size: 80x7!"
+        s_out=s_out[:c.COLS]
+        s.addstr(s_out)
+        s.getch()
+        return
     colors_n=c.COLORS
     #for x in range(1,17):
     #    s.addstr(f"TEST:{x-1} ",c.color_pair(x))
@@ -2017,7 +2024,7 @@ if __name__=="__main__":
             if ver_list[x]==last_ver_file:
                 ver_idx=x
                 break
-        last.close
+        last.close()
     except:
         pass
     read_monsters(ver_list[ver_idx])

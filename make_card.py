@@ -1129,33 +1129,36 @@ def make_card(mon,format_length=0):
     return out_line_s
 
 one_line_headers=[]
+#1st column: field in mons array
+#2nd column: width of column in list
+#3rd column: sort_mode1 and sort_mode2 index
 one_line_headers.append({
-    "Name":["name",0],
-    "Df":["difficulty",2],
-    "Lv":["level",2],
-    "Exp":["exp",4],
-    "Mv":["speed",2],
-    "AC":["ac",3],
-    "MR":["mr",3],
-    "Fr":["",2],
-    "Ali":["alignment",4],
-    "Wt":["weight",4],
-    "Nut":["nutrition",4],
-    "Sz":["",2],
+    "Name":["name",0,2],
+    "Df":["difficulty",2,3],
+    "Lv":["level",2,4],
+    "Exp":["exp",4,5],
+    "Mv":["speed",2,6],
+    "AC":["ac",3,7],
+    "MR":["mr",3,8],
+    "Fr":["",2,9],
+    "Ali":["alignment",4,10],
+    "Wt":["weight",4,11],
+    "Nut":["nutrition",4,12],
+    "Sz":["",2,13],
 })
 one_line_headers.append({
-    "Name":["name",0],
-    "Df":["difficulty",2],
-    "Lv":["level",2],
-    "Exp":["exp",4],
-    "Mv":["speed",2],
-    "AC":["ac",3],
-    "MR":["mr",3],
-    "Fr":["",2],
-    "Ali":["alignment",4],
-    "Wt":["weight",4],
-    "Ins":["insight",3],
-    "Li":["light_radius",3],
+    "Name":["name",0,2],
+    "Df":["difficulty",2,3],
+    "Lv":["level",2,4],
+    "Exp":["exp",4,5],
+    "Mv":["speed",2,6],
+    "AC":["ac",3,7],
+    "MR":["mr",3,8],
+    "Fr":["",2,9],
+    "Ali":["alignment",4,10],
+    "Wt":["weight",4,11],
+    "Ins":["insight",3,14],
+    "Li":["light_radius",3,15],
 
 })
 
@@ -1195,18 +1198,4 @@ def make_card_one_line(mon,actual_name,pg):
     if real_name_l>max_name_l:
         name=actual_name[:max_name_l-1]+"!"
     out_line=f"|{name:{max_name_l}}"+out_line
-    return out_line
-
-def one_line_header_str(pg):
-    out_line=""
-    name_header=""
-    for f in one_line_headers[pg].keys():
-        w=one_line_headers[pg][f][1]
-        if w==0:#skipping name
-            name_header=f
-            continue
-        out_line+=f"|{f:{w}}"
-    props_len=len(out_line)
-    max_name_l=SCR_WIDTH-2-props_len
-    out_line=f"|{name_header:{max_name_l}}"+out_line
     return out_line
