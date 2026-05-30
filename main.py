@@ -1845,7 +1845,7 @@ def main(s):
     s.bkgd(' ',c.color_pair(BK_CARD))
     s.erase()
     s.refresh()
-    if check_screen_minimal()==False:
+    if not check_screen_minimal():
         s_out="Minimal size: 80x7!"
         s_out=s_out[:c.COLS]
         s.addstr(s_out)
@@ -1867,6 +1867,17 @@ def main(s):
     card_win.erase()
     card_win.refresh()
     while True:
+        if not check_screen_minimal():
+            s_out="Minimal size: 80x7!"
+            s_out=s_out[:c.COLS]
+            s.addstr(s_out)
+            s.getch()
+            continue
+        if not check_screen() and mode not in [SEARCH,SHOW_ALL]:
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            continue
+        lines=c.LINES
+        cols=c.COLS
         results=[]
         not_found_after_reload=False
         if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
