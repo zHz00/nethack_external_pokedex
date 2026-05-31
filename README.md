@@ -105,9 +105,9 @@ Second group of filters shows monsters which have specific property. There are s
 
 You can reduce output to 7 lines in search mode, but the program is designed to run in 80x25 mode. If you make your screen wider, you will still see card in 80 character-width format. Maybe one day i'll make adaptive design for any width, but not today.
 
-## Licence and author information
+## License and author information
 
-MIT Licence. See LICENCE.txt file for details.  
+MIT License. See LICENSE.txt file for details.  
 (C) 2022-2026 zHz  
 You can contact me via Telegram @zHz01  
 Also, please visit project's github page:  

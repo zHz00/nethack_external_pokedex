@@ -16,7 +16,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-05-30"
+version="2026-05-31"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -29,7 +29,7 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
-filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_param_filter("Parameter","",0,0),fs.make_conveyed_filter("Conveyed","")]
+filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_param_filter("Parameter","",0,0)]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -42,7 +42,7 @@ SHOW_ALL=5
 SELECT_SORT1=6
 SELECT_SORT2=7
 FILTERS=8
-SELECT_RES=9
+#SELECT_RES=9 #REMOVED BC OF MOVING TO FILTERS.JSON
 SELECT_PARAM=10
 EXPLANATION_CARD=11
 EXPLANATION_SEARCH=12
@@ -175,7 +175,7 @@ def show_ver_format_upper(search_win):
     x1=50
     x2=60
     out_mode=""
-    if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
+    if mode in [LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
         out_mode="|Format:list"
     else:
         if format_length==0:
@@ -193,7 +193,7 @@ def show_ver_format_upper(search_win):
             search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode in [LIST,FILTERS,SELECT_RES,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
+        if mode in [LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
             search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
@@ -1461,12 +1461,6 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
         if mode==SELECT_SORT2:
             sort_mode2=idx
             mode=LIST
-        if mode==SELECT_RES:
-            filter_list[filter_mode_sel]=fs.make_conveyed_filter("Conveyed",list(resists_conv.keys())[idx])
-            if idx!=0:
-                filter_on[filter_mode_sel]=True
-            else:
-                filter_on[filter_mode_sel]=False#(none)
         if mode==SELECT_FILTER_GROUP:
             filter_list[filter_mode_sel]["index"]=idx+skip-1
             if filter_list[filter_mode_sel]["index"]!=-1:
@@ -1474,7 +1468,7 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
             else:
                 filter_on[filter_mode_sel]=False#(none)
         prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
-        if mode==SELECT_RES or mode==SELECT_FILTER_GROUP:
+        if mode==SELECT_FILTER_GROUP:
             list_mode_sel=0
             list_mode_skip=0
             show_list(card_win,search_win,[])
@@ -1558,9 +1552,6 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             show_filters(card_win,filter_mode_sel)
         if f["field"]=="name":
             enter_name_param(card_win,search_win)
-
-        if f["field"]=="prob":
-            mode=SELECT_RES
         if "min" in f:#param filter
             mode=SELECT_PARAM
     return 0
@@ -1887,8 +1878,6 @@ def main(s):
             else:
                 card_win.erase()
                 show_not_found_msg(card_win,mon_name)
-        if mode==SELECT_RES:
-            show_select_list(card_win,"Conveyed",list(res_mode_list.keys()),res_mode_sel,0)
         if mode==SELECT_PARAM:
             show_select_list(card_win,"Numeric parameters",list(filters_mode_param_str.keys()),param_mode_sel,0)
         if mode==FILTERS:
@@ -1980,12 +1969,6 @@ def main(s):
             continue
         if mode==FILTERS:
             res=react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name)
-            if res!=0:
-                break
-            continue
-        if mode==SELECT_RES:
-            #res=react_to_key_select_res(card_win,search_win,ch,key,alt_ch,mon_name)
-            res,res_mode_sel,notused=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,list(res_mode_list.keys()),res_mode_sel,0)
             if res!=0:
                 break
             continue

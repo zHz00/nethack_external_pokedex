@@ -102,24 +102,6 @@ def make_name_filter(fname,name):
     f["fields"]=[field]
     return f
 
-def make_conveyed_filter(fname,res):
-    field=dict()
-    field["name"]="Conveyed"
-    field["name_short"]="Conv"
-    field["variant"]=[""]
-    field["type"]="include"
-    field["field"]="prob"
-    field["value"]=res
-    f=dict()
-    f["name"]=fname
-    if len(res)>0:
-        f["short_name"]=resists_conv_short[list(resists_conv.keys()).index(res)]
-    else:
-        f["short_name"]="<any>"
-    f["type"]="check_fields"
-    f["fields"]=[field]
-    return f
-
 def make_param_filter(fname,param,min,max):
     field=dict()
     field["name"]="Parameter"

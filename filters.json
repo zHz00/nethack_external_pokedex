@@ -1,5 +1,180 @@
 [
     {
+        "group_title":"Conveyed",
+        "filters_list": [
+            {
+                "name": "Fire",
+                "name_short": "Fire",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_FIRE"
+                    }
+                ]
+            },
+            {
+                "name": "Cold",
+                "name_short": "Cold",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_COLD"
+                    }
+                ]
+            },
+            {
+                "name": "Sleep",
+                "name_short": "Sleep",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_SLEEP"
+                    }
+                ]
+            },
+            {
+                "name": "Disintegration",
+                "name_short": "Dising.",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_DISINT"
+                    }
+                ]
+            },
+            {
+                "name": "Shock",
+                "name_short": "Shock",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_ELEC"
+                    }
+                ]
+            },
+            {
+                "name": "Poison",
+                "name_short": "Poison",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_POISON"
+                    }
+                ]
+            },
+            {
+                "name": "Acid (temp)",
+                "name_short": "Acid",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_ACID"
+                    }
+                ]
+            },
+            {
+                "name": "Stoning (temp)",
+                "name_short": "Stone",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"prob",
+                        "type":"include",
+                        "value": "MR_STONE"
+                    }
+                ]
+            },
+            {
+                "name": "Teleportitis",
+                "name_short": "Tele",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"flag",
+                        "type":"include",
+                        "value": "M1_TPORT"
+                    }
+                ]
+            },
+            {
+                "name": "T. Control",
+                "name_short": "T.Ctrl",
+                "type": "check_fields",
+                "variants": [
+                    ""
+                ],
+                "fields": [
+                    {
+                        "name":"t",
+                        "name_short":"t",
+                        "field":"flag",
+                        "type":"include",
+                        "value": "M1_TPORT_CNTRL"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "group_title": "Quest monsters",
         "filters_list": [
             {
@@ -4425,4 +4600,5 @@
             }
         ]
     }
+
 ]
