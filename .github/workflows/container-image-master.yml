@@ -1,18 +1,19 @@
-name: build NetHack External Pokedex container image
+name: build NetHack External Pokedex container image (master)
 on:
   push:
     branches:
       - master
     paths:
       - deploy/Containerfile
-      - .github/workflows/container-image.yml
+      - .github/workflows/container-image-master.yml
       - "*.py"
+      - "*.json"
       - data/
   workflow_dispatch:
 
 jobs:
   build:
-    name: build container image
+    name: build and push container image
     runs-on: ubuntu-latest
 
     steps:
@@ -32,12 +33,12 @@ jobs:
       - name: build the version
         run: >-
           buildah bud --layers --format oci --tls-verify=true
-          -t ${IMAGE}:latest
+          -t ${IMAGE}:${GITHUB_REF_NAME}
           -f deploy/Containerfile .
 
-      - name: push to registry
+      - name: push to registry (branch)
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2.8
         with:
-          tags: "${{ env.IMAGE }}:latest"
+          tags: "${{ env.IMAGE }}:${{ github.ref_name }}"
           username: ${{ github.actor }}
           password: ${{ github.token }}
