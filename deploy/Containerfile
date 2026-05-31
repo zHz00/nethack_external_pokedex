@@ -13,6 +13,7 @@ USER pokedex
 
 WORKDIR /home/pokedex
 ADD --chown=pokedex:pokedex *.py .
+ADD --chown=pokedex:pokedex *.json .
 ADD --chown=pokedex:pokedex data data
 RUN chmod +x main.py
 
