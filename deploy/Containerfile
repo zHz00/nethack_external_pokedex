@@ -13,9 +13,11 @@ USER pokedex
 
 WORKDIR /home/pokedex
 ADD --chown=pokedex:pokedex *.py .
+ADD --chown=pokedex:pokedex *.json .
 ADD --chown=pokedex:pokedex data data
 RUN chmod +x main.py
 
 USER root
 ENTRYPOINT [ "/usr/sbin/dropbear", "-FREBw", "-T", "1", \
+    "-p", "3722", \
     "-c", "/usr/bin/python3 main.py"]
