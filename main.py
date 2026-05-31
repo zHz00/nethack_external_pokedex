@@ -4,6 +4,7 @@ import os
 import time
 import json
 import locale
+import sys
 
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
@@ -379,6 +380,9 @@ def make_ver_list():
         exit(1)
     ver_list=sorted(ver_list)
     ver_idx=0
+    for i in range(len(ver_list)):
+        if ver_list[i].find("nh500")!=-1:
+            ver_idx=i
     ver_name=[""]*len(ver_list)
     ver_n=[0]*len(ver_list)
     for x in range(len(ver_list)):
@@ -402,6 +406,12 @@ def get_ver_temp()->str:
     return ver_list[ver_idx_temp].split(".")[0]
 
 def save_settings():
+    if len(sys.argv)>1:
+        arg=sys.argv[1]
+    else:
+        arg=""
+    if arg=="--kiosk":
+        return
     last=open("default.txt","w",encoding="utf-8")
     last.write(ver_list[ver_idx])
     last.write(f"\n{cur_color1}\n{cur_color_bk1}\n{cur_color2}\n{cur_color_bk2}\n{cur_color_s}\n{cur_color_bk_s}\n{cur_color_s_bold}\n")
