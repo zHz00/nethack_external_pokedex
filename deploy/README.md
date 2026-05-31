@@ -14,7 +14,7 @@ podman build -t pokedex -f deploy/Containerfile .
 Once built, the container can be started as follows:
 
 ```sh
-podman run -p 3722:22 pokedex
+podman run -p 3722:3722 pokedex
 ```
 
 The application can be accessed via SSH as the user `pokedex` to 0.0.0.0:3722. There is no password by default.
