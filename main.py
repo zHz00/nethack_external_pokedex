@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-06-11"
+version="2026-06-11a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1862,6 +1862,7 @@ def main(s):
     if not check_screen_minimal():
         s_out="Minimal size: 80x7!"
         s_out=s_out[:c.COLS]
+        s.move(0,0)
         s.addstr(s_out)
         s.getch()
         return
@@ -1884,6 +1885,7 @@ def main(s):
         if not check_screen_minimal():
             s_out="Minimal size: 80x7!"
             s_out=s_out[:c.COLS]
+            s.move(0,0)
             s.addstr(s_out)
             s.getch()
             continue
