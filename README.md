@@ -34,13 +34,14 @@ Also, you can type part of name and still find your monster in search results.
 | Key             |Action                                                       |
 |-----------------|-------------------------------------------------------------|
 |**Main keys**    |                                                             |
-|F1               |Show quick help                                              |
+|F1, ?            |Show quick help                                              |
 |Tab              |Switch to LIST mode                                          |
 |[, ]             |Switch variant                                               |
 |Ctrl+O           |Select variant from list                                     |
 |Down             |Show more information                                        |
 |Up               |Show less information                                        |
 |Esc              |Clear search line                                            |
+|Ctrl+Z           |Show previous card after Esc                                 |
 |Left, Right      |Scroll through search results                                |
 |Ctrl+A           |Show attacks analysis window (Press Esc to return to card)   |
 |F10, Ctrl+Q      |Exit                                                         |

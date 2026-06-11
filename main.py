@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-05-31a"
+version="2026-06-11"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -79,7 +79,7 @@ ver_n=[]
 ver_idx=-1
 ver_idx_temp=-1
 ver_selector_idx=0
-format_length=0
+format_length=2
 list_mode_mons=[]
 list_mode_mons_highlight=[]
 list_mode_sel=0
@@ -176,7 +176,7 @@ def show_ver_format_upper(search_win):
     x1=50
     x2=60
     out_mode=""
-    if mode in [LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
+    if mode in (LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM):
         out_mode="|Format:list"
     else:
         if format_length==0:
@@ -188,13 +188,13 @@ def show_ver_format_upper(search_win):
     search_win.addstr(0,x2,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     if ver_idx_temp!=-1:
         search_win.addstr(0,x1,"|Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
+        if mode in (EXPLANATION_CARD,EXPLANATION_SEARCH):
             search_win.addstr(1,x1-5,"(Card Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
         else:
             search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-        if mode in [LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM]:
+        if mode in (LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM):
             search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
@@ -709,14 +709,14 @@ def show_hint(search_win):
     search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
 def show_hello_msg(card_win):
-    hello_msg=["=== Nethack external Pokedex ===",
+    hello_msg=[f"=== Nethack external Pokedex [{version}]===",
     "Enter monster name to see its properties. Keys:"]
     block1=["LEFT, RIGHT: Scroll results",
             "Tab: Switch to List mode",
-            "F1: Extended help"]
+            "?, F1: Extended help"]
     block2=["[, ], Ctrl+O: Choose variant",
             "UP, DOWN: Change format",
-            "F10, Ctrl+Q: Exit"]
+            "Ctrl+Q, F10: Exit"]
     col1=10
     col2=45
     card_win.bkgd(' ',c.color_pair(BK_CARD))
@@ -1116,13 +1116,24 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global current_mon
     global list_mode_sel, list_mode_skip
     global mode_prev
+    global in_str_prev
     if ch==27:#ESC
         search_win.nodelay(True)
         while search_win.getch()!=-1:
             pass
         search_win.nodelay(False)
+        in_str_prev=mon_name
         in_str=""
-        reloaded=False
+        reloaded=True
+    if key=="^U":
+        in_str_prev=mon_name
+        in_str=""
+        reloaded=True
+    if key=="^Z":
+        in_str=in_str_prev
+        sel=0
+        skip=0
+        reloaded=True
     if key=="1":
         cur_color1+=1
         if cur_color1>7:
@@ -1223,7 +1234,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         reset_colors()
         utils.init_pairs()
 
-    if len(key)==1 and key not in ["1","2","3","4","5","6","[","]"]:
+    if len(key)==1 and key not in ("1","2","3","4","5","6","[","]","?","/","!"):
         if len(in_str)<MAX_SEARCH:
             in_str+=key
             sel=0
@@ -1301,7 +1312,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             return 0
         if len(in_str)>0 and len(mon_name)>0:
             mode=EXPLANATION_SEARCH
-    if key=="KEY_F(1)":
+    if key in ("KEY_F(1)","?","/"):
         if not check_screen():
             utils.show_message("Extend screen to 80x25!",minimal=True)
             return 0
@@ -1684,7 +1695,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
-    if key=="KEY_F(1)":
+    if key in ("KEY_F(1)","?","/"):
         utils.show_message(help.list_mode())
     return 0
 
@@ -1734,7 +1745,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
             mode=CARD
         if mode==EXPLANATION_SEARCH:
             mode=SEARCH
-    if key=="KEY_F(1)":
+    if key in ("KEY_F(1)","?","/"):
         card_win.addstr(0,25,"|Attack can be resisted ------------->",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         card_win.addstr(1,25,"|Monster can be cancelled --------------------^    ^",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
         card_win.addstr(2,25,"|Attack can be prevented by magic cancellation ----+",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
@@ -1785,12 +1796,13 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         ver_idx_temp=-1
         read_monsters(ver_list[ver_idx])
         mode=LIST
-    if key=="KEY_F(1)":
+    if key in ("KEY_F(1)","?","/"):
         utils.show_message(help.card_mode())
 
     return 0
 
 in_str=""
+in_str_prev=""
 not_found_after_reload=False
 cur_color1=c.COLOR_GREEN
 cur_color2=c.COLOR_CYAN
@@ -1821,6 +1833,7 @@ def main(s):
     global sort_mode_sel,res_mode_sel,param_mode_sel
     global filter_mode_sel
     global filters_group_names,filters_group_sel,filters_group_skip
+    global in_str_prev
     if c.COLORS<16:
         bold=1
     else:
@@ -1874,9 +1887,13 @@ def main(s):
             s.addstr(s_out)
             s.getch()
             continue
-        if not check_screen() and mode not in [SEARCH,SHOW_ALL]:
-            utils.show_message("Extend screen to 80x25!",minimal=True)
-            continue
+        if not check_screen():
+            if mode not in [SEARCH,SHOW_ALL]:
+                utils.show_message("Extend screen to 80x25!",minimal=True)
+                continue
+            else:
+                if mode==SEARCH:
+                    format_length=0#set to mini
         lines=c.LINES
         cols=c.COLS
         results=[]
@@ -1918,6 +1935,7 @@ def main(s):
             else:
                 if sel+skip<len(results):
                     mon_name=results[sel+skip]
+                    in_str_prev=mon_name
                 else:
                     mon_name=""
             show_search_upper(search_win,results,mon_name)

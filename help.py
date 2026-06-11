@@ -4,7 +4,8 @@ def search_mode(version):
 _Ctrl+O_        Select NetHack variant to search\n\
 _[, ]_          Switch to next NetHack variant\n\
 _Left, Right_   Scroll through search results\n\
-_Esc_           Clear search line\n\
+_Esc, Ctrl+U_   Clear search line\n\
+_Ctrl+Z_        Show previous card after Esc\n\
 _Up_            Show less information\n\
 _Down_          Show more information\n\
 _Ctrl+A_        Show attacks analysis windows\n\
