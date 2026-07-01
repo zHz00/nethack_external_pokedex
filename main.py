@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-06-11a"
+version="2026-07-01"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -709,7 +709,7 @@ def show_hint(search_win):
     search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
 def show_hello_msg(card_win):
-    hello_msg=[f"=== Nethack external Pokedex [{version}]===",
+    hello_msg=[f"=== Nethack external Pokedex [{version}] ===",
     "Enter monster name to see its properties. Keys:"]
     block1=["LEFT, RIGHT: Scroll results",
             "Tab: Switch to List mode",
@@ -906,6 +906,11 @@ def show_explanation(card_win,results,mon_name):
     else:
         attacks="(none)"
     card="".join(attacks).split("\n")
+    if len(card)>0:
+        header=card[0]
+        if len(card)>SCR_HEIGHT-3:
+            for i in range (len(card)//(SCR_HEIGHT-3)):
+                card.insert((SCR_HEIGHT-3)*(i+1),header)
     cur_pair=BK_CARD
     line_n=0
     if e_offset>len(card):
