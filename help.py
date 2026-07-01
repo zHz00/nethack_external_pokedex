@@ -8,7 +8,7 @@ _Esc, Ctrl+U_   Clear search line\n\
 _Ctrl+Z_        Show previous card after Esc\n\
 _Up_            Show less information\n\
 _Down_          Show more information\n\
-_Ctrl+A_        Show attacks analysis windows\n\
+_Ctrl+A_        Show attacks analysis screen\n\
 _Tab_           Switch to **List** mode\n\
 _F10, Ctrl+Q_   Exit\n\
 _1...6_         Change colors\n\
@@ -26,7 +26,7 @@ _[, ]_            Switch variant\n\
 _Ctrl+O_          Nothing. Use square brackets!\n\
 _Up_              Show less information\n\
 _Down_            Show more information\n\
-_Ctrl+A_          Show attacks analysis windows\n\
+_Ctrl+A_          Show attacks analysis screen\n\
 _F10, Ctrl+Q_     Exit"
 
 def list_mode():
@@ -36,7 +36,7 @@ _Tab_           Switch to **Search** mode\n\
 _Ctrl+O_        Select NetHack variant to view\n\
 _[, ]_          Switch to next NetHack variant\n\
 _Up, Down_      Scroll through list\n\
-_PgUp, PgDn_    Scorll, but faster\n\
+_PgUp, PgDn_    Scroll, but faster\n\
 _Home, End_     Scroll with speed of light\n\
 _Left, Right_   View dNetHack additional parameters\n\
 _Enter_         View selected monster's card\n\

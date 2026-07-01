@@ -41,9 +41,9 @@ Also, you can type part of name and still find your monster in search results.
 |Down             |Show more information                                        |
 |Up               |Show less information                                        |
 |Esc              |Clear search line                                            |
-|Ctrl+Z           |Show previous card after Esc                                 |
+|Ctrl+Z           |Show last viewed card again (works only after Esc)           |
 |Left, Right      |Scroll through search results                                |
-|Ctrl+A           |Show attacks analysis window (Press Esc to return to card)   |
+|Ctrl+A           |Show attacks analysis screen (Press Esc to return to card)   |
 |F10, Ctrl+Q      |Exit                                                         |
 |**Change colors**|                                                             |
 |1                |Foreground1 (card, list)                                     |

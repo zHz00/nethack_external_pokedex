@@ -302,8 +302,9 @@ def card_explanation(mon):
             #explanation_str="<TEST>"
             explanation_str=make_spell_list(mon[rows["name"]],mon[rows["level"]],attack[1])
         if explanation_str==explanation_str_prev:
-            if len(explanation_str)>30:
-                explanation_str="<Same as previous>"
+            pass
+            #if len(explanation_str)>30:
+                #explanation_str="<Same as previous>"
         else:
             explanation_str_prev=explanation_str
         if attack[0] not in at_actual:
