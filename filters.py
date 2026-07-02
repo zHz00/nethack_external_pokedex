@@ -7,6 +7,16 @@ import utils
 groups_titles=[]
 groups_filters=dict()
 
+def convert_to_set(f):
+    f["monsters_names_set"]=set()
+    f["monsters_letters_set"]=set()
+    for m in f["monsters"]:
+        if len(m)==1:#full category
+            f["monsters_letters_set"].add(m)
+        else:
+            f["monsters_names_set"].update(m.split("|"))
+    return f
+
 def load_filters(variant):
     global groups_titles
     global groups_filters
@@ -40,13 +50,7 @@ def load_filters(variant):
                         good=True
             if good:
                 if f["type"]=="monsters_list":#converting list to set for faster searching
-                    f["monsters_names_set"]=set()
-                    f["monsters_letters_set"]=set()
-                    for m in f["monsters"]:
-                        if len(m)==1:#full category
-                            f["monsters_letters_set"].add(m)
-                        else:
-                            f["monsters_names_set"].update(m.split("|"))
+                    f=convert_to_set(f)
                 groups_filters[g["group_title"]].append(f)
     #print(filters_all)
 
@@ -100,6 +104,17 @@ def make_name_filter(fname,name):
         f["short_name"]="<any>"
     f["type"]="check_fields"
     f["fields"]=[field]
+    return f
+
+def make_list_filter(fname,names):
+    f=dict()
+    f["name"]=fname
+    f["short_name"]=fname
+    f["type"]="monsters_list"
+    f["variants"]=[""]
+    f["highlight"]=[]
+    f["monsters"]=names
+    f=convert_to_set(f)
     return f
 
 def make_param_filter(fname,param,min,max):
