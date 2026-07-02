@@ -1188,6 +1188,9 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         mode=SHOW_ALL_EXPL
         current_mon=0
         return 0
+    if key=="KEY_F(4)":
+        utils.multiline_textpad(s,10,10,20,5,c.color_pair(INV))
+        return 0
     if key=="KEY_F(3)":
         run_tests(s,table,ver_list[ver_idx])
         c.update_lines_cols()
@@ -1974,7 +1977,7 @@ def main(s):
             show_select_ver(card_win,ver_selector_idx)
             card_win.refresh()
         ch=search_win.getch()
-        key=c.keyname(ch).decode("utf-8")        
+        key=c.keyname(ch).decode("utf-8")
         alt_ch=""
         if ch==27:
             s.nodelay(True)
