@@ -124,45 +124,58 @@ def textpad(s,y,x,width):
     else:
         return text
 
-def multiline_textpad(s,y,x,width,height,attr):
+def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"TEST"),footer=(lambda x:"FOOTER"),found=(lambda x:0)):
     global user_cancel
     s.keypad(1)
     s.refresh()
     c.curs_set(1)
     win = s.derwin(height,width,y,x)
-    win.bkgd(" ",attr)
+    win.bkgd(" ",attr1)
     win.erase()
     win.refresh()
     #tb = c.textpad.Textbox(win)
     #tb.insert_mode=True
     #tb.stripspaces=False
     #text = tb.edit(edit_keys_multiline)
-    lines=["test line 1 01234567890123456789","012345678qq90123456789 test line 2",
-    "test line 3 01234567890123456789","01234567890123456789 test line 4",
-    "test line 5 01234567890123456789","0123456789012qqqqqqq3456789 test line 6",
-    "test line 7 01234567890123456789","01234567890123456789 test line 8",
-    "test line 9 01234567890123456789","0123qqqq4567890123456789 test line 10"]
+    lines=contents.copy()
     xscroll=0
     yscroll=0
     xc=0
     yc=0
+    width-=2
+    height-=2#borders
     win.move(xc,yc)
+    f_n=0#found lines
     while True:
-        win.erase()
         c.curs_set(0)
+        win.erase()
+        win.border()
+        h=header(0)[:width]
+        win.addstr(0,(width-len(h))//2,h,attr1)
+        f_n=0
+
         for i in range(len(lines)):
+            line=lines[i]
+            f=found(line)
+            a=attr1
+            if f is not None:
+                a=attr2
+                f_n+=1
             if i<yscroll:
                 continue
             if i-yscroll>height-1:
-                break
-            line=lines[i]
-            line=line[xscroll:xscroll+width-1]
+                continue
+            line=line[xscroll:xscroll+width]
             #line+=" "*(width-len(line)-1)
-            win.move(i-yscroll,0)
-            win.addstr(line)
+            win.move(i-yscroll+1,1)
+            win.addstr(line,a)
+
+        f=footer(f_n,len(lines))[:width]
+        win.addstr(height-1+2,(width-len(f))//2,f,attr1)#i already subtracted 2 for inner
+
         win.refresh()
         c.curs_set(1)
-        win.move(yc,xc)
+        win.move(yc+1,xc+1)
         ch=win.getch()
         key=c.keyname(ch).decode("utf-8")
         if ch==27:
@@ -237,6 +250,12 @@ def multiline_textpad(s,y,x,width,height,attr):
                     remainder=lines[ypos][xpos:]
                     lines.insert(ypos+1,remainder)
                     lines[ypos]=lines[ypos][:xpos]
+        if key=="^N":
+            lines=[]
+            xc=0
+            yc=0
+            xscroll=0
+            yscroll=0
 
         if len(key)==1:#ordinary character
             if ypos>len(lines)-1:
@@ -249,14 +268,13 @@ def multiline_textpad(s,y,x,width,height,attr):
                 xc+=1
             else:
                 xscroll+=1
-        win.move(yc,xc)
     c.curs_set(0)
     del win
     if user_cancel:
         user_cancel=False
         return ""
     else:
-        return "\n".join(lines)
+        return lines
 
 
 user_cancel=False#there is no way to distinguish Esc from Enter after curses.TextBox.edit(), so i use global variable

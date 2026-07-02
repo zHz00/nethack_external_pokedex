@@ -17,6 +17,16 @@ Please note that this utility have nothing to do with Pokemons, it uses Pokedex 
 
 ## Quick Start
 
+### Online use
+
+You can try online via SSH:
+
+`ssh pokedex@pokedex.nethack.ash.pw`
+
+Or in your browser: https://pokedex.nethack.ash.pw (recent browser required)
+
+### Offline use
+
 For Linux there are no special requirements. For Windows, though, you must install windows-curses module. Please use this command:
 
 `pip install windows-curses`
@@ -111,6 +121,9 @@ You can reduce output to 7 lines in search mode, but the program is designed to 
 MIT License. See LICENSE.txt file for details.  
 (C) 2022-2026 zHz  
 You can contact me via Telegram @zHz01  
+
+Online pokedex is maintained by Ashpool (https://github.com/ashpool37)  
+
 Also, please visit project's github page:  
 https://github.com/zHz00/nethack_external_pokedex
 

@@ -30,7 +30,11 @@ colors_table={
     7:c.COLOR_WHITE
 }
 
-filter_list=[fs.make_letter_filter("Letter",""),fs.make_name_filter("Name",""),fs.make_param_filter("Parameter","",0,0)]
+filter_list=[
+    fs.make_letter_filter("Letter",""),
+    fs.make_name_filter("Name",""),
+    fs.make_param_filter("Parameter","",0,0),
+    fs.make_list_filter("List","")]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -274,29 +278,32 @@ def show_filters(s,sel:int):
     s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
     for y in range(len(filter_list)):
         filter=filter_list[y]
-        field=filter["fields"][0]
         letter=chr(49+y)
         on="+" if filter_on[y] else "-"
         name=filter["name"]
-        value="<any>"
-        if ("value" in field) and len(str(field["value"]))>0 and field["value"]!="*":
-            if field["field"]=="prob":
-                value=resists_conv[field["value"]]
-            else:
-                value=str(field["value"])
-                if field["value"]==" ":
-                    value="["+value+"]"
-        if "min" in field:
-            if field['field']=="":
-                value="<any>"
-            else:
-                value=f"{param_mode_list[field['field']]}={field['min']}...{field['max']}"
-        if "index" in filter:
-            if filter["index"]==-1:
-                value="(none)"
-            else:
-                filter_indexed=fs.groups_filters[filter["name"]][filter["index"]]
-                value=filter_indexed["name"]
+        if "fields" in filter:
+            field=filter["fields"][0]
+            value="<any>"
+            if ("value" in field) and len(str(field["value"]))>0 and field["value"]!="*":
+                if field["field"]=="prob":
+                    value=resists_conv[field["value"]]
+                else:
+                    value=str(field["value"])
+                    if field["value"]==" ":
+                        value="["+value+"]"
+            if "min" in field:
+                if field['field']=="":
+                    value="<any>"
+                else:
+                    value=f"{param_mode_list[field['field']]}={field['min']}...{field['max']}"
+            if "index" in filter:
+                if filter["index"]==-1:
+                    value="(none)"
+                else:
+                    filter_indexed=fs.groups_filters[filter["name"]][filter["index"]]
+                    value=filter_indexed["name"]
+        else:#monsters list
+            value=f"({len(filter['monsters_names_set'])} monsters)"
         
         info=f"|{letter:{w0}}|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
         if y==sel:
@@ -1106,6 +1113,31 @@ def show_card(card_win,results,mon_name):
         else:
             show_hello_msg(card_win)
 
+def monlist_header(x):
+    return "Monster list editor: insert list from your game (/, Shift+M)"
+
+def monlist_footer(x:int,y:int):
+    return f"{x}/{y} found. Ctrl+N: Clear list; Esc: Apply list"
+
+def monlist_found(x:str):
+    pos=x.find("called")
+    if pos!=-1:
+        x=x[:pos]
+    words=x.split(" ")
+    words.reverse()
+    names=[]
+    name=""
+    for w in words:
+        name=w+" "+name
+        name=name.strip()
+        names.append(name)
+    names.reverse()
+    for n in names:
+        if n in table:
+            return n
+
+    return None
+
 
 def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global reloaded
@@ -1187,9 +1219,6 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             return 0
         mode=SHOW_ALL_EXPL
         current_mon=0
-        return 0
-    if key=="KEY_F(4)":
-        utils.multiline_textpad(s,10,10,20,5,c.color_pair(INV))
         return 0
     if key=="KEY_F(3)":
         run_tests(s,table,ver_list[ver_idx])
@@ -1527,7 +1556,10 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     global filter_list
     global list_mode_sel,list_mode_skip
     global filters_group_names,filters_group_sel,filters_group_skip
-    f=filter_list[filter_mode_sel]["fields"][0]
+    f=dict()
+    f["field"]=""#for compatibility
+    if "fields" in filter_list[filter_mode_sel]:
+        f=filter_list[filter_mode_sel]["fields"][0]
 
     if ch==27:
         mode=LIST
@@ -1583,6 +1615,26 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             enter_name_param(card_win,search_win)
         if "min" in f:#param filter
             mode=SELECT_PARAM
+        if filter_list[filter_mode_sel]["type"]=="monsters_list":
+            monlist_raw_in=[""]
+            if "monlist_raw" in filter_list[filter_mode_sel]:
+                monlist_raw_in=filter_list[filter_mode_sel]["monlist_raw"]
+            monlist_raw=utils.multiline_textpad(card_win,1,0,80,20,c.color_pair(BK),c.color_pair(BK)|c.A_BOLD,monlist_raw_in,monlist_header,monlist_footer,monlist_found)
+            monlist_txt=[]
+            for m in monlist_raw:
+                mon=monlist_found(m)
+                if mon is None:
+                    continue
+                if mon not in monlist_txt:
+                    monlist_txt.append(mon)
+            filter_list[filter_mode_sel]=fs.make_list_filter("List",monlist_txt)
+            filter_list[filter_mode_sel]["monlist_raw"]=monlist_raw
+            filter_on[filter_mode_sel]=True
+            prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
+            list_mode_sel=0
+            list_mode_skip=0
+            show_list(card_win,search_win,[])
+            show_filters(card_win,filter_mode_sel)
     return 0
 
 
