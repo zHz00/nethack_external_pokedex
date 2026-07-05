@@ -206,6 +206,8 @@ def test_monster_one_filter(mon,f):
     if f["type"]=="monsters_list":
         if mon[rows["name"]] in f["monsters_names_set"]:
             return True
+        if mon[rows["key"]] in f["monsters_names_set"]:#for special cases when key!=name: multi-gender monsters and were-creatures
+            return True
         if monsym[mon[rows["symbol"]]] in f["monsters_letters_set"] and int((mon[rows["geno"]].split("|"))[-1])!=0:
             return True
         return False

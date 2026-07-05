@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-05"
+version="2026-07-05a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -69,6 +69,7 @@ max_len_con=0
 
 
 table=dict()
+table_synonyms=dict()#multi-gender monsters and were-creatures
 table_temp=[]
 e_at=dict()
 e_ad=dict()
@@ -425,19 +426,23 @@ def save_settings():
     last.close()
 
 
-def table_insert(table:dict(),mon):
+def table_insert(table:dict(),table_synonyms:dict(),mon):
     namef=mon[rows["namef"]]
     namem=mon[rows["namem"]]
     if mon[rows["flags2"]].find("M2_FEMALE")!=-1 and len(namef)>0:
         name=namef+"("+mon[rows["name"]]+")"
+        table_synonyms[namef]=[name]
         if name in table:
             raise#why?
+        mon[rows["key"]]=name
         table[name]=mon
         return
     if mon[rows["flags2"]].find("M2_MALE")!=-1 and len(namem)>0:
         name=namem+"("+mon[rows["name"]]+")"
+        table_synonyms[namem]=[name]
         if name in table:
             raise#why?
+        mon[rows["key"]]=name
         table[name]=mon
         return
     if mon[rows["name"]] not in table:
@@ -446,9 +451,12 @@ def table_insert(table:dict(),mon):
         temp_mon=table[mon[rows["name"]]]
         name1=temp_mon[rows["name"]]+" ("+monsym[temp_mon[rows["symbol"]]]+")"
         name2=mon[rows["name"]]+" ("+monsym[mon[rows["symbol"]]]+")"
+        table_synonyms[mon[rows["name"]]]=[name1, name2]#this will be deleted from keys so we need to preserve name here
         if name1 in table or name2 in table:
             raise#monsters with equal names and letters? nonsense!
+        temp_mon[rows["key"]]=name1
         table[name1]=temp_mon
+        mon[rows["key"]]=name2
         table[name2]=mon
         table.pop(mon[rows["name"]])
 
@@ -468,8 +476,8 @@ def reset_filters():
     filter_on=[False]*len(filter_on)
     
 
-def read_monsters(file):
-    global table,table_temp
+def load_monsters(file):
+    global table,table_temp,table_synonyms
     global disable_sorting
     global wingy
     global e_at,e_ad
@@ -477,6 +485,7 @@ def read_monsters(file):
     global filter_list,filter_on
     wingy=False
     table=dict()
+    table_synonyms=dict()
     table_temp=[]
     monfile=open(data_folder+file,"r")
     reader=csv.reader(monfile)
@@ -489,17 +498,17 @@ def read_monsters(file):
         if len(mon[rows["namef"]])>0 and len(mon[rows["namem"]])>0:#two-gender monster
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_NEUTER"
-            table_insert(table,mon_copy)
+            table_insert(table,table_synonyms,mon_copy)
         else:
-            table_insert(table,mon)
+            table_insert(table,table_synonyms,mon)
         if len(mon[rows["namef"]])>0:
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_FEMALE"
-            table_insert(table,mon_copy)
+            table_insert(table,table_synonyms,mon_copy)
         if len(mon[rows["namem"]])>0:
             mon_copy=mon.copy()
             mon_copy[rows["flags2"]]+="|M2_MALE"
-            table_insert(table,mon_copy)
+            table_insert(table,table_synonyms,mon_copy)
         if "M1_WINGS" in mon[rows["flags1"]]:
             wingy=True
     base_name=file.replace(".csv","")
@@ -1134,7 +1143,9 @@ def monlist_found(x:str):
     names.reverse()
     for n in names:
         if n in table:
-            return n
+            return [n]
+        if n in table_synonyms:
+            return table_synonyms[n]
 
     return None
 
@@ -1313,7 +1324,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         ver_idx+=1
         if ver_idx>=len(ver_list):
             ver_idx=0
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         reset_sort()
         reset_filters()
         if mon_name!="":
@@ -1322,7 +1333,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         ver_idx-=1
         if ver_idx<0:
             ver_idx=len(ver_list)-1
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         reset_sort()
         reset_filters()
         if mon_name!="":
@@ -1381,7 +1392,7 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
         ver_selector_idx=len(ver_list)-1
     if key=="^M" or key=="^J":
         ver_idx=ver_selector_idx
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         reset_sort()
         reset_filters()
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
@@ -1622,11 +1633,12 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             monlist_raw=utils.multiline_textpad(card_win,1,0,80,20,c.color_pair(BK),c.color_pair(BK)|c.A_BOLD,monlist_raw_in,monlist_header,monlist_footer,monlist_found)
             monlist_txt=[]
             for m in monlist_raw:
-                mon=monlist_found(m)
-                if mon is None:
+                mons=monlist_found(m)
+                if mons is None:
                     continue
-                if mon not in monlist_txt:
-                    monlist_txt.append(mon)
+                for mon in mons:
+                    if mon not in monlist_txt:
+                        monlist_txt.append(mon)
             filter_list[filter_mode_sel]=fs.make_list_filter("List",monlist_txt)
             filter_list[filter_mode_sel]["monlist_raw"]=monlist_raw
             filter_on[filter_mode_sel]=True
@@ -1653,7 +1665,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
         ver_idx+=1
         if ver_idx>=len(ver_list):
             ver_idx=0
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         reset_sort()
         reset_filters()
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
@@ -1665,7 +1677,7 @@ def react_to_key_list(card_win,search_win,ch,key,alt_ch,mon_name):
         ver_idx-=1
         if ver_idx<0:
             ver_idx=len(ver_list)-1
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         reset_sort()
         reset_filters()
         prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
@@ -1779,7 +1791,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         ver_idx_temp+=1
         if ver_idx_temp>=len(ver_list):
             ver_idx_temp=0
-        read_monsters(ver_list[ver_idx_temp])
+        load_monsters(ver_list[ver_idx_temp])
         #reset_sort()
         if mon_name!="":
             reloaded=True
@@ -1789,7 +1801,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         ver_idx_temp-=1
         if ver_idx_temp<0:
             ver_idx_temp=len(ver_list)-1
-        read_monsters(ver_list[ver_idx_temp])
+        load_monsters(ver_list[ver_idx_temp])
         #reset_sort()
         if mon_name!="":
             reloaded=True
@@ -1800,7 +1812,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         e_offset+=(SCR_HEIGHT-3)
     if ch==27 or key=="BACKSPACE" or key=="^H":
         ver_idx_temp=-1
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         if mode==EXPLANATION_CARD:
             mode=CARD
         if mode==EXPLANATION_SEARCH:
@@ -1833,7 +1845,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         ver_idx_temp+=1
         if ver_idx_temp>=len(ver_list):
             ver_idx_temp=0
-        read_monsters(ver_list[ver_idx_temp])
+        load_monsters(ver_list[ver_idx_temp])
         #reset_sort()
         if mon_name!="":
             reloaded=True
@@ -1843,7 +1855,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         ver_idx_temp-=1
         if ver_idx_temp<0:
             ver_idx_temp=len(ver_list)-1
-        read_monsters(ver_list[ver_idx_temp])
+        load_monsters(ver_list[ver_idx_temp])
         #reset_sort()
         if mon_name!="":
             reloaded=True
@@ -1854,7 +1866,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         return -1
     if ch==27 or key=="BACKSPACE" or key=="^H":
         ver_idx_temp=-1
-        read_monsters(ver_list[ver_idx])
+        load_monsters(ver_list[ver_idx])
         mode=LIST
     if key in ("KEY_F(1)","?","/"):
         utils.show_message(help.card_mode())
@@ -2111,7 +2123,7 @@ if __name__=="__main__":
         last.close()
     except:
         pass
-    read_monsters(ver_list[ver_idx])
+    load_monsters(ver_list[ver_idx])
     for g in fs.groups_titles:#appending groups only on first loading, bc no groups are variant-exclusive
         filter_list.append(fs.make_group_filter(g,-1))
     filter_on=[False]*len(filter_list)

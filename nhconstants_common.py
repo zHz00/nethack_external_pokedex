@@ -82,7 +82,7 @@ monsym= {'S_ANT':'a',
 "S_ORB":"8",
 }
 
-rows={"index":0,
+rows={"key":0,
 "namem":1,
 "namef":2,
 "name":3,
