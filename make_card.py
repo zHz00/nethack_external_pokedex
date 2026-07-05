@@ -548,9 +548,9 @@ def card_resistances(mon,format_length):
     if len(ress)==0:
         ress="None"
     hates=""
-    for hate in resistes_mon_hates.keys():
+    for hate in resists_mon_hates.keys():
         if hate in flags4:
-            hates+=resistes_mon_hates[hate]+", "
+            hates+=resists_mon_hates[hate]+", "
     if len(hates)>0:
         if ress.endswith(", "):
             ress=ress[:-2]
