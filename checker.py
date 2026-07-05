@@ -100,7 +100,7 @@ def check_monster(mon,ver_name):
             report.append("Not found ad. Monster: "+mon[rows["name"]]+"; ad: "+attack[1].strip()+"\n")
 
     if len(report)>0:
-        report_file=open("errors.log","a",encoding="utf-8")
+        report_file=open("reports/errors.log","a",encoding="utf-8")
         report_file.write("=== FILE: "+ver_name+"\n")
         report_file.writelines(report)
         report_file.close()

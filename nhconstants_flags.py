@@ -59,16 +59,28 @@ resists_mon={'MR_FIRE':'Fire',
 "":""
 }
 
-resistes_mon_hates={
+resists_mon_hates={
 "M4_HATESSILVER":"Silver",
 "M4_HATESIRON":"Iron",
+"M4_HATESCOPPER":"Copper",
+"M4_HATESMITHRIL":"Mithril",
 "M4_HATESUNHOLY":"Unholy",
 "M4_HATESHOLY":"Holy",
+"M4_HATESLIGHT":"Light",#+
 "M4_HATESUNBLESSED":"Unblessed",
 "M4_VULNERABLE_FIRE":"Fire",#+
 "M4_VULNERABLE_COLD":"Cold",#+
 "M4_VULNERABLE_ELEC":"Shock",#+
 "M4_VULNERABLE_ACID":"Acid",#+
+"M4_HATESBLUNT":"Blunt",#+
+"M4_HATESSLASH":"Slash",#+
+"M4_HATESPIERCE":"Pierce",#+
+"M4_HATESPOLE":"Pole",#+
+"M4_HATESSPEAR":"Spear",#+
+"M4_HATESAXE":"Axe",#+
+"M4_HATESPICK":"Pick-axe",#+
+"M4_HATESHARVEST":"Harvest tools"
+
 }
 
 resists_conv={'':'(none)',
@@ -408,6 +420,7 @@ flags_druid_forms={
     "M2_DRUID_FORM_B":"Druid Form B",
     "M2_DRUID_FORM_C":"Druid Form C",
     "M2_DRUID_FORM_D":"Druid Form D",
+    "M2_VAMPIRE_FORM":"Vampire form"
 }
 
 flags_perks={

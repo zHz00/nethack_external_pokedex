@@ -78,6 +78,8 @@ monsym= {'S_ANT':'a',
 "S_PLANT":"{",
 "S_NEU_OUTSIDER":"\"",
 "S_SHADE":" ",
+"S_ENT":"#",
+"S_ORB":"8",
 }
 
 rows={"index":0,
