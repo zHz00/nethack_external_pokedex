@@ -178,8 +178,20 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
         win.move(yc+1,xc+1)
         ch=win.getch()
         key=c.keyname(ch).decode("utf-8")
+        alt_ch=""
         if ch==27:
-            break
+            s.nodelay(True)
+            next_key=s.getch()
+            if next_key!=-1:
+                alt_ch=c.keyname(next_key).decode("utf8")
+            else:
+                alt_ch=""
+            if alt_ch=="[":#home and end keys
+                for i in range(2):
+                    next_key=s.getch()
+                    if next_key!=-1:
+                        alt_ch+=c.keyname(next_key).decode("utf8")
+            s.nodelay(False)
         xpos=xc+xscroll
         ypos=yc+yscroll
 
