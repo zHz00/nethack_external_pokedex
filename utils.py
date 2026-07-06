@@ -192,6 +192,9 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
                     if next_key!=-1:
                         alt_ch+=c.keyname(next_key).decode("utf8")
             s.nodelay(False)
+
+        if ch==27:
+            break
         xpos=xc+xscroll
         ypos=yc+yscroll
 
