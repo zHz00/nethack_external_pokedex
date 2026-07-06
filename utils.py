@@ -129,7 +129,7 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
     s.keypad(1)
     s.refresh()
     c.curs_set(1)
-    win = s.newwin(height,width,y,x)
+    win = c.newwin(height,width,y,x)
     win.keypad(1)
     win.bkgd(" ",attr1)
     win.erase()
