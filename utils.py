@@ -221,6 +221,23 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
                     xscroll=len(lines[ypos])-width+1
         if key=="^H":
             if xpos==0:
+                if ypos==0:#0,0: nothing to delete
+                    continue
+                if yc>0:
+                    yc-=1
+                else:
+                    if yscroll>0:
+                        yscroll-=1
+                ypos=yc+yscroll
+                if ypos<len(lines)-1 and ypos!=-1:
+                    new_x=len(lines[ypos])
+                    if new_x<width:
+                        xc=new_x
+                    else:
+                        xc=width-1
+                        xscroll=new_x-width+1
+                    lines[ypos]=lines[ypos]+lines[ypos+1]
+                    lines.pop(ypos+1)
                 continue
             if xc>0:
                 xc-=1

@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-05a"
+version="2026-07-06"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -200,7 +200,7 @@ def show_ver_format_upper(search_win):
     else:
         search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
         if mode in (LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM):
-            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:<4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
 
             num_filters=0
             last_filter=0
