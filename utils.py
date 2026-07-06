@@ -129,7 +129,8 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
     s.keypad(1)
     s.refresh()
     c.curs_set(1)
-    win = s.derwin(height,width,y,x)
+    win = s.newwin(height,width,y,x)
+    win.keypad(1)
     win.bkgd(" ",attr1)
     win.erase()
     win.refresh()
@@ -176,19 +177,20 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
         win.refresh()
         c.curs_set(1)
         win.move(yc+1,xc+1)
+
         ch=win.getch()
         key=c.keyname(ch).decode("utf-8")
         alt_ch=""
         if ch==27:
-            s.nodelay(True)
-            next_key=s.getch()
+            win.nodelay(True)
+            next_key=win.getch()
             if next_key!=-1:
                 alt_ch=c.keyname(next_key).decode("utf8")
             else:
                 alt_ch=""
             if alt_ch=="[":#home and end keys
                 for i in range(2):
-                    next_key=s.getch()
+                    next_key=win.getch()
                     if next_key!=-1:
                         alt_ch+=c.keyname(next_key).decode("utf8")
             s.nodelay(False)
@@ -234,7 +236,7 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
                 else:
                     xc=width-1
                     xscroll=len(lines[ypos])-width+1
-        if key=="^H":
+        if key=="KEY_BACKSPACE" or key=="^H" or key == "^?":
             if xpos==0:
                 if ypos==0:#0,0: nothing to delete
                     continue

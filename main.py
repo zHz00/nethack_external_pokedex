@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-06a"
+version="2026-07-06b"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1810,7 +1810,7 @@ def react_to_key_explanation(card_win,ch,key,alt_ch,mon_name):
         return -1
     if key==" ":
         e_offset+=(SCR_HEIGHT-3)
-    if ch==27 or key=="BACKSPACE" or key=="^H":
+    if ch==27 or key=="KEY_BACKSPACE" or key=="^H" or key == "^?":
         ver_idx_temp=-1
         load_monsters(ver_list[ver_idx])
         if mode==EXPLANATION_CARD:
@@ -1864,7 +1864,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
-    if ch==27 or key=="BACKSPACE" or key=="^H":
+    if ch==27 or key=="KEY_BACKSPACE" or key=="^H" or key == "^?":
         ver_idx_temp=-1
         load_monsters(ver_list[ver_idx])
         mode=LIST
