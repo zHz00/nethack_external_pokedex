@@ -211,8 +211,6 @@ def test_monster_one_filter(mon,f):
         if monsym[mon[rows["symbol"]]] in f["monsters_letters_set"] and int((mon[rows["geno"]].split("|"))[-1])!=0:
             return True
         return False
-    if mon[rows["name"]=="mumak"]:
-        f=""
     if f["type"]=="check_fields":#if more than one field present, fields are ORed       
         include_field_present=False
         for field in f["fields"]:
