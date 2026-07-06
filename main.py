@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-06"
+version="2026-07-06a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
