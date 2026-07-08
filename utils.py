@@ -222,10 +222,10 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
                 yc+=1
             else:
                 yscroll+=1
-        if key=="KEY_HOME":
+        if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
             xscroll=0
             xc=0
-        if key=="KEY_END":
+        if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
             if ypos>=len(lines):
                 xc=0
                 xscroll=0

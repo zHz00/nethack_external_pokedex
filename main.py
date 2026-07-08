@@ -1315,7 +1315,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         format_length+=1
         if format_length>2:
             format_length=2
-    if key=="KEY_BACKSPACE" or key=="^H":
+    if key=="KEY_BACKSPACE" or key=="^H" or key=="^?":
         in_str=in_str[:-1]
         sel=0
         skip=0
@@ -1386,9 +1386,9 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
             ver_selector_idx+=1
         else:
             ver_selector_idx=0
-    if key=="KEY_HOME":
+    if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
         ver_selector_idx=0
-    if key=="KEY_END":
+    if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
         ver_selector_idx=len(ver_list)-1
     if key=="^M" or key=="^J":
         ver_idx=ver_selector_idx
@@ -1514,10 +1514,10 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
                 if idx+skip>=len(op_list):
                     idx=0
                     skip=0
-    if key=="KEY_HOME":
+    
         idx=0
         skip=0
-    if key=="KEY_END":
+    if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
         idx=len(op_list)-1
         if idx>=MAX_LINES_LIST:
             idx=MAX_LINES_LIST-1
@@ -1588,9 +1588,9 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             filter_mode_sel+=1
         else:
             filter_mode_sel=0
-    if key=="KEY_HOME":
+    if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
         filter_mode_sel=0
-    if key=="KEY_END":
+    if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
         filter_mode_sel=len(filter_list)-1
     if key==" ":
         filter_on[filter_mode_sel]=not filter_on[filter_mode_sel]

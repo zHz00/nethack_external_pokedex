@@ -939,6 +939,30 @@
                 "variants": [
                     "eh09"
                 ],
+                "name": "Knight (Dark)",
+                "name_short": "DKnight",
+                "type": "monsters_list",
+                "highlight": ["Merlin"],
+                "monsters": [
+                    "Morgan le Fay",
+                    "page",
+                    "wolf",
+                    "large hawk",
+                    "hawk",
+                    "stag",
+                    "grizzly bear",
+                    "aligned priest|aligned cleric",
+                    "u",
+                    "q",
+                    "Merlin",
+                    "giant hawk",
+                    "wolverine"
+                ]
+            },
+            {
+                "variants": [
+                    "eh09"
+                ],
                 "name": "Monk",
                 "name_short": "Mon",
                 "type": "monsters_list",
