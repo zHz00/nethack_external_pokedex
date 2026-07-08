@@ -278,7 +278,13 @@ def check_monster_list(monlist,f):
                 if name in monlist:
                     found=True
             if found==False:
-                absent.append(m)
+                for name in names:
+                    for mon in monlist:
+                        mon_dict=monlist[mon]
+                        if name in (mon_dict[rows["key"]],mon_dict[rows["namef"]],mon_dict[rows["namem"]],mon_dict[rows["name"]]):
+                            found=True
+                if found==False:
+                    absent.append(m)
     return absent
 
 def test_monster(mon,filters):

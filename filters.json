@@ -3509,8 +3509,7 @@
                     "&",
                     "ghost",
                     "wraith",
-                    "aligned priest|aligned cleric",
-                    "aligned priest",
+                    "aligned cleric",
                     "Nalzok",
                     "W"
                 ]
@@ -3795,8 +3794,7 @@
                     "&",
                     "ghost",
                     "wraith",
-                    "aligned priest|aligned cleric",
-                    "aligned priest",
+                    "aligned cleric",
                     "Nalzok",
                     "W"
                 ]

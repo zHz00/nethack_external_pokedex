@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-06b"
+version="2026-07-08a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1374,7 +1374,7 @@ def react_to_key_select_ver(ch,key,alt_ch,mon_name):
     global mode
     global reloaded
     global list_mode_sel,list_mode_skip
-    if ch==27:
+    if ch==27 and len(alt_ch)==0:
         mode=mode_prev
     if key=="KEY_UP" :
         if ver_selector_idx>0:
@@ -1468,7 +1468,7 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
     global filters_group_sel,filters_group_skip
     global filter_list
 
-    if ch==27:
+    if ch==27 and len(alt_ch)==0:
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             mode=LIST
         else:
@@ -1514,7 +1514,7 @@ def react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,op_list,
                 if idx+skip>=len(op_list):
                     idx=0
                     skip=0
-    
+    if key=="KEY_HOME" or alt_ch=="[H" or alt_ch=="[1~":
         idx=0
         skip=0
     if key=="KEY_END" or key=="KEY_A1" or alt_ch=="[4~":
@@ -1572,7 +1572,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
     if "fields" in filter_list[filter_mode_sel]:
         f=filter_list[filter_mode_sel]["fields"][0]
 
-    if ch==27:
+    if ch==27 and len(alt_ch)==0:
         mode=LIST
     if ch in range(49,49+len(filter_list)):
         filter_mode_sel=ch-49
