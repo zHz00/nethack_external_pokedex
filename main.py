@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-09a"
+version="2026-07-09b"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -221,7 +221,7 @@ def show_ver_format_upper(search_win):
                     name_short=fs.groups_filters[filter_list[last_filter]["name"]][filter_list[last_filter]["index"]]["name_short"]
                 else:
                     name_short=filter_list[last_filter]["short_name"]
-                name_short=name_short[:8]
+                name_short=name_short[:9]
                 search_win.addstr(1,x2,"|Filter:"+name_short,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
             if num_filters>1:
                 search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
