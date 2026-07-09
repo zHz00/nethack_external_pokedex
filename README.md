@@ -98,11 +98,12 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 
 ## Using filters
 
-There are now 8 types of filters. First group are parametric filters and requires entering values on keyboard. Press Enter while filter is selected, enter parameter value(s) and press Enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
+There are now 9 types of filters. First group are parametric filters and requires entering values on keyboard. Press Enter while filter is selected, enter parameter value(s) and press Enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
 
 **Letter:**			Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to \<any\> state, you must enter asterisk (\*) as a value.  
 **Name:**			Show monsters, specified by part of their name. This is similar to SEARCH mode, but you see results as a list. To switch this filter to \<any\> state, you must enter a space in the edit field. You can quickly call this filter using Ctrl+F instead of Shift+F.  
 **Parameter:**		You can select any parameter from the list, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter in range from first value (included) to second value (also included).
+**Selection:**		You can paste monsters from your game to built-in editor. Press /, Then Shift+M in your game, then select all screen and paste it to editor window. Found monsters will be highlighted. When you close the window with Esc key, all found monsters will be converted to interactive list, which can be navigated as with any other filter.
 
 Second group of filters shows monsters which have specific property. There are several lists of properties:
 

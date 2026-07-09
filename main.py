@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-09"
+version="2026-07-09a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -34,7 +34,7 @@ filter_list=[
     fs.make_letter_filter("Letter",""),
     fs.make_name_filter("Name",""),
     fs.make_param_filter("Parameter","",0,0),
-    fs.make_list_filter("List","")]
+    fs.make_list_filter("Selection","")]
 filter_on=[False]*len(filter_list)
 
 bold=0
@@ -303,8 +303,13 @@ def show_filters(s,sel:int):
                 else:
                     filter_indexed=fs.groups_filters[filter["name"]][filter["index"]]
                     value=filter_indexed["name"]
-        else:#monsters list
-            value=f"({len(filter['monsters_names_set'])} monsters)"
+        else:#monsters selection
+            l=len(filter['monsters_names_set'])
+            value=""
+            if l==1:
+                value=f"(1 monster)"
+            else:
+                value=f"({l} monsters)"
         
         info=f"|{letter:{w0}}|{on:{w1}}|{name:{w2}}|{value:{w3}}|"
         if y==sel:
@@ -1123,7 +1128,7 @@ def show_card(card_win,results,mon_name):
             show_hello_msg(card_win)
 
 def monlist_header(x):
-    return "Monster list editor: insert list from your game (/, Shift+M)"
+    return "Monster selection editor: paste from your game (/, Shift+M)"
 
 def monlist_footer(x:int,y:int):
     return f"{x}/{y} found. Ctrl+N: Clear list; Esc: Apply list"
@@ -1630,7 +1635,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             monlist_raw_in=[""]
             if "monlist_raw" in filter_list[filter_mode_sel]:
                 monlist_raw_in=filter_list[filter_mode_sel]["monlist_raw"]
-            monlist_raw=utils.multiline_textpad(card_win,1,0,80,20,c.color_pair(BK),c.color_pair(BK)|c.A_BOLD,monlist_raw_in,monlist_header,monlist_footer,monlist_found)
+            monlist_raw=utils.multiline_textpad(card_win,4,0,c.COLS,20,c.color_pair(BK),c.color_pair(BK)|c.A_BOLD,monlist_raw_in,monlist_header,monlist_footer,monlist_found)
             monlist_txt=[]
             for m in monlist_raw:
                 mons=monlist_found(m)
@@ -1639,7 +1644,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
                 for mon in mons:
                     if mon not in monlist_txt:
                         monlist_txt.append(mon)
-            filter_list[filter_mode_sel]=fs.make_list_filter("List",monlist_txt)
+            filter_list[filter_mode_sel]=fs.make_list_filter("Selection",monlist_txt)
             filter_list[filter_mode_sel]["monlist_raw"]=monlist_raw
             filter_on[filter_mode_sel]=True
             prepare_list(sort_mode1,sort_mode2,sort_dir1,sort_dir2,active_filters(filter_on,filter_list))
