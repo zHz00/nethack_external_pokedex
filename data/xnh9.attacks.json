@@ -46,7 +46,7 @@
       "type": "AT_HUGS",
       "caption": "Hug",
       "caption_short": "Hug",
-      "explanation": "50%: stick [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
+      "explanation": "tries to stick if two previous attacks succeded, else miss  [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
       "ad_list_name": "AT_COMMON"
     },
     "AT_SPIT": {
@@ -88,7 +88,7 @@
       "type": "AT_GAZE",
       "caption": "Gaze",
       "caption_short": "Gz",
-      "explanation": "Activates when you see a monster [prevented by blindness]",
+      "explanation": "Activates when you see a monster [prevented by blindness and by hallucination (100% of time instead of 75% of time in vanilla]",
       "ad_list_name": "AT_GAZE"
     },
     "AT_TENT": {
@@ -353,8 +353,8 @@
       },
       "AD_DRST": {
         "type": "AD_DRST",
-        "caption": "Poison -St",
-        "caption_short": "Poison -St",
+        "caption": "Poison -Dx",
+        "caption_short": "Poison -Dx",
         "explanation": "Poison with no additional damage: _(a)_ 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -1 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
@@ -384,7 +384,7 @@
         "type": "AD_PHYS",
         "caption": "",
         "caption_short": "",
-        "explanation": "Ordinary physical. Damage->XdY if X!=0 and Lv d Y, if X==0",
+        "explanation": "Ordinary physical. Damage->XdY if X!=0 and Lv+1 d Y, if X==0",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -568,7 +568,7 @@
         "type": "AD_PLYS",
         "caption": "Paralyze",
         "caption_short": "Prlz",
-        "explanation": "If not helpless, set paralyze timer to d10 turns. _Resistance item:_ ring of free action. Only for ghost: ghost becomes visible and set paralyze timer to 3 turns. Can't be resisted",
+        "explanation": "Ordinary damage then 66.7% of nothing; 33.3%: if not helpless, set paralyze timer to d10 turns. _Resistance item:_ ring of free action. Only for ghost: ghost becomes visible and set paralyze timer to 3 turns. Can't be resisted",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -1026,7 +1026,7 @@
         "caption_short": "Acid",
         "explanation": "Acid venom: Damage->2d6",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DRST": {
@@ -1035,7 +1035,7 @@
         "caption_short": "Blind",
         "explanation": "Blinding venom: increase blindness timer by d25 turns. _Resistance item:_ worn blindfold. **Note:** This attack uses AD\\_DRST constant, but don't poison or drain St.",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_BLND": {
@@ -1044,7 +1044,7 @@
         "caption_short": "Blind",
         "explanation": "Blinding venom: increase blindness timer by d25 turns. _Resistance item:_ worn blindfold",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       }
     }
