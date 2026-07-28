@@ -17,7 +17,7 @@ import filters as fs
 import utils
 import help
 
-version="2026-07-09b"
+version="2026-07-28"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -929,14 +929,17 @@ def show_explanation(card_win,results,mon_name):
     card="".join(attacks).split("\n")
     if len(card)>0:
         header=card[0]
-        if len(card)>SCR_HEIGHT-3:
-            for i in range (len(card)//(SCR_HEIGHT-3)):
-                card.insert((SCR_HEIGHT-3)*(i+1),header)
+        height=SCR_HEIGHT-3
+        if len(card)>height+1:
+            for i in range (len(card)//height):
+                card.insert(height*(i+1),header)
     cur_pair=BK_CARD
     line_n=0
-    if e_offset>len(card):
+    if e_offset>=len(card)-1:
         e_offset=0#cycle scroll
     mode=EX_NORMAL
+    if e_offset>=len(card):
+        e_offset=0
     for i in range(e_offset,len(card)):
         line=card[i]
         if len(line)==0:
@@ -1170,6 +1173,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global list_mode_sel, list_mode_skip
     global mode_prev
     global in_str_prev
+    global e_offset
     if ch==27:#ESC
         search_win.nodelay(True)
         while search_win.getch()!=-1:
@@ -1364,6 +1368,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
             utils.show_message("Extend screen to 80x25!",minimal=True)
             return 0
         if len(in_str)>0 and len(mon_name)>0:
+            e_offset=0
             mode=EXPLANATION_SEARCH
     if key in ("KEY_F(1)","?","/"):
         if not check_screen():
@@ -1836,6 +1841,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
     global mode
     global ver_idx
     global ver_idx_temp
+    global e_offset
     if key=="KEY_UP" :
         format_length-=1
         if format_length<=0:
@@ -1865,6 +1871,7 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
         if mon_name!="":
             reloaded=True
     if key=="^A":
+        e_offset=0
         mode=EXPLANATION_CARD
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
