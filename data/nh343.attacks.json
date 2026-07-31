@@ -47,7 +47,7 @@
       "caption": "Hug",
       "caption_short": "Hug",
       "explanation": "tries to stick if two previous attacks succeded, else miss [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
-      "ad_list_name": "AT_COMMON"
+      "ad_list_name": "AT_HUGS"
     },
     "AT_SPIT": {
       "type": "AT_SPIT",
@@ -88,7 +88,7 @@
       "type": "AT_GAZE",
       "caption": "Gaze",
       "caption_short": "Gz",
-      "explanation": "Activates when you see a monster [prevented by blindness and 75% of time by hallucination]",
+      "explanation": "Activates when you see a monster [prevented by blindness]",
       "ad_list_name": "AT_GAZE"
     },
     "AT_TENT": {
@@ -144,8 +144,8 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "Damage->0, then *instant petrify* if you land a successful hit, but have incorrect protector. Protectors are:\nKick: boots\nStrike with weapon: weapon\nStrike with bare hands: gloves\n_Resistance item:_ yellow dragon scales/mail",
-        "resisted": true,
+        "explanation": "Damage->0, then *instant petrify* if you land a successful hit, but have incorrect protector. Protectors are:\nKick: boots\nStrike with weapon: weapon\nStrike with bare hands: gloves",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -263,7 +263,7 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ aside from rare stoning resistance (provided by yellow dragon scales/mail), you can protect yourself with blindfold or some reflecting item.",
+        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ you can protect yourself with blindfold or some reflecting item.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -550,7 +550,7 @@
         "type": "AD_LEGS",
         "caption": "Legs",
         "caption_short": "Legs",
-        "explanation": "_1._ If iron shoes or low boots: 60%: ordinary damage; 40%: nothing;\n_2._ Other cases: ordinary damage, then set wounded legs timeout for d(60-Dx) turns, but if current timeout is already greater, then just ordinary damage",
+        "explanation": "_1._ If levitating, flying or riding: nothing;\n_2._ If iron shoes or low boots: 60%: ordinary damage; 40%: Damage->0;\n_3._ Other cases: ordinary damage.\nBoth 2 and 3 leads to wounded legs. Timeout is d(60-Dx) turns, but if current timeout is already greater, then nothing",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -586,7 +586,7 @@
         "type": "AD_SITM",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
+        "explanation": "Nymphs:\n_1._ If your have rings of adornment without gloves, steal one.\n_2._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -595,7 +595,7 @@
         "type": "AD_SEDU",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
+        "explanation": "Nymphs:\n_1._ If your have rings of adornment without gloves, steal one.\n_2._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -604,7 +604,7 @@
         "type": "AD_TLPT",
         "caption": "Teleport",
         "caption_short": "Tele",
-        "explanation": "Teleport you to safe location, guaranteed not fatal (set to 1 Hp if damage was too big). If you have teleport control and not stunned, you can select new location",
+        "explanation": "Teleport you to safe location, in rare cases can be fatal due to ordinary damage. If you have teleport control and not stunned, you can select new location",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": true
@@ -642,15 +642,6 @@
         "caption_short": "Heal",
         "explanation": "If armed or not naked: ordinary damage.\nIf naked and unarmed, then:\n_1._ Damage->0\n_2._ Cure sickness\n_3._ Hp->Hp+d7\n_4._ 14.2% of MAX Hp->MAX Hp+1 (if MAX Hp<5\\*xlvl+(2\\*xlvl)d10)\n_5._ 7.7% of flee",
         "resisted": false,
-        "can_be_cancelled": true,
-        "mc": false
-      },
-      "AD_WRAP": {
-        "type": "AD_WRAP",
-        "caption": "Drown",
-        "caption_short": "Drown",
-        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
-        "resisted": true,
         "can_be_cancelled": true,
         "mc": false
       },
@@ -694,7 +685,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1",
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -712,7 +703,7 @@
         "type": "AD_SSEX",
         "caption": "Seduce",
         "caption_short": "Seduce",
-        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ if d35-1>Ch+Wi then you get one of negative effects: Pw->0 and -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 MAX Pw and Pw->MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp. _3._ If d20-1>=Ch, demon will take your money, minimum 500, but if you have less, demon will take all the money",
+        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ if d35-1>Ch+In then you get one of negative effects: Pw->0 and -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 MAX Pw and Pw->MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp. _3._ If d20-1>=Ch, demon will take your money, minimum 500, but if you have less, demon will take all the money",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -739,8 +730,8 @@
         "type": "AD_PEST",
         "caption": "Plus disease",
         "caption_short": "+disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
-        "resisted": true,
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -748,7 +739,7 @@
         "type": "AD_FAMN",
         "caption": "Plus hunger",
         "caption_short": "+hunger",
-        "explanation": "If you are not fainted, lose 39+d40 nutrition",
+        "explanation": "Ordinary damage, then if you are not fainted, lose 39+d40 nutrition",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -757,7 +748,7 @@
         "type": "AD_SLIM",
         "caption": "Slime",
         "caption_short": "Slime",
-        "explanation": "Set sliming timer to 10 turns. No effect if already sliming. _Resistance item:_ amulet of unchanging",
+        "explanation": "Ordinary damage, then set sliming timer to 10 turns. No effect if already sliming. _Resistance item:_ amulet of unchanging",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -803,6 +794,15 @@
         "caption": "Polymorph",
         "caption_short": "Polymorph",
         "explanation": "DUMMY",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
+      },
+      "AD_WRAP": {
+        "type": "AD_WRAP",
+        "caption": "Drown",
+        "caption_short": "Drown",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and  _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented  by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will \nnot help.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -894,8 +894,8 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
-        "resisted": true,
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       }
@@ -965,6 +965,35 @@
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
+      }
+    },
+    "AT_HUGS": {
+      "AD_PHYS": {
+        "type": "AD_PHYS",
+        "caption": "Physical",
+        "caption_short": "Physical",
+        "explanation": "Ordinary physical, but 50% chance to stick to the monster",
+        "resisted": true,
+        "can_be_cancelled": false,
+        "mc": false
+      },
+      "AD_WRAP": {
+        "type": "AD_WRAP",
+        "caption": "Drown",
+        "caption_short": "Drown",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be \nprevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": false
+      },
+      "AD_FIRE": {
+        "type": "AD_FIRE",
+        "caption": "Fire",
+        "caption_short": "Fire",
+        "explanation": "Burn away slime; Destroy items with additional damage:\n_1._ If Lv>=d20, destroy 33.3% of potions (+d6 dmg)\n_2._ Separate roll: If Lv>=d20, destroy 33.3% of scrolls (+1 dmg)\n_3._ Separate roll: If Lv>=d25, destroy 33.3% of, Spellbooks (+1 dmg)",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
       }
     }
   },
