@@ -11,7 +11,7 @@ _Down_          Show more information\n\
 _Ctrl+A_        Show attacks analysis screen\n\
 _Tab_           Switch to **List** mode\n\
 _F10, Ctrl+Q_   Exit\n\
-_1...6_         Change colors\n\
+_Ctrl+T_         Change color theme\n\
 \n\
 Version {version}. (C) **zHz** 2022-2026. MIT License.\n\
 https://github.com/zHz00/nethack\\_external\\_pokedex"

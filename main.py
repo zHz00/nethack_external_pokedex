@@ -16,8 +16,9 @@ from make_card import *
 import filters as fs
 import utils
 import help
+import colors as cl
 
-version="2026-07-31"
+version="2026-08-01"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -54,6 +55,7 @@ EXPLANATION_SEARCH=12
 SHOW_ALL_EXPL=13
 ENTER_NUMERIC_PARAM=14
 SELECT_FILTER_GROUP=15
+EDIT_COLORS=16
 
 mode=SEARCH
 mode_prev=SEARCH
@@ -108,6 +110,8 @@ res_mode_sel=0
 
 param_mode_sel=0
 
+edit_colors_x=0
+
 
 sort_mode_lambdas=[
     lambda x:0,#"(none)",
@@ -151,6 +155,11 @@ def active_filters(f_on,f_list):
             active.append(f_list[x])
     return active
 
+def bold_for_header():
+    if cl.cur_color_s==0:
+        return 0
+    return c.A_BOLD
+
 
 def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
@@ -190,17 +199,17 @@ def show_ver_format_upper(search_win):
             out_mode="|Format:full"
         if format_length==2:
             out_mode="|Format:ext"
-    search_win.addstr(0,x2,out_mode,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,x2,out_mode,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     if ver_idx_temp!=-1:
-        search_win.addstr(0,x1,"|Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(0,x1,"|Ver:"+get_ver_temp(),c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
         if mode in (EXPLANATION_CARD,EXPLANATION_SEARCH):
-            search_win.addstr(1,x1-5,"(Card Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+            search_win.addstr(1,x1-5,"(Card Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
         else:
-            search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+            search_win.addstr(1,x1-5,"(List Ver:"+get_ver()+")",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     else:
-        search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(0,x1,"|Ver:"+get_ver(),c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
         if mode in (LIST,FILTERS,SELECT_PARAM,SELECT_FILTER_GROUP,ENTER_NUMERIC_PARAM):
-            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:<4}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+            search_win.addstr(1,x1,f"|{(list_mode_skip+list_mode_sel+1):4}/{list_mode_max:<4}",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
 
             num_filters=0
             last_filter=0
@@ -214,7 +223,7 @@ def show_ver_format_upper(search_win):
                         last_filter=x
                         num_filters+=1
             if num_filters==0:
-                search_win.addstr(1,x2,"|Filter:Shift+F",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+                search_win.addstr(1,x2,"|Filter:Shift+F",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
             if num_filters==1:
                 name_short="<?>"
                 if filter_list[last_filter]["type"]=="group":
@@ -222,9 +231,9 @@ def show_ver_format_upper(search_win):
                 else:
                     name_short=filter_list[last_filter]["short_name"]
                 name_short=name_short[:9]
-                search_win.addstr(1,x2,"|Filter:"+name_short,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+                search_win.addstr(1,x2,"|Filter:"+name_short,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
             if num_filters>1:
-                search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+                search_win.addstr(1,x2,f"|Filters:{num_filters}",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
 
 
 def show_select_ver(s,sel:int):
@@ -243,7 +252,7 @@ def show_select_ver(s,sel:int):
         offset_y=int((h-l)/2)
     offset_x=int((SCR_WIDTH-w1-w2-w3-4)/2)#4 for |
     header=f"|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
-    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|bold_for_header())
     for y in range(len(ver_list)):
         filename=ver_list[y][:w1]
         variant=ver_name[y][:w2]
@@ -276,7 +285,7 @@ def show_filters(s,sel:int):
     filters_edits_offset_x=offset_x+w0+w1+w2+4
     filters_edits_offset_y=offset_y+1
     header=f"|{cap0:{w0}}|{cap1:{w1}}|{cap2:{w2}}|{cap3:{w3}}|"
-    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|bold_for_header())
     for y in range(len(filter_list)):
         filter=filter_list[y]
         letter=chr(49+y)
@@ -316,7 +325,7 @@ def show_filters(s,sel:int):
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(INV))
         else:
             s.addstr(y+offset_y+1,offset_x,info,c.color_pair(BK))
-    s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w0+w1+w2+w3+4}}|",c.color_pair(BK)|c.A_BOLD)
+    s.addstr(offset_y+1+len(filter_list),offset_x,f"{'|Space:Toggle, Enter:Modify, Esc: Close':{w0+w1+w2+w3+4}}|",c.color_pair(BK)|bold_for_header())
     s.refresh()
 
 def show_select_list(s,cap,op_list,idx,skip):
@@ -418,16 +427,22 @@ def get_ver()->str:
 def get_ver_temp()->str:
     return ver_list[ver_idx_temp].split(".")[0]
 
-def save_settings():
+def is_kiosk()->bool:
     if len(sys.argv)>1:
         arg=sys.argv[1]
     else:
         arg=""
     if arg=="--kiosk":
+        return True
+    return False
+
+def save_settings():
+    if is_kiosk():
         return
     last=open("default.txt","w",encoding="utf-8")
-    last.write(ver_list[ver_idx])
-    last.write(f"\n{cur_color1}\n{cur_color_bk1}\n{cur_color2}\n{cur_color_bk2}\n{cur_color_s}\n{cur_color_bk_s}\n{cur_color_s_bold}\n")
+    last.write(ver_list[ver_idx]+"\n")
+    last.write(str(cl.cur_theme_idx)+"\n")
+    #last.write(f"\n{cl.cur_color1}\n{cl.cur_color_bk1}\n{cl.cur_color2}\n{cl.cur_color_bk2}\n{cl.cur_color_s}\n{cl.cur_color_bk_s}\n{cl.cur_color_s_bold}\n")
     last.close()
 
 
@@ -636,24 +651,27 @@ SEPARATOR_BLACK=26
 SEPARATOR_BK_INV=27
 SEPARATOR_BK_ALT_INV=28
 
-def reset_colors():
-    c.init_pair(BK,cur_color_s,cur_color_bk_s)
-    c.init_pair(INV,cur_color_bk_s,cur_color_s)
+def reinit_colors():
+    cl.save_theme(cl.cur_theme_idx)
+    if is_kiosk()==False:
+        cl.save_colors()    
+    c.init_pair(BK,cl.cur_color_s,cl.cur_color_bk_s)
+    c.init_pair(INV,cl.cur_color_bk_s,cl.cur_color_s)
 
-    c.init_pair(BK_CARD,cur_color1,cur_color_bk1)
-    c.init_pair(BK_ALT_CARD,cur_color2,cur_color_bk2)
-    c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cur_color_bk1)
-    c.init_pair(SEPARATOR_BK_ALT,c.COLOR_WHITE,cur_color_bk2)
-    c.init_pair(SEPARATOR_BK_INV,cur_color_bk1,c.COLOR_WHITE)
-    c.init_pair(SEPARATOR_BK_ALT_INV,cur_color_bk2,c.COLOR_WHITE)
+    c.init_pair(BK_CARD,cl.cur_color1,cl.cur_color_bk1)
+    c.init_pair(BK_ALT_CARD,cl.cur_color2,cl.cur_color_bk2)
+    c.init_pair(SEPARATOR_BK,c.COLOR_WHITE,cl.cur_color_bk1)
+    c.init_pair(SEPARATOR_BK_ALT,c.COLOR_WHITE,cl.cur_color_bk2)
+    c.init_pair(SEPARATOR_BK_INV,cl.cur_color_bk1,c.COLOR_WHITE)
+    c.init_pair(SEPARATOR_BK_ALT_INV,cl.cur_color_bk2,c.COLOR_WHITE)
     c.init_pair(SEPARATOR_BLACK,c.COLOR_WHITE,c.COLOR_BLACK)
 
 
 def out_input(s,in_str):
 
     s.erase()
-    s.addstr(0,0,">"+in_str,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    s.chgat(-1,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    s.addstr(0,0,">"+in_str,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
+    s.chgat(-1,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     s.clrtoeol()
     s.refresh()
 
@@ -681,14 +699,14 @@ def out_results(s,results,sel,skip):
             out_str+=mon
         out_str+="|"
         cur+=1
-    attr=c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0)
+    attr=c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0)
     ch_prev=""
     idx=0
     for ch in out_str:
         if ch_prev=="|":
-            attr=c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0)
+            attr=c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0)
         if ch=="*":
-            attr=c.color_pair(INV)|(c.A_BOLD if cur_color_s_bold else 0)
+            attr=c.color_pair(INV)|(c.A_BOLD if cl.cur_color_s_bold else 0)
         if ch=="|":
             attr=c.color_pair(BK)|c.A_BOLD
         ch_prev=ch
@@ -696,7 +714,7 @@ def out_results(s,results,sel,skip):
             s.addstr(ch,attr)
             idx+=1
         
-    s.chgat(c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    s.chgat(c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     s.refresh()
     return (cur-skip,selected_appeared)
 
@@ -724,10 +742,10 @@ def out_symbol(s,mon):
             s.addstr(monsym[mon[rows["symbol"]]],c.color_pair(color+1))
 
 def show_hint(search_win):
-    search_win.addstr(0,3,"<- Type here",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(1,0,"In this line you'll see search results",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(0,SCR_WIDTH-4,"<-+",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
-    search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,3,"<- Type here",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
+    search_win.addstr(1,0,"In this line you'll see search results",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
+    search_win.addstr(0,SCR_WIDTH-4,"<-+",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
+    search_win.addstr(1,SCR_WIDTH-25,"^--------------------+ |",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
 
 def show_hello_msg(card_win):
     hello_msg=[f"=== Nethack external Pokedex [{version}] ===",
@@ -807,11 +825,11 @@ def show_list_upper(search_win,results,mon_name):
 
     search_win.erase()
 
-    search_win.addstr(0,0,f"Sort1(Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1(Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,0,f"Sort1(Ctrl+S) :{sort_mode_str[sort_mode1]:10}|Dir1(Ctrl+D) :{sort_dir1_str}",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     if sort_mode1!=0:
-        search_win.addstr(1,0,f"Sort2(Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2(Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,0,f"Sort2(Shift+S):{sort_mode_str[sort_mode2]:10}|Dir2(Shift+D):{sort_dir2_str}",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     else:
-        search_win.addstr(1,0,f"Tab: Switch to search mode, Ctrl+F: Quick search",c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+        search_win.addstr(1,0,f"Tab: Switch to search mode, Ctrl+F: Quick search",c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
 
     show_ver_format_upper(search_win)
     disable_cursor()
@@ -832,12 +850,12 @@ def show_card_upper(search_win,results,mon_name):
     if mode in [EXPLANATION_CARD,EXPLANATION_SEARCH]:
         if mon_name in table:
             addition=f"[Lv:{table[mon_name][rows['level']]}]"
-    search_win.addstr(0,0,"Monster:"+mon_name+addition,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(0,0,"Monster:"+mon_name+addition,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
     if mode in [EXPLANATION_SEARCH,EXPLANATION_CARD]:
         hint="Esc:Back to card"
     else:
         hint="Esc:Back to list"
-    search_win.addstr(1,0,hint,c.color_pair(BK)|(c.A_BOLD if cur_color_s_bold else 0))
+    search_win.addstr(1,0,hint,c.color_pair(BK)|(c.A_BOLD if cl.cur_color_s_bold else 0))
 
     show_ver_format_upper(search_win)
     disable_cursor()
@@ -848,48 +866,52 @@ def show_full_line(card_win,y,line,color):
     if len(line)>=SCR_WIDTH-1:#-1 for monster character in first column
         card_win.insch(y+1,SCR_WIDTH-1,line[SCR_WIDTH-2],color)
 
-def show_one_line_header(card_win,pg):
+def show_one_line_header(card_win,pg,move_y):
     props_len=0
     for f in one_line_headers[pg].keys():
         props_len+=1#|
         props_len+=one_line_headers[pg][f][1]
     max_name_l=SCR_WIDTH-1-props_len
     pos_x=1
+    card_win.chgat(move_y,0,c.color_pair(SEPARATOR_BK)|c.A_BOLD)
     for f in one_line_headers[pg].keys():
         w=one_line_headers[pg][f][1]
         if w==0:
             w=max_name_l
-        card_win.addstr(0,pos_x,"|",c.color_pair(SEPARATOR_BK_ALT))
+        card_win.addstr(move_y,pos_x,"|",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
         pos_x+=1
-        if sort_mode1==one_line_headers[pg][f][2] or sort_mode2==one_line_headers[pg][f][2]:
-            card_win.addstr(0,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
-        else:
-            card_win.addstr(0,pos_x,f,c.color_pair(SEPARATOR_BK_ALT))
+        card_win.addstr(move_y,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        #if sort_mode1==one_line_headers[pg][f][2] or sort_mode2==one_line_headers[pg][f][2]:
+            #card_win.addstr(move_y,pos_x,f"{f:{w}}",c.color_pair(SEPARATOR_BK)|c.A_BOLD)
+        #else:
+            #card_win.addstr(move_y,pos_x,f,c.color_pair(SEPARATOR_BK))
         pos_x+=w
 
-def show_list(card_win,search_win,results):
+def show_list(card_win,search_win,results,move_y=0,list_len=LIST_LINES):
     global selected_mon_name
     selected_mon_name=""
-    card_win.bkgd(' ',c.color_pair(SEPARATOR_BK_ALT))
-    card_win.erase()
-    show_one_line_header(card_win, list_pg)
-    for x in range(LIST_LINES):
+    if move_y==0:
+        card_win.bkgd(' ',c.color_pair(SEPARATOR_BK_ALT))
+        card_win.erase()
+    show_one_line_header(card_win, list_pg,move_y)
+    for x in range(list_len):
         if x+list_mode_skip>=len(list_mode_mons):
             break
         current_mon=table[list_mode_mons[x+list_mode_skip]]
-        card_win.move(x+1,0)
+        card_win.move(x+1+move_y,0)
         out_symbol(card_win,current_mon)
         line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip],list_pg)#key is monster name, it can be different from "name" column
         if x==list_mode_sel:
             selected_mon_name=list_mode_mons[x+list_mode_skip]
-            show_full_line(card_win,x,line,c.color_pair(BK_CARD)|c.A_BOLD)
+            show_full_line(card_win,x+move_y,line,c.color_pair(BK_CARD)|c.A_BOLD)
         else:
             if current_mon[rows["name"]] in list_mode_mons_highlight:
-                show_full_line(card_win,x,line,c.color_pair(BK_ALT_CARD)|c.A_BOLD)
+                show_full_line(card_win,x+move_y,line,c.color_pair(BK_ALT_CARD)|c.A_BOLD)
             else:
-                show_full_line(card_win,x,line,c.color_pair(BK_ALT_CARD))
+                show_full_line(card_win,x+move_y,line,c.color_pair(BK_ALT_CARD))
     card_win.refresh()
-    show_list_upper(search_win,results,selected_mon_name)
+    if move_y==0:#some bad programming here
+        show_list_upper(search_win,results,selected_mon_name)
 
 EX_NORMAL = 30
 EX_HEADER = 31
@@ -917,6 +939,31 @@ modes_attr={
     EX_ITALIC:0,
     EX_NAME:0
 }
+
+def show_edit_colors_hint(card_win,x_pos):
+    color_headers=["Foreground 1","Background 1","Foreground 2","Background2","Foreground (upper)","Background (upper)"]
+    color_ranges=[8,8,8,8,16,8]
+    color_values=[cl.cur_color1,cl.cur_color_bk1,cl.cur_color2,cl.cur_color_bk2,cl.cur_color_s_bold*8+cl.cur_color_s,cl.cur_color_bk_s]
+
+    w=31
+
+    lines=[]
+    lines.append(f"|{'Color themes':{w-2}}|")
+    lines.append(f"| |Current:{cl.cur_theme_name:{w-12}}|")
+    lines.append(f"|S|{'Switch':{w-4}}|")
+    lines.append(f"|R|{'Reset':{w-4}}|")
+    lines.append("|"+" "*(w-2)+"|")
+    for i in range(len(color_headers)):
+        lines.append(f"|{i+1}|{color_headers[i]:{w-13}}|0..{color_ranges[i]:2}|{color_values[i]:2}|")
+    lines.append("|"+" "*(w-2)+"|")
+    lines.append(f"|{'Left, Right: Reposition':{w-2}}|")
+    lines.append(f"|{'Esc: Close':{w-2}}|")
+    for i in range(len(lines)):
+        if i==0:
+            card_win.addstr(5+i,x_pos,lines[i],c.color_pair(BK)|bold_for_header())
+        else:
+            card_win.addstr(5+i,x_pos,lines[i],c.color_pair(BK))
+    card_win.refresh()
 
 
 def show_explanation(card_win,results,mon_name):
@@ -1160,8 +1207,6 @@ def monlist_found(x:str):
 
 def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
     global reloaded
-    global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
-    global cur_color_s,cur_color_bk_s,cur_color_s_bold
     global in_str
     global sel,skip
     global format_length
@@ -1191,41 +1236,9 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         sel=0
         skip=0
         reloaded=True
-    if key=="1":
-        cur_color1+=1
-        if cur_color1>7:
-            cur_color1=0
-        reset_colors()
-    if key=="2":
-        cur_color_bk1+=1
-        if cur_color_bk1>7:
-            cur_color_bk1=0
-        reset_colors()
-    if key=="3":
-        cur_color2+=1
-        if cur_color2>7:
-            cur_color2=0
-        reset_colors()
-    if key=="4":
-        cur_color_bk2+=1
-        if cur_color_bk2>7:
-            cur_color_bk2=0
-        reset_colors()
-    if key=="5":
-        cur_color_s+=1
-        if cur_color_s>7:
-            cur_color_s=0
-            if cur_color_s_bold==0:
-                cur_color_s_bold=1
-            else:
-                cur_color_s_bold=0
-        reset_colors()
-    if key=="6":
-        cur_color_bk_s+=1
-        if cur_color_bk_s>7:
-            cur_color_bk_s=0
-        reset_colors()
-
+    if key=="^T":
+        mode=EDIT_COLORS
+        return 0
     if key=="KEY_F(10)" or key=="^Q":
         save_settings()
         return -1
@@ -1288,10 +1301,10 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
                 fill_attacks(file)
                 set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
         
-        reset_colors()
+        reinit_colors()
         utils.init_pairs()
 
-    if len(key)==1 and key not in ("1","2","3","4","5","6","[","]","?","/","!"):
+    if len(key)==1 and key not in ("[","]","?","/","!"):
         if len(in_str)<MAX_SEARCH:
             in_str+=key
             sel=0
@@ -1377,6 +1390,91 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         utils.show_message(help.search_mode(version))
 
     return 0
+
+def react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name):
+    global reloaded
+    global in_str
+    global sel,skip
+    global format_length
+    global max_sel
+    global ver_idx
+    global mode
+    global ver_selector_idx
+    global current_mon
+    global list_mode_sel, list_mode_skip
+    global mode_prev
+    global in_str_prev
+    global e_offset
+    global edit_colors_x
+    if ch==27:#ESC
+        search_win.nodelay(True)
+        while search_win.getch()!=-1:
+            pass
+        search_win.nodelay(False)
+        in_str=""
+        reloaded=True
+        mode=SEARCH
+        return 0
+    if key=="1":
+        cl.cur_color1+=1
+        if cl.cur_color1>7:
+            cl.cur_color1=0
+        reinit_colors()
+    if key=="2":
+        cl.cur_color_bk1+=1
+        if cl.cur_color_bk1>7:
+            cl.cur_color_bk1=0
+        reinit_colors()
+    if key=="3":
+        cl.cur_color2+=1
+        if cl.cur_color2>7:
+            cl.cur_color2=0
+        reinit_colors()
+    if key=="4":
+        cl.cur_color_bk2+=1
+        if cl.cur_color_bk2>7:
+            cl.cur_color_bk2=0
+        reinit_colors()
+    if key=="5":
+        cl.cur_color_s+=1
+        if cl.cur_color_s>7:
+            cl.cur_color_s=0
+            if cl.cur_color_s_bold==0:
+                cl.cur_color_s_bold=1
+            else:
+                cl.cur_color_s_bold=0
+        reinit_colors()
+    if key=="6":
+        cl.cur_color_bk_s+=1
+        if cl.cur_color_bk_s>7:
+            cl.cur_color_bk_s=0
+        reinit_colors()
+    if key=="r":
+        cl.restore_theme(cl.cur_theme_idx)
+        reinit_colors()
+    if key=="s":
+        cl.cur_theme_idx+=1
+        if cl.cur_theme_idx>=len(cl.color_themes):
+            cl.cur_theme_idx=0
+        cl.switch_theme(cl.cur_theme_idx)
+        reinit_colors()
+    if key=="^Z":
+        cl.new_defaults(cl.cur_theme_idx)
+    if key=="KEY_RIGHT" or key=="KEY_LEFT":
+        if edit_colors_x==0:
+            edit_colors_x=1
+        else:
+            edit_colors_x=0
+    
+
+    if key in ("KEY_F(1)","?","/"):
+        if not check_screen():
+            utils.show_message("Extend screen to 80x25!",minimal=True)
+            return 0
+        utils.show_message(help.search_mode(version))
+
+    return 0
+
 
 def react_to_key_select_ver(ch,key,alt_ch,mon_name):
     global ver_selector_idx
@@ -1888,13 +1986,6 @@ def react_to_key_card(ch,key,alt_ch,mon_name):
 in_str=""
 in_str_prev=""
 not_found_after_reload=False
-cur_color1=c.COLOR_GREEN
-cur_color2=c.COLOR_CYAN
-cur_color_bk1=c.COLOR_BLACK
-cur_color_bk2=c.COLOR_BLACK
-cur_color_s=c.COLOR_WHITE
-cur_color_s_bold=0
-cur_color_bk_s=c.COLOR_BLUE
 reloaded=False
 sel=0
 skip=0
@@ -1912,12 +2003,12 @@ def main(s):
     global in_str
     global not_found_after_reload
     global reloaded
-    global cur_color1,cur_color2,cur_color_bk1,cur_color_bk2
     global sel,skip
     global sort_mode_sel,res_mode_sel,param_mode_sel
     global filter_mode_sel
     global filters_group_names,filters_group_sel,filters_group_skip
     global in_str_prev
+    global list_mode_sel,list_mode_skip
     if c.COLORS<16:
         bold=1
     else:
@@ -1927,7 +2018,7 @@ def main(s):
     c.mouseinterval(0)
     c.curs_set(1)
     s.erase()
-    reset_colors()
+    reinit_colors()
     #c.init_pair(BK_CARD,c.COLOR_GREEN,c.COLOR_BLACK)
     #c.init_pair(INV_CARD,c.COLOR_YELLOW,c.COLOR_BLACK)
     utils.init_pairs()
@@ -2029,6 +2120,26 @@ def main(s):
                 show_hint(search_win)
                 move_to_in(search_win,in_str)
             show_card(card_win,results,mon_name)
+        if mode==EDIT_COLORS:
+            in_str="ac"
+            for mon in table.keys():
+                if mon.lower().find(in_str.lower())!=-1:
+                    results.append(mon)
+            sel=1
+            skip=0
+            mon_name=results[sel+skip]
+            show_search_upper(search_win,results,mon_name)
+            show_card(card_win,results,mon_name)
+            prepare_list(0,0,0,0,active_filters(filter_on,filter_list))
+            list_mode_sel=3
+            list_mode_skip=0
+            show_list(card_win,search_win,results,move_y=12,list_len=10)
+            ec_offset=0
+            if edit_colors_x==0:
+                ec_offset=45
+            else:
+                ec_offset=5
+            show_edit_colors_hint(card_win,ec_offset)
         if mode==SHOW_ALL:
             show_card(card_win,table,mon_name)
             time.sleep(0.05)
@@ -2097,6 +2208,11 @@ def main(s):
             if res!=0:
                 break
             continue
+        if mode==EDIT_COLORS:
+            res=react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name)
+            if res!=0:
+                break
+            continue            
         if mode==SELECT_SORT1 or mode==SELECT_SORT2:
             #res=react_to_key_select_sort(ch,key,alt_ch,mon_name)
             res,sort_mode_sel,notused=react_to_key_select_list(card_win,search_win,ch,key,alt_ch,mon_name,sort_mode_str,sort_mode_sel,0)
@@ -2121,13 +2237,7 @@ if __name__=="__main__":
     try:
         last=open("default.txt","r",encoding="utf-8")
         last_ver_file=last.readline().strip()
-        cur_color1=int(last.readline().strip())
-        cur_color_bk1=int(last.readline().strip())
-        cur_color2=int(last.readline().strip())
-        cur_color_bk2=int(last.readline().strip())
-        cur_color_s=int(last.readline().strip())
-        cur_color_bk_s=int(last.readline().strip())
-        cur_color_s_bold=int(last.readline().strip())
+        cl.cur_theme_idx=int(last.readline().strip())
         for x in range(len(ver_list)):
             if ver_list[x]==last_ver_file:
                 ver_idx=x
@@ -2135,6 +2245,7 @@ if __name__=="__main__":
         last.close()
     except:
         pass
+    cl.load_colors()
     load_monsters(ver_list[ver_idx])
     for g in fs.groups_titles:#appending groups only on first loading, bc no groups are variant-exclusive
         filter_list.append(fs.make_group_filter(g,-1))
