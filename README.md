@@ -41,6 +41,8 @@ Also, you can type part of name and still find your monster in search results.
 
 ### Search mode (default)
 
+![Search mode exapmle](screenshots/00_search.png)
+
 | Key             |Action                                                       |
 |-----------------|-------------------------------------------------------------|
 |**Main keys**    |                                                             |
@@ -62,6 +64,8 @@ Also, you can type part of name and still find your monster in search results.
 |Shift+F3         |Show attacks analysis windows for every monster. Warning is same as above.|
 
 ### List mode
+
+![List mode example](screenshots/01_list.png)
 
 |Key                |Action                                                                  |
 |-------------------|------------------------------------------------------------------------|
@@ -85,6 +89,8 @@ Also, you can type part of name and still find your monster in search results.
 Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s and d as aliases.
 
 ### Color editor window
+
+![Color editor example](screenshots/02_edit_colors.png)
 
 |Key              |Action                                                       |
 |-----------------|-------------------------------------------------------------|
@@ -110,6 +116,8 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 **ext:**	you see all available information.
 
 ## Using filters
+
+![Filters exapmle](screenshots/03_filters.png)
 
 There are now 9 types of filters. First group are parametric filters and requires entering values on keyboard. Press Enter while filter is selected, enter parameter value(s) and press Enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
 
