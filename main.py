@@ -941,9 +941,17 @@ modes_attr={
 }
 
 def show_edit_colors_hint(card_win,x_pos):
-    color_headers=["Foreground 1","Background 1","Foreground 2","Background2","Foreground (upper)","Background (upper)"]
+    color_headers=["Foreground 1","Background 1","Foreground 2","Background 2","Foreground (upper)","Background (upper)"]
     color_ranges=[8,8,8,8,16,8]
-    color_values=[cl.cur_color1,cl.cur_color_bk1,cl.cur_color2,cl.cur_color_bk2,cl.cur_color_s_bold*8+cl.cur_color_s,cl.cur_color_bk_s]
+    color_values=\
+        [\
+            cl.colors_reverse_table[cl.cur_color1],
+            cl.colors_reverse_table[cl.cur_color_bk1],
+            cl.colors_reverse_table[cl.cur_color2],
+            cl.colors_reverse_table[cl.cur_color_bk2],
+            cl.colors_reverse_table[cl.cur_color_s]+cl.cur_color_s_bold*8,
+            cl.colors_reverse_table[cl.cur_color_bk_s],
+        ]
 
     w=31
 

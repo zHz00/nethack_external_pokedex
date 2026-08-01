@@ -13,11 +13,11 @@
   "colors_current": {
    "fg1": "2",
    "bk1": "0",
-   "fg2": "3",
+   "fg2": "6",
    "bk2": "0",
    "fg_upper": "7",
    "fg_upper_bold": "0",
-   "bk_upper": "1"
+   "bk_upper": "4"
   }
  },
  {
@@ -44,22 +44,22 @@
  {
   "name": "Peter Norton",
   "colors_default": {
-   "fg1": "6",
-   "bk1": "1",
-   "fg2": "3",
-   "bk2": "1",
+   "fg1": "3",
+   "bk1": "4",
+   "fg2": "6",
+   "bk2": "4",
    "fg_upper": "0",
    "fg_upper_bold": "0",
-   "bk_upper": "3"
+   "bk_upper": "6"
   },
   "colors_current": {
-   "fg1": "6",
-   "bk1": "1",
-   "fg2": "3",
-   "bk2": "1",
+   "fg1": "3",
+   "bk1": "4",
+   "fg2": "6",
+   "bk2": "4",
    "fg_upper": "0",
    "fg_upper_bold": "0",
-   "bk_upper": "3"
+   "bk_upper": "6"
   }
  },
  {
@@ -107,22 +107,22 @@
  {
   "name": "User",
   "colors_default": {
-   "fg1": "3",
+   "fg1": "2",
    "bk1": "0",
-   "fg2": "4",
+   "fg2": "6",
    "bk2": "0",
    "fg_upper": "7",
    "fg_upper_bold": "0",
-   "bk_upper": "1"
+   "bk_upper": "4"
   },
   "colors_current": {
-   "fg1": "3",
+   "fg1": "2",
    "bk1": "0",
-   "fg2": "4",
+   "fg2": "6",
    "bk2": "0",
    "fg_upper": "7",
    "fg_upper_bold": "0",
-   "bk_upper": "1"
+   "bk_upper": "4"
   }
  }
 ]
