@@ -87,6 +87,7 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 ### Color editor window
 
 |Key              |Action                                                       |
+|-----------------|-------------------------------------------------------------|
 |**Common**       |                                                             |
 |Esc              |Close, saving current configuration                          |
 |S                |Switch to next theme                                         |
