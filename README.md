@@ -55,13 +55,7 @@ Also, you can type part of name and still find your monster in search results.
 |Left, Right      |Scroll through search results                                |
 |Ctrl+A           |Show attacks analysis screen (Press Esc to return to card)   |
 |F10, Ctrl+Q      |Exit                                                         |
-|**Change colors**|                                                             |
-|1                |Foreground1 (card, list)                                     |
-|2                |Background1 (card, list)                                     |
-|3                |Foreground2 (card, list)                                     |
-|4                |Background2 (card, list)                                     |
-|5                |Foreground (upper zone, menus)                               |
-|6                |Background (upper zone, menus)                               |
+|Ctrl+T           |Color editor window                                          |
 |**Debug**        |                                                             |
 |F3               |Run tests and show results                                   |
 |Shift+F2         |Show every card in quick succession. WARNING, this is debug feature. This process cannot be interrupted. You just have to watch.  |
@@ -89,6 +83,24 @@ Also, you can type part of name and still find your monster in search results.
 |F10, Ctrl+Q        |Exit                                                                    |
 
 Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s and d as aliases.
+
+### Color editor window
+
+|Key              |Action                                                       |
+|**Common**       |                                                             |
+|Esc              |Close, saving current configuration                          |
+|S                |Switch to next theme                                         |
+|R                |Reset current theme                                          |
+|Ctrl+K           |Rewrite defaults (for developers)                            |
+|Left, Right      |Move editing window between two positions for better view    |
+|**Cycle through colors**|                                                      |
+|1                |Foreground1 (card, list)                                     |
+|2                |Background1 (card, list)                                     |
+|3                |Foreground2 (card, list)                                     |
+|4                |Background2 (card, list)                                     |
+|5                |Foreground (upper zone, menus)                               |
+|6                |Background (upper zone, menus)                               |
+|Shift+1..6       |Cycle colors in reverse order                                |
 
 ## Formats
 

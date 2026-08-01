@@ -18,7 +18,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-01"
+version="2026-08-01b"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1453,10 +1453,44 @@ def react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name):
                 cl.cur_color_s_bold=0
         reinit_colors()
     if key=="6":
+        cl.cur_color_bk_s-=1
+        if cl.cur_color_bk_s<0:
+            cl.cur_color_bk_s=7
+        reinit_colors()
+    if key=="!":
+        cl.cur_color1-=1
+        if cl.cur_color1<0:
+            cl.cur_color1=7
+        reinit_colors()
+    if key=="@":
+        cl.cur_color_bk1-=1
+        if cl.cur_color_bk1<0:
+            cl.cur_color_bk1=7
+        reinit_colors()
+    if key=="#":
+        cl.cur_color2-=1
+        if cl.cur_color2<0:
+            cl.cur_color2=7
+        reinit_colors()
+    if key=="$":
+        cl.cur_color_bk2-=1
+        if cl.cur_color_bk2<0:
+            cl.cur_color_bk2=7
+        reinit_colors()
+    if key=="%":
+        cl.cur_color_s-=1
+        if cl.cur_color_s<0:
+            cl.cur_color_s=7
+            if cl.cur_color_s_bold==0:
+                cl.cur_color_s_bold=1
+            else:
+                cl.cur_color_s_bold=0
+        reinit_colors()
+    if key=="^":
         cl.cur_color_bk_s+=1
         if cl.cur_color_bk_s>7:
             cl.cur_color_bk_s=0
-        reinit_colors()
+        reinit_colors()        
     if key=="r":
         cl.restore_theme(cl.cur_theme_idx)
         reinit_colors()
@@ -1466,7 +1500,7 @@ def react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name):
             cl.cur_theme_idx=0
         cl.switch_theme(cl.cur_theme_idx)
         reinit_colors()
-    if key=="^Z":
+    if key=="^K":
         cl.new_defaults(cl.cur_theme_idx)
     if key=="KEY_RIGHT" or key=="KEY_LEFT":
         if edit_colors_x==0:
@@ -1479,7 +1513,7 @@ def react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name):
         if not check_screen():
             utils.show_message("Extend screen to 80x25!",minimal=True)
             return 0
-        utils.show_message(help.search_mode(version))
+        utils.show_message(help.edit_colors_mode())
 
     return 0
 

@@ -62,3 +62,15 @@ _Up_             Nothing. Less information on main screen\n\
 _Down_           Nothing. More information on main screen\n\
 _Space_          Scroll screens if more than one available\n\
 _F10 or Ctrl+Q_  Exit"
+
+def edit_colors_mode():
+    return "Quick help: Color editor\n\
+\n\
+_Esc_         Return to search mode\n\
+\n\
+_S_           Switch to next theme\n\
+_R_           Reset current theme\n\
+_1..6_        Increase corresponding color\n\
+_Shift+1..6_  Decrease corresponding color\n\
+_Left, Right_ Move editor window for better observations\n\
+_Ctrl+K_      Rewrite defaults (for developers)\n"
