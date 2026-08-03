@@ -98,7 +98,6 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 |Esc              |Close, saving current configuration                          |
 |S                |Switch to next theme                                         |
 |R                |Reset current theme                                          |
-|Ctrl+K           |Rewrite defaults (for developers)                            |
 |Left, Right      |Move editing window between two positions for better view    |
 |**Cycle through colors**|                                                      |
 |1                |Foreground1 (card, list)                                     |
@@ -107,7 +106,14 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 |4                |Background2 (card, list)                                     |
 |5                |Foreground (upper zone, menus)                               |
 |6                |Background (upper zone, menus)                               |
-|Shift+1..6       |Cycle colors in reverse order                                |
+|7                |Separator                                                    |
+|Shift+1..7       |Cycle colors in reverse order                                |
+|**For developers**|                                                            |
+|Ctrl+K           |Rewrite defaults                                             |
+|N                |Rename theme                                                 |
+|Shift+D          |Duplicate theme                                              |
+
+Please note that you can remove themes only by editing colors.json.
 
 ## Formats
 

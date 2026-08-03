@@ -5,6 +5,7 @@ import time
 import json
 import locale
 import sys
+from copy import deepcopy
 
 from nhconstants_flags_raw import *
 from nhconstants_flags import *
@@ -18,7 +19,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-01c"
+version="2026-08-03"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -160,6 +161,11 @@ def bold_for_header():
         return 0
     return c.A_BOLD
 
+def bold_for_header_inv():
+    if cl.cur_color_bk_u==0:
+        return 0
+    return c.A_BOLD
+
 def bold_list1():
     if cl.cur_color1_bold==0:
         return 0
@@ -169,6 +175,20 @@ def bold_list2():
     if cl.cur_color2_bold==0:
         return 0
     return c.A_BOLD
+
+def color1():
+    #if cl.cur_color1_bold:
+        #return c.color_pair(BK_CARD)|c.A_BOLD
+    if cl.cur_color1==cl.cur_color_bk1:
+        return c.color_pair(BK_CARD)|c.A_BOLD
+    return c.color_pair(BK_CARD)
+
+def color2():
+    #if cl.cur_color2_bold:
+        #return c.color_pair(BK_ALT_CARD)|c.A_BOLD
+    if cl.cur_color2==cl.cur_color_bk1:
+        return c.color_pair(BK_ALT_CARD)|c.A_BOLD
+    return c.color_pair(BK_ALT_CARD)
 
 def prepare_list(sort_field1,sort_field2,dir1,dir2,filters):
     global list_mode_mons
@@ -367,7 +387,7 @@ def show_select_list(s,cap,op_list,idx,skip):
         offset_y=int((h-lines)/2)
     offset_x=int((SCR_WIDTH-w1-w2-w3-4)/2)#4 for |
     header=f"|{cap1:{w1}}|"
-    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|c.A_BOLD)
+    s.addstr(offset_y,offset_x,header,c.color_pair(BK)|bold_for_header())
 
     for y in range(lines):
         op=op_list[y+skip]
@@ -593,9 +613,10 @@ def load_monsters(file):
         explanation_attacks=dict()
         explanation_attacks["at"]=e_at
         explanation_attacks["ad"]=e_ad
-        attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
-        json.dump(explanation_attacks,attacks_file,indent=1)
-        attacks_file.close()
+        if is_kiosk()==False:
+            attacks_file=open(data_folder+base_name+".attacks.json","w",encoding="utf-8")
+            json.dump(explanation_attacks,attacks_file,indent=1)
+            attacks_file.close()
     set_at_ad(e_at,e_ad,e_AD_SPEL_LIST,e_AD_CLRC_LIST)
     fs.load_filters(ver_list[ver_idx].split(".")[0])
     #for f in filter_list:
@@ -674,6 +695,7 @@ def reinit_colors():
     c.init_pair(SEPARATOR_BK_INV,cl.cur_color_bk1,c.COLOR_WHITE)
     c.init_pair(SEPARATOR_BK_ALT_INV,cl.cur_color_bk2,cl.cur_color_s)
     c.init_pair(SEPARATOR_BLACK,cl.cur_color_s,c.COLOR_BLACK)
+    check_modes_attr()    
 
 
 def out_input(s,in_str):
@@ -708,16 +730,16 @@ def out_results(s,results,sel,skip):
             out_str+=mon
         out_str+="|"
         cur+=1
-    attr=c.color_pair(BK)|(c.A_BOLD if cl.cur_color_u_bold else 0)
+    attr=c.color_pair(BK)|(bold_for_header() if cl.cur_color_u_bold else 0)
     ch_prev=""
     idx=0
     for ch in out_str:
         if ch_prev=="|":
-            attr=c.color_pair(BK)|(c.A_BOLD if cl.cur_color_u_bold else 0)
+            attr=c.color_pair(BK)|(bold_for_header() if cl.cur_color_u_bold else 0)
         if ch=="*":
-            attr=c.color_pair(INV)|(c.A_BOLD if cl.cur_color_u_bold else 0)
+            attr=c.color_pair(INV)|(bold_for_header_inv() if cl.cur_color_u_bold else 0)
         if ch=="|":
-            attr=c.color_pair(BK)|bold_for_header()
+            attr=c.color_pair(BK)|(bold_for_header() if cl.cur_color_u_bold else 0)
         ch_prev=ch
         if ch!="*" and idx<SCR_WIDTH-1:
             s.addstr(ch,attr)
@@ -767,17 +789,17 @@ def show_hello_msg(card_win):
             "Ctrl+Q, F10: Exit"]
     col1=10
     col2=45
-    card_win.bkgd(' ',c.color_pair(BK_CARD))
-    card_win.chgat(0,0,-1,c.color_pair(BK_ALT_CARD))
-    card_win.chgat(1,0,-1,c.color_pair(BK_ALT_CARD))
-    card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],c.color_pair(BK_ALT_CARD)|c.A_BOLD)
-    card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],c.color_pair(BK_ALT_CARD))
-    card_win.chgat(2,0,-1,c.color_pair(BK_CARD))
-    card_win.chgat(3,0,-1,c.color_pair(BK_CARD))
-    card_win.chgat(4,0,-1,c.color_pair(BK_CARD))
+    card_win.bkgd(' ',color1())
+    card_win.chgat(0,0,-1,color2())
+    card_win.chgat(1,0,-1,color2())
+    card_win.addstr(0,int((SCR_WIDTH-len(hello_msg[0]))/2),hello_msg[0],color2()|c.A_BOLD)
+    card_win.addstr(1,int((SCR_WIDTH-len(hello_msg[1]))/2),hello_msg[1],color2())
+    card_win.chgat(2,0,-1,color1())
+    card_win.chgat(3,0,-1,color1())
+    card_win.chgat(4,0,-1,color1())
     for i in range(len(block1)):
-        card_win.addstr(i+2,col1,block1[i],c.color_pair(BK_CARD))
-        card_win.addstr(i+2,col2,block2[i],c.color_pair(BK_CARD))
+        card_win.addstr(i+2,col1,block1[i],color1())
+        card_win.addstr(i+2,col2,block2[i],color1())
 
     if len(in_str)==0:
 
@@ -794,8 +816,8 @@ def show_hello_msg(card_win):
 def show_not_found_msg(card_win,mon_name):
     msg=[f"'{mon_name}' does not exist in selected variant.","Try another search or switch variant."]
     card_win.chgat(-1,c.color_pair(BK_CARD))
-    card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],c.color_pair(BK_ALT_CARD)|c.A_BOLD)
-    card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],c.color_pair(BK_CARD)|c.A_BOLD)
+    card_win.addstr(0,int((SCR_WIDTH-len(msg[0]))/2),msg[0],color2()|c.A_BOLD)
+    card_win.addstr(1,int((SCR_WIDTH-len(msg[1]))/2),msg[1],color1()|c.A_BOLD)
     card_win.refresh()
 
 def show_search_upper(search_win,results,mon_name):
@@ -913,12 +935,12 @@ def show_list(card_win,search_win,results,move_y=0,list_len=LIST_LINES):
         line=make_card_one_line(current_mon,list_mode_mons[x+list_mode_skip],list_pg)#key is monster name, it can be different from "name" column
         if x==list_mode_sel:
             selected_mon_name=list_mode_mons[x+list_mode_skip]
-            show_full_line(card_win,x+move_y,line,c.color_pair(BK_CARD)|bold_list1())
+            show_full_line(card_win,x+move_y,line,c.color_pair(BK_ALT_CARD)|bold_list2())
         else:
             if current_mon[rows["name"]] in list_mode_mons_highlight:
                 show_full_line(card_win,x+move_y,line,c.color_pair(SEPARATOR_BK)|c.A_BOLD)
             else:
-                show_full_line(card_win,x+move_y,line,c.color_pair(BK_ALT_CARD)|bold_list2())
+                show_full_line(card_win,x+move_y,line,c.color_pair(BK_CARD)|bold_list1())
     card_win.refresh()
     if move_y==0:#some bad programming here
         show_list_upper(search_win,results,selected_mon_name)
@@ -942,13 +964,45 @@ modes_inv={
     EX_ITALIC:SEPARATOR_BK_ALT,
     EX_NAME:BK_CARD,
 }
-modes_attr={
+modes_attr_default={
     EX_NORMAL:0,
     EX_HEADER:c.A_BOLD,
     EX_BOLD:c.A_BOLD,
     EX_ITALIC:0,
     EX_NAME:0
 }
+
+modes_attr=deepcopy(modes_attr_default)
+
+modes_attr_inv_default={
+    EX_NORMAL:0,
+    EX_HEADER:c.A_BOLD,
+    EX_BOLD:c.A_BOLD,
+    EX_ITALIC:0,
+    EX_NAME:0
+}
+
+modes_attr_inv=deepcopy(modes_attr_inv_default)
+
+def check_modes_attr():
+    global modes_attr,modes_attr_inv
+    modes_attr=deepcopy(modes_attr_default)
+    modes_attr_inv=deepcopy(modes_attr_inv_default)
+    if cl.cur_color1==cl.cur_color_bk1:
+        for k in modes_bk.keys():
+            if k==BK_CARD:
+                modes_attr[k]=c.A_BOLD
+        for k in modes_inv.keys():
+            if k==BK_CARD:
+                modes_attr[k]=c.A_BOLD
+
+    if cl.cur_color2==cl.cur_color_bk2:
+        for k in modes_bk.keys():
+            if k==BK_ALT_CARD:
+                modes_attr[k]=c.A_BOLD
+        for k in modes_inv.keys():
+            if k==BK_ALT_CARD:
+                modes_attr[k]=c.A_BOLD                
 
 def show_edit_colors_hint(card_win,x_pos):
     color_headers=["Foreground 1","Background 1","Foreground 2","Background 2","Foreground (upper)","Background (upper)","Separator"]
@@ -968,11 +1022,11 @@ def show_edit_colors_hint(card_win,x_pos):
     y_start=3
 
     lines=[]
-    lines.append(f"|{'Color themes':{w-2}}|")
-    line=f"|Theme({cl.cur_theme_idx+1}/{len(cl.color_themes)}):{cl.cur_theme_name}"
+    line=f"|Color themes [{cl.cur_theme_idx+1}/{len(cl.color_themes)}]"
     line+=" "*(w-len(line)-1)
-    line+="|"
+    line+="|"    
     lines.append(line)
+    lines.append(f"|Theme:{cl.cur_theme_name:{w-8}}|")
     lines.append(f"|S|{'Switch':{w-4}}|")
     lines.append(f"|R|{'Reset':{w-4}}|")
     lines.append("|"+" "*(w-2)+"|")
@@ -1081,7 +1135,7 @@ def show_explanation(card_win,results,mon_name):
                     if cur_pair==BK_CARD:
                         card_win.addstr(line_n,pos,line[i],c.color_pair(modes_bk[mode])|(modes_attr[mode] if mode!=EX_NORMAL else attrib))
                     else:
-                        card_win.addstr(line_n,pos,line[i],c.color_pair(modes_inv[mode])|(modes_attr[mode] if mode!=EX_NORMAL else attrib))
+                        card_win.addstr(line_n,pos,line[i],c.color_pair(modes_inv[mode])|(modes_attr_inv[mode] if mode!=EX_NORMAL else attrib))
             if line[i]==":":
                 attrib=0
             if line[i]=="|":
@@ -1109,6 +1163,7 @@ def show_card(card_win,results,mon_name):
     global max_sel
     global ver_idx
     global tries
+    check_modes_attr()
     card_win.erase()
     #card_win.refresh()
     if (len(results)>0 and len(in_str)>0 and not_found_after_reload==False) or mode in [SHOW_ALL,CARD]:
@@ -1184,7 +1239,7 @@ def show_card(card_win,results,mon_name):
                             else:
                                 card_win.addstr(line_n,pos,line[i],c.color_pair(SEPARATOR_BK_ALT)|c.A_BOLD)
                         else:
-                            card_win.addstr(line_n,pos,line[i],c.color_pair(cur_pair)|attrib)
+                            card_win.addstr(line_n,pos,line[i],(color1() if cur_pair==BK_CARD else color2())|attrib)
                     if line[i]==":":
                         attrib=0
                     if line[i]=="|":
@@ -1315,7 +1370,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         
         s.refresh()
         ch=s.getch()
-        if ch==ord("f"):
+        if ch==ord("f") and is_kiosk()==False:
             s.addstr(15,15,"Enter file name to fill attacks:")
             file=utils.textpad(s,16,15,20).strip()
             if len(file)>0:
@@ -1519,8 +1574,27 @@ def react_to_key_edit_colors(s,search_win,ch,key,alt_ch,results,mon_name):
             cl.cur_theme_idx=0
         cl.switch_theme(cl.cur_theme_idx)
         reinit_colors()
+    if key=="n":
+        ec_offset=0
+        if edit_colors_x==0:
+            ec_offset=45
+        else:
+            ec_offset=5
+        ec_offset+=7
+        new_name=utils.textpad(s,6,ec_offset,20).strip()
+        if len(new_name)>0 and len(new_name)<=cl.MAX_NAME_LEN:
+            cl.rename_theme(cl.cur_theme_idx,new_name)
+        cl.switch_theme(cl.cur_theme_idx)
+        reinit_colors()
+    if key=="D":
+        dup_name=cl.cur_theme_name[:(cl.MAX_NAME_LEN-3)]+"(1)"
+        cl.duplicate_theme(cl.cur_theme_idx,dup_name)
+        cl.cur_theme_idx+=1
+        cl.switch_theme(cl.cur_theme_idx)
+        reinit_colors()
     if key=="^K":
         cl.new_defaults(cl.cur_theme_idx)
+        reinit_colors()
         utils.show_message("Rewritten.")
     if key=="KEY_RIGHT" or key=="KEY_LEFT":
         if edit_colors_x==0:
@@ -1800,7 +1874,7 @@ def react_to_key_filters(card_win,search_win,ch,key,alt_ch,mon_name):
             monlist_raw_in=[""]
             if "monlist_raw" in filter_list[filter_mode_sel]:
                 monlist_raw_in=filter_list[filter_mode_sel]["monlist_raw"]
-            monlist_raw=utils.multiline_textpad(card_win,4,0,c.COLS,20,c.color_pair(BK),c.color_pair(BK)|c.A_BOLD,monlist_raw_in,monlist_header,monlist_footer,monlist_found)
+            monlist_raw=utils.multiline_textpad(card_win,4,0,c.COLS,20,c.color_pair(INV),c.color_pair(BK),monlist_raw_in,monlist_header,monlist_footer,monlist_found)
             monlist_txt=[]
             for m in monlist_raw:
                 mons=monlist_found(m)

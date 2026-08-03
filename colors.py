@@ -1,5 +1,6 @@
 import curses as c
 import json
+from copy import deepcopy
 
 colors_table={
     0:c.COLOR_BLACK,
@@ -27,6 +28,8 @@ cur_color_s=c.COLOR_WHITE
 
 cur_theme_name="Default"
 cur_theme_idx=0
+
+MAX_NAME_LEN=20
 
 fname="colors.json"
 color_themes=dict()
@@ -56,6 +59,10 @@ def switch_theme(n:int):
     global cur_color1_bold,cur_color2_bold,cur_color_s
     global cur_color_u,cur_color_u_bold,cur_color_bk_u
     global cur_theme_idx,cur_theme_name
+    if len(color_themes)==0:
+        return
+    if n>len(color_themes):
+        n=0
     cur_color1=colors_table[int(color_themes[n]["colors_current"]["fg1"])]
     cur_color1_bold=int(color_themes[n]["colors_current"].get("fg1_bold",0))
     cur_color2=colors_table[int(color_themes[n]["colors_current"]["fg2"])]
@@ -109,6 +116,16 @@ def save_theme(n:int):
     color_themes[n]["colors_current"]["fg_upper_bold"]=str(cur_color_u_bold)
     color_themes[n]["colors_current"]["bk_upper"]=str(colors_reverse_table[cur_color_bk_u])
     color_themes[n]["colors_current"]["fg_separator"]=str(colors_reverse_table[cur_color_s])
+
+def duplicate_theme(n:int,new_name:str):
+    global color_themes
+    new_theme=deepcopy(color_themes[n])
+    color_themes.insert(n+1,new_theme)
+    color_themes[n+1]["name"]=new_name
+
+def rename_theme(n:int,new_name:str):
+    global color_themes
+    color_themes[n]["name"]=new_name
 
 def load_colors():
     global color_themes

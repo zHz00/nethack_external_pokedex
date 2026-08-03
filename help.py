@@ -70,7 +70,12 @@ _Esc_         Return to search mode\n\
 \n\
 _S_           Switch to next theme\n\
 _R_           Reset current theme\n\
-_1..6_        Increase corresponding color\n\
-_Shift+1..6_  Decrease corresponding color\n\
+_1..7_        Increase corresponding color\n\
+_Shift+1..7_  Decrease corresponding color\n\
 _Left, Right_ Move editor window for better observations\n\
-_Ctrl+K_      Rewrite defaults (for developers)\n"
+\n\
+**For developers**\n\
+_N_           Rename theme\n\
+_Shift+D_     Duplicate theme\n\
+_Ctrl+K_      Rewrite defaults\n\
+You can dele theme only by editing colors.json"

@@ -131,7 +131,7 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
     c.curs_set(1)
     win = c.newwin(height,width,y,x)
     win.keypad(1)
-    win.bkgd(" ",attr1)
+    win.bkgd(" ",attr2)
     win.erase()
     win.refresh()
     #tb = c.textpad.Textbox(win)
@@ -152,7 +152,7 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
         win.erase()
         win.border()
         h=header(0)[:width]
-        win.addstr(0,(width-len(h))//2,h,attr1)
+        win.addstr(0,(width-len(h))//2,h,attr2)
         f_n=0
 
         for i in range(len(lines)):
@@ -172,7 +172,7 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
             win.addstr(line,a)
 
         f=footer(f_n,len(lines))[:width]
-        win.addstr(height-1+2,(width-len(f))//2,f,attr1)#i already subtracted 2 for inner
+        win.addstr(height-1+2,(width-len(f))//2,f,attr2)#i already subtracted 2 for inner
 
         win.refresh()
         c.curs_set(1)
