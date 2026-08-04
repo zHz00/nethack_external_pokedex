@@ -19,7 +19,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-03"
+version="2026-08-04"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -989,20 +989,36 @@ def check_modes_attr():
     modes_attr=deepcopy(modes_attr_default)
     modes_attr_inv=deepcopy(modes_attr_inv_default)
     if cl.cur_color1==cl.cur_color_bk1:
-        for k in modes_bk.keys():
-            if k==BK_CARD:
+        for k,v in modes_bk.items():
+            if v==BK_CARD:
                 modes_attr[k]=c.A_BOLD
-        for k in modes_inv.keys():
-            if k==BK_CARD:
-                modes_attr[k]=c.A_BOLD
+        for k,v in modes_inv.items():
+            if v==BK_CARD:
+                modes_attr_inv[k]=c.A_BOLD
 
     if cl.cur_color2==cl.cur_color_bk2:
-        for k in modes_bk.keys():
-            if k==BK_ALT_CARD:
+        for k,v in modes_bk.items():
+            if v==BK_ALT_CARD:
                 modes_attr[k]=c.A_BOLD
-        for k in modes_inv.keys():
-            if k==BK_ALT_CARD:
-                modes_attr[k]=c.A_BOLD                
+        for k,v in modes_inv.items():
+            if v==BK_ALT_CARD:
+                modes_attr_inv[k]=c.A_BOLD
+
+    if cl.cur_color_s==cl.cur_color_bk1:
+        for k,v in modes_bk.items():
+            if v==SEPARATOR_BK:
+                modes_attr[k]=c.A_BOLD
+        for k,v in modes_inv.items():
+            if v==SEPARATOR_BK:
+                modes_attr_inv[k]=c.A_BOLD
+
+    if cl.cur_color_s==cl.cur_color_bk2:
+        for k,v in modes_bk.items():
+            if v==SEPARATOR_BK_ALT:
+                modes_attr[k]=c.A_BOLD
+        for k,v in modes_inv.items():
+            if v==SEPARATOR_BK_ALT:
+                modes_attr_inv[k]=c.A_BOLD                
 
 def show_edit_colors_hint(card_win,x_pos):
     color_headers=["Foreground 1","Background 1","Foreground 2","Background 2","Foreground (upper)","Background (upper)","Separator"]
