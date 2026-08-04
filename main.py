@@ -19,7 +19,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-04"
+version="2026-08-04a"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -1481,7 +1481,7 @@ def react_to_key_search(s,search_win,ch,key,alt_ch,results,mon_name):
         if not check_screen():
             utils.show_message("Extend screen to 80x25!",minimal=True)
             return 0
-        utils.show_message(help.search_mode(version))
+        utils.show_message(help.search_mode(version,is_kiosk()))
 
     return 0
 

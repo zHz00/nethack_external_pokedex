@@ -1,5 +1,10 @@
-def search_mode(version):
-    return f"Quick help: Search mode\n\
+def search_mode(version,kiosk):
+    k=""
+    if kiosk:
+        k="[kiosk]"
+    else:
+        k="       "
+    return f"Quick help: Search mode {k:>34}\n\
 \n\
 _Ctrl+O_        Select NetHack variant to search\n\
 _[, ]_          Switch to next NetHack variant\n\
@@ -78,4 +83,4 @@ _Left, Right_ Move editor window for better observations\n\
 _N_           Rename theme\n\
 _Shift+D_     Duplicate theme\n\
 _Ctrl+K_      Rewrite defaults\n\
-You can dele theme only by editing colors.json"
+You can delete theme only by editing colors.json"
