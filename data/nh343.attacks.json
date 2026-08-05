@@ -981,7 +981,7 @@
         "type": "AD_WRAP",
         "caption": "Drown",
         "caption_short": "Drown",
-        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be \nprevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false

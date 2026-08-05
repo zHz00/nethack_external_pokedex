@@ -144,7 +144,9 @@ def test_monster_one_field(mon,field):
         if f=="symbol":
             test=(monsym[mon[rows[f]]]==field["value"] or field["value"]=="*" or field["value"]=="")
         if f=="name":
-            test=(mon[rows[f]].lower().find(field["value"].lower())!=-1 or field["value"]=="*")
+            test=(mon[rows[f]].lower().find(field["value"].lower())!=-1 or\
+                  mon[rows["key"]].lower().find(field["value"].lower())!=-1 or\
+                  field["value"]=="*")
         if f=="prob" or f=="conv_special":
             ress_with_prob=mon[rows[f]].split("|")
             ress_names=[]

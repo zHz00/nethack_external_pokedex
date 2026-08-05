@@ -123,6 +123,16 @@ def textpad(s,y,x,width):
         return ""
     else:
         return text
+    
+def monster_line(l):
+    if l=="--More--":
+        return False
+    if l.find("currently shown")!=-1:
+        return False
+    if len(l)==0:
+        return False
+    return True
+
 
 def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"TEST"),footer=(lambda x:"FOOTER"),found=(lambda x:0)):
     global user_cancel
@@ -160,8 +170,9 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
             f=found(line)
             a=attr1
             if f is not None:
-                a=attr2
                 f_n+=1
+            if f is not None or monster_line(line)==False:
+                a=attr2
             if i<yscroll:
                 continue
             if i-yscroll>height-1:
@@ -171,7 +182,12 @@ def multiline_textpad(s,y,x,width,height,attr1,attr2,contents,header=(lambda x:"
             win.move(i-yscroll+1,1)
             win.addstr(line,a)
 
-        f=footer(f_n,len(lines))[:width]
+        total_mons=0
+        for l in lines:
+            if monster_line(l):
+                total_mons+=1
+
+        f=footer(f_n,total_mons)[:width]
         win.addstr(height-1+2,(width-len(f))//2,f,attr2)#i already subtracted 2 for inner
 
         win.refresh()

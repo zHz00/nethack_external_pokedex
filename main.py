@@ -19,7 +19,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-04a"
+version="2026-08-05"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
@@ -303,7 +303,7 @@ def show_filters(s,sel:int):
     cap1="ON"
     cap2="Filter"
     cap3="Value"
-    l=len(ver_list)
+    l=len(filter_list)+2
     h=SCR_HEIGHT-2-1#one for header
     offset_y=0
     if l>=h:
@@ -480,15 +480,23 @@ def table_insert(table:dict(),table_synonyms:dict(),mon):
     namem=mon[rows["namem"]]
     if mon[rows["flags2"]].find("M2_FEMALE")!=-1 and len(namef)>0:
         name=namef+"("+mon[rows["name"]]+")"
-        table_synonyms[namef]=[name]
+        if namef in table_synonyms:
+            table_synonyms[namef].append(name)
+        else:
+            table_synonyms[namef]=[name]
         if name in table:
             raise#why?
         mon[rows["key"]]=name
         table[name]=mon
         return
+    if mon[rows["name"]]=="aligned priest":
+        table_synonyms["priest"]=[mon[rows["name"]]]#special case: aligned priests in 3.4.3 and 3.6.x are displayed just as "priest"
     if mon[rows["flags2"]].find("M2_MALE")!=-1 and len(namem)>0:
         name=namem+"("+mon[rows["name"]]+")"
-        table_synonyms[namem]=[name]
+        if namem in table_synonyms:
+            table_synonyms[namem].append(name)
+        else:
+            table_synonyms[namem]=[name]
         if name in table:
             raise#why?
         mon[rows["key"]]=name
@@ -1278,9 +1286,28 @@ def monlist_footer(x:int,y:int):
     return f"{x}/{y} found. Ctrl+N: Clear list; Esc: Apply list"
 
 def monlist_found(x:str):
-    pos=x.find("called")
-    if pos!=-1:
-        x=x[:pos]
+    remove_list=["called",
+                ", hiding",
+                ", meditating",
+                ", mimicking",
+                ", masquerading",
+                ", in a cloud of",
+                
+                ", swallowing you",
+                ", engulfing you",
+                ", being held",
+                ", holding you",
+                ", can't move",
+                ", asleep",
+                ", meditating",
+                ", leashed to you",
+                ", trapped in",
+                ]
+    pos=-1
+    for r in remove_list:
+        pos=x.find(r)
+        if pos!=-1:
+            x=x[:pos]
     words=x.split(" ")
     words.reverse()
     names=[]
@@ -1288,13 +1315,33 @@ def monlist_found(x:str):
     for w in words:
         name=w+" "+name
         name=name.strip()
-        names.append(name)
+        if len(name)>0:
+            names.append(name)
     names.reverse()
+    found_list=[]
     for n in names:
         if n in table:
-            return [n]
+            found_list.append(n)
         if n in table_synonyms:
-            return table_synonyms[n]
+            found_list.extend(table_synonyms[n])
+        #for k in table.keys():
+            #gendered_names=[table[k][rows["namem"]].lower(),table[k][rows["namef"]].lower(),table[k][rows["name"]].lower()]
+            #if n.lower() in gendered_names:
+                #found_list.append(k)
+
+    if len(found_list)>0:
+        return found_list
+        
+    #still not found. maybe "priest of..." or some minion
+    #now we checked every "ordinary" monster with "of" in the name, Wizard of
+    #Yendor, Minion of Huhetotl etc. No one of these monsters can be aligned
+    #to the specific god, e.g. "Wizard of Yendor of Set" is impossbile. So now
+    #we can painlessly delete "of XXXX" from name and call function again
+        
+    pos=x.find(" of ")
+    if pos!=-1:
+        x=x[:pos]
+        return monlist_found(x)
 
     return None
 
