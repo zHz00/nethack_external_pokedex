@@ -41,6 +41,8 @@ Also, you can type part of name and still find your monster in search results.
 
 ### Search mode (default)
 
+![Search mode exapmle](screenshots/00_search.png)
+
 | Key             |Action                                                       |
 |-----------------|-------------------------------------------------------------|
 |**Main keys**    |                                                             |
@@ -55,19 +57,15 @@ Also, you can type part of name and still find your monster in search results.
 |Left, Right      |Scroll through search results                                |
 |Ctrl+A           |Show attacks analysis screen (Press Esc to return to card)   |
 |F10, Ctrl+Q      |Exit                                                         |
-|**Change colors**|                                                             |
-|1                |Foreground1 (card, list)                                     |
-|2                |Background1 (card, list)                                     |
-|3                |Foreground2 (card, list)                                     |
-|4                |Background2 (card, list)                                     |
-|5                |Foreground (upper zone, menus)                               |
-|6                |Background (upper zone, menus)                               |
+|Ctrl+T           |Color editor window                                          |
 |**Debug**        |                                                             |
 |F3               |Run tests and show results                                   |
 |Shift+F2         |Show every card in quick succession. WARNING, this is debug feature. This process cannot be interrupted. You just have to watch.  |
 |Shift+F3         |Show attacks analysis windows for every monster. Warning is same as above.|
 
 ### List mode
+
+![List mode example](screenshots/01_list.png)
 
 |Key                |Action                                                                  |
 |-------------------|------------------------------------------------------------------------|
@@ -90,6 +88,33 @@ Also, you can type part of name and still find your monster in search results.
 
 Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s and d as aliases.
 
+### Color editor window
+
+![Color editor example](screenshots/02_edit_colors.png)
+
+|Key              |Action                                                       |
+|-----------------|-------------------------------------------------------------|
+|**Common**       |                                                             |
+|Esc              |Close, saving current configuration                          |
+|S                |Switch to next theme                                         |
+|R                |Reset current theme                                          |
+|Left, Right      |Move editing window between two positions for better view    |
+|**Cycle through colors**|                                                      |
+|1                |Foreground1 (card, list)                                     |
+|2                |Background1 (card, list)                                     |
+|3                |Foreground2 (card, list)                                     |
+|4                |Background2 (card, list)                                     |
+|5                |Foreground (upper zone, menus)                               |
+|6                |Background (upper zone, menus)                               |
+|7                |Separator                                                    |
+|Shift+1..7       |Cycle colors in reverse order                                |
+|**For developers**|                                                            |
+|Ctrl+K           |Rewrite defaults                                             |
+|N                |Rename theme                                                 |
+|Shift+D          |Duplicate theme                                              |
+
+Please note that you can remove themes only by editing colors.json.
+
 ## Formats
 
 **mini:**	only essential information shown. Monster card is limited to 5 lines, plus two lines for search results (total: 7). This enables you to place pokedex windows along with main game window. Unfortunately, some words are shrunk, and some attacks don't fit on screen, after all. This is main problem for dNetHack, where many monsters have too many too strange attacks.  
@@ -98,11 +123,13 @@ Ctrl+S and Ctrl+D are troublesome on some terminals, so you can use lowercase s 
 
 ## Using filters
 
+![Filters exapmle](screenshots/03_filters.png)
+
 There are now 9 types of filters. First group are parametric filters and requires entering values on keyboard. Press Enter while filter is selected, enter parameter value(s) and press Enter again. Filter will be applied immediately. If you want to disable a filter, just press space.
 
 **Letter:**			Show only monsters, that have desired letter. You cannot select two or more letters. If you enter some non-monster letter, then you'll get an emtpy list. If you want to switch this filter back to \<any\> state, you must enter asterisk (\*) as a value.  
 **Name:**			Show monsters, specified by part of their name. This is similar to SEARCH mode, but you see results as a list. To switch this filter to \<any\> state, you must enter a space in the edit field. You can quickly call this filter using Ctrl+F instead of Shift+F.  
-**Parameter:**		You can select any parameter from the list, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter in range from first value (included) to second value (also included).
+**Parameter:**		You can select any parameter from the list, and also you can select specific dNetHack parameters: insight and light_radius. Then you must enter minimum and maximum values in edit fields, then you get a list containing monsters with selected parameter in range from first value (included) to second value (also included).  
 **Selection:**		You can paste monsters from your game to built-in editor. Press /, Then Shift+M in your game, then select all screen and paste it to editor window. Found monsters will be highlighted. When you close the window with Esc key, all found monsters will be converted to interactive list, which can be navigated as with any other filter.
 
 Second group of filters shows monsters which have specific property. There are several lists of properties:

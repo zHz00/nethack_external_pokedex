@@ -144,8 +144,8 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "Damage->0, then *instant petrify* if you land a successful hit, but have incorrect protector. Protectors are:\nKick: boots\nStrike with weapon: weapon\nStrike with bare hands: gloves\n_Resistance item:_ yellow dragon scales/mail",
-        "resisted": true,
+        "explanation": "Damage->0, then *instant petrify* if you land a successful hit, but have incorrect protector. Protectors are:\nKick: boots\nStrike with weapon: weapon\nStrike with bare hands: gloves",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -236,7 +236,7 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "**20%**: nothing; **80%**: Damage->2d6 (fire). Burn away slime; If Lv>=d20, destroy Damage/5 items without additional damage: Potions, Scrolls, Spellbooks, Green slime globs. Separate roll: if Lv>=d20, burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.",
+        "explanation": "**20%**: nothing; **80%**: Damage->2d6 (fire). Burn away slime; Destroy items with additional damage:\n_1._ If Lv>=d20, destroy 33.3% of scrolls (+1 dmg).\n_2._ Separate roll: if Lv>=d20, destroy 33.3% of potions (+d6 dmg).\n_3._ Separate roll: if Lv>=d25, destroy 33.3% of spellbooks (+1 dmg).\n_4._ Separate roll: if Lv>=d20, burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -245,7 +245,7 @@
         "type": "AD_BLND",
         "caption": "Blind",
         "caption_short": "Blind",
-        "explanation": "Set blindness timer to Damage turns. Also, set stunned timer to d3 turns if current timer is lesser. Then, Damage->0. _Resistance item:_ worn blindfold",
+        "explanation": "Set blindness timer to Damage turns. Also, set stunned timer to d3 turns but only if not already stunned. Then, Damage->0. _Resistance item:_ worn blindfold",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -263,7 +263,7 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ aside from rare stoning resistance (provided by yellow dragon scales/mail), you can protect yourself with blindfold or some reflecting item. Furthermore, if you are hallucinating, then you are protected 75% of time",
+        "explanation": "*Instant petrification*. Damage->0. _Resistance item:_ you can protect yourself with blindfold or some reflecting item. Furthermore, if you are hallucinating, then you are protected 75% of time",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -283,7 +283,7 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: Potions",
+        "explanation": "Ray Damage->Xd6. 33.3%: destroy 33.3% of potions with +d4 damage",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -292,7 +292,7 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Ray Damage->Xd6. Burn away slime. Burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.\nIf selected item is body item (most outer: cloak, body armor, shirt), then 33.3%: destroy Damage/5 items with no additional damage: Potions, Scrolls, Spellbooks, Green slime globs",
+        "explanation": "Ray Damage->Xd6. Burn away slime. Burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.\nIf selected item is body item (most outer: cloak, body armor, shirt), then destroy items with additional damage:\n_1._ 33.3%: destroy 33.3% of potions (+d6 dmg)\n_2._ Separate roll: 33.3%: destroy 33.3% of scrolls (+1 dmg)\n_3._ Separate roll: 20%: destroy 33.3% of spellbooks (+1 dmg)\n_4._ Destroy 33.3% of globs (+((19+weight)/20) damage)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -328,7 +328,7 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Ray Damage->Xd6. 33.3%: destroy Damage/5 items with no additional damage: Wands, (metallic) Rings (if ring can be charged, 66.7% chance of charging it instead of destroying). Set blind timer to Xd50 turns if not resisted. _Resistance item:_ worn blindfold (for blindness only)",
+        "explanation": "Ray Damage->Xd6. Set blind timer to Xd50 turns if not resisted. Destroy items with additional damage:\n_1._ 33.3%: destroy 33.3% of wands (+d10 dmg)\n_2._ Separate roll: 33.3%: destroy 33.3% of (metallic) rings (+0 dmg).\n_Resistance item:_ worn blindfold (for blindness only)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -337,7 +337,7 @@
         "type": "AD_DRST",
         "caption": "Poison -Dx",
         "caption_short": "Poison -Dx",
-        "explanation": "Poison with no additional damage: _(a)_ 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -2d2 Dx.",
+        "explanation": "Poison with no additional damage: _(a)_ 6.7% of *instant death*. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -(1+d2) Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -377,7 +377,7 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Potions. Also destroy items on the floor.",
+        "explanation": "If Dx>d20, then Damage->Damage/2. Inventory remains intact.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -386,7 +386,7 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Burn away slime. Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Potions, Scrolls, Spellbooks, Green slime globs. Also destroy items on the floor. Burn one (organic) item for one grade. How item is selected:\n_1._ Choose helmet, body  (most outer: cloak, body armor, shirt), shield, gloves and boots (20% each)\n_2._ If body is selected, then stop regardless of item material.\n_3._ Test, if item can be eroded.\n_4._ If item can't be eroded, go to 1.",
+        "explanation": "Burn away slime. If Dx>d20, then Damage->Damage/2. Inventory remains intact.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -395,7 +395,7 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "Damage->XdY if X!=0 and Lv d Y, if X==0. Destroy Damage/5 items with no additional damage: Wands, (metallic) Rings (if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "explanation": "If Dx>d20, then Damage->Damage/2. Inventory remains intact.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -442,7 +442,7 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Burn away slime; If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d6), Scrolls (1), Spellbooks (1), Green slime globs ((Wt+19)/20)",
+        "explanation": "Burn away slime; Destroy items with additional damage:\n_1._ If Lv>=d20, destroy 33.3% of potions (+d6 dmg)\n_2._ Separate roll: If Lv>=d20, destroy 33.3% of scrolls (+1 dmg)\n_3._ Separate roll: If Lv>=d25, destroy 33.3% of, Spellbooks (+1 dmg)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -451,7 +451,7 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d4)",
+        "explanation": "If Lv>=d20, destroy 33.3% of potions with additional damage (+d4 dmg)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -469,7 +469,7 @@
         "type": "AD_ELEC",
         "caption": "Shock",
         "caption_short": "Shock",
-        "explanation": "If Lv>=d20, destroy Damage/5 items with additional damage: Wands(d10), (metallic) Rings (0 damage, if ring can be charged, 66.7% chance of charging it instead of destroying)",
+        "explanation": "Destroy items with additional damage:\n_1._ If Lv>=d20, destroy 33.3% of wands (+d10 dmg)\n_2._ Separate roll: if Lv>d20, destroy 33.3% of (metallic) Rings (+0 dmg)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -478,7 +478,7 @@
         "type": "AD_DRST",
         "caption": "Poison -St",
         "caption_short": "Poison -St",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 St. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 St.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of *instant death* _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -(1+d2) St.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -541,7 +541,7 @@
         "type": "AD_DREN",
         "caption": "Drain Pw",
         "caption_short": "-Pw",
-        "explanation": "**75%**: nothing; **25%**: Pw->Pw-Damage, if Pw becomes negative, then MAX Pw->MAX Pw-d(Pw-Damage). In all cases Damage->0",
+        "explanation": "**75%**: nothing; **25%**: Pw->Pw-Damage, if Pw would become negative or Damage>character level, then Damage->d(Damage). If Pw still becomes negative, then MAX Pw->MAX Pw-d(-Pw). Then Pw->0. In all cases actual Damage->0",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": true
@@ -559,8 +559,8 @@
         "type": "AD_STON",
         "caption": "Petrify",
         "caption_short": "Petrify",
-        "explanation": "**66.7%** (at new moon) or **96.7%** (other moon phases): ordinary damage; **33.3%** (at new moon) or **3.3%** (other moon phases): ordinary damage, then lose intrinsic speed, then begin 5-turns *petrification* process, but you can act only for first two turns. No effect if already stoning. _Resistance item:_ yellow dragon scales/mail",
-        "resisted": true,
+        "explanation": "**66.7%** (at new moon without lizard corpse) or **96.7%** (other moon phases or new moon with lizard corpse): ordinary damage; **33.3%** (at new moon without lizard corpse) or **3.3%** (other moon phases or new moon with lizard corpse): ordinary damage, then lose intrinsic speed, then begin 5-turns *petrification* process, but you can act only for first two turns. No effect if already stoning.",
+        "resisted": false,
         "can_be_cancelled": true,
         "mc": false
       },
@@ -586,7 +586,7 @@
         "type": "AD_SITM",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
+        "explanation": "Nymphs:\n_1._ If your have rings of adornment without gloves, steal one.\n_2._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -595,7 +595,7 @@
         "type": "AD_SEDU",
         "caption": "Steal",
         "caption_short": "Steal",
-        "explanation": "Nymphs:\n_1._ If you are punished and empty inventory (i.e. ball is on the floor), 75% that chain is removed.\n_2._ Else, if your have rings of adornment without gloves, steal one.\n_3._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
+        "explanation": "Nymphs:\n_1._ If your have rings of adornment without gloves, steal one.\n_2._ Else, steal one object, uncovered by others, then nymph teleports. If iron ball is sole item in inventory, steal it and remove chain.\nAnimals: Steal one object, uncovered by others, then monster flees. Can't steal iron ball or worn cursed items.",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -604,7 +604,7 @@
         "type": "AD_TLPT",
         "caption": "Teleport",
         "caption_short": "Tele",
-        "explanation": "Teleport you to safe location, guaranteed not fatal (set to 1 Hp if damage was too big). If you have teleport control and not stunned, you can select new location",
+        "explanation": "Teleport you to safe location, in rare cases can be fatal due to ordinary damage. If you have teleport control and not stunned, you can select new location",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": true
@@ -645,15 +645,6 @@
         "can_be_cancelled": true,
         "mc": false
       },
-      "AD_WRAP": {
-        "type": "AD_WRAP",
-        "caption": "Drown",
-        "caption_short": "Drown",
-        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
-        "resisted": true,
-        "can_be_cancelled": true,
-        "mc": false
-      },
       "AD_WERE": {
         "type": "AD_WERE",
         "caption": "Lycantropy",
@@ -667,7 +658,7 @@
         "type": "AD_DRDX",
         "caption": "Poison -Dx",
         "caption_short": "Poison -Dx",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 Dx.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of *death* _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -(1+d2) Dx.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -676,7 +667,7 @@
         "type": "AD_DRCO",
         "caption": "Poison -Co",
         "caption_short": "Poison -Co",
-        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -3 Co. _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7% of -2d2 Co.",
+        "explanation": "**87.5%**: ordinary damage; **12.5%**: ordinary damage, then poison: _(a)_ 3.3% of *death* _(b)_ 80% of 5+d10 additional damage _(c)_ 16.7%  of -(1+d2) Co.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -685,7 +676,7 @@
         "type": "AD_DRIN",
         "caption": "Drain In",
         "caption_short": "-In",
-        "explanation": "-d2 In (In<3: *death*), then 20%: forget any number of spells (from 1 to all); 20% independent chance: forget d2 learned skills for one grade. If spells of skills was forgotten, then skip further drain attacks for this turn",
+        "explanation": "-d2 In (In<3: *death*), then forget 25% of level maps and  25% of known (including called) objects",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -694,8 +685,8 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Ordinary damage (can be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
-        "resisted": true,
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -730,7 +721,7 @@
         "type": "AD_DETH",
         "caption": "Deadly touch",
         "caption_short": "Deadly",
-        "explanation": "**25%**: nothing; **60%**: MAX Hp reduced:\nMAX Hp>25\\*xlvl:MAX Hp->MAX Hp-Damage\nMAX Hp>10\\*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/2)\nMAX Hp>5\\*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/4)\nMAX Hp<=5\\*xlvl:MAX Hp->MAX Hp-d(Damage/2);\n**15%**: if magic resistant, MAX Hp reduced as described above, else \"Touch of death\" occurs: Damage->50+8d6. If  Damage/2>MAX Hp, then *you die*. Else, Hp->Hp-Damage, MAX Hp->MAX Hp-Damage/2",
+        "explanation": "**25%**: nothing; **60%**: MAX Hp reduced:\nMAX Hp>25\\*xlvl:MAX Hp->MAX Hp-Damage\nMAX Hp>10\\*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/2)\nMAX Hp>5\\*xlvl:MAX Hp->MAX Hp-(d(Damage/2)+Damage/4)\nMAX Hp<=5\\*xlvl:MAX Hp->MAX Hp-d(Damage/2);\n**15%**: if magic resistant, MAX Hp reduced as described above, else \"Touch of death\" occurs: instant *death*",
         "resisted": true,
         "can_be_cancelled": false,
         "mc": false
@@ -739,8 +730,8 @@
         "type": "AD_PEST",
         "caption": "Plus disease",
         "caption_short": "+disease",
-        "explanation": "Ordinary damage (can't be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
-        "resisted": true,
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       },
@@ -784,7 +775,7 @@
         "type": "AD_SAMU",
         "caption": "-Artifact",
         "caption_short": "-Arti",
-        "explanation": "**95%**: ordinary damage; **5%**: ordinary damage, then steal one quest artifact of any role. If you have no quest artifacts, then steal one item: invocation items, Amulet of Yendor, fake Amulet of Yendor, ordinary bell. Wizard of Yendor don't steal fake Amulet and ordinary bell. Then monster teleports away.",
+        "explanation": "**95%**: ordinary damage; **5%**: ordinary damage, then steal one item in the following priority:\n_1._ Amulet of Yendor, fake or real\n_2._ Quest artifact of current role\n_3._ Bell of Opening or silver bell\n_4._ Book of the Dead\nWizard of Yendor don't steal fake Amulet and ordinary bell. Then monster teleports away.",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -793,7 +784,7 @@
         "type": "AD_CURS",
         "caption": "-Intrinsic",
         "caption_short": "-Intrinsic",
-        "explanation": "**90%**: ordinary damage; **10%**: ordinary damage, then lose random intrinsic and give it to monster (fire, cold, poison, telepathy, teleportitis, invisibility, see invisible, speed, stealth, aggravate monsters, intrinsic protection). Gremlins can steal only at night (22:00...05:00 server time)",
+        "explanation": "**90%**: ordinary damage; **10%**: ordinary damage, then lose random intrinsic (fire, cold, poison, telepathy, teleportitis, invisibility, see invisible, speed, stealth, aggravate monsters, intrinsic protection). Gremlins can steal only at night (22:00...05:00 server time)",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -802,7 +793,16 @@
         "type": "AD_POLY",
         "caption": "Polymorph",
         "caption_short": "Polymorph",
-        "explanation": "_1._ If you have lycantropy, polymorph to your second form.\n_2._ Else, polymorph to random monster. _Resistance item:_ amulet of unchanging",
+        "explanation": "DUMMY",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
+      },
+      "AD_WRAP": {
+        "type": "AD_WRAP",
+        "caption": "Drown",
+        "caption_short": "Drown",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and  _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented  by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will \nnot help.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -867,7 +867,7 @@
         "type": "AD_DREN",
         "caption": "Drain Pw",
         "caption_short": "-Pw",
-        "explanation": "**25%**: nothing; **75%**: Pw->Pw-Damage, if Pw becomes negative, then MAX Pw->MAX Pw-d(Pw-Damage). In all cases Damage->0",
+        "explanation": "**75%**: nothing; **25%**: Pw->Pw-Damage, if Pw would become negative or Damage>character level, then Damage->d(Damage). If Pw still becomes negative, then MAX Pw->MAX Pw-d(-Pw). Then Pw->0. In all cases actual Damage->0",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -894,8 +894,8 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Ordinary damage (can be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
-        "resisted": true,
+        "explanation": "Ordinary damage, then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1",
+        "resisted": false,
         "can_be_cancelled": false,
         "mc": false
       }
@@ -932,7 +932,7 @@
         "type": "AD_COLD",
         "caption": "Cold",
         "caption_short": "Cold",
-        "explanation": "Cold damage.\nRanged: Damage->XdY. Also, destroy Damage/5 items with no additional damage: Potions\nMelee: Damage->(Lv/2+X)dY, also destroy items on the floor",
+        "explanation": "Cold damage.\nRanged: Damage->XdY. Also, 33.3% chance to destroy 33.3% of potions with additional damage (+d4).\nMelee: Damage->(Lv/2+X)dY",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -990,12 +990,12 @@
         "type": "AD_FIRE",
         "caption": "Fire",
         "caption_short": "Fire",
-        "explanation": "Burn away slime; If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d6), Scrolls (1), Spellbooks (1), Green slime globs ((Wt+19)/20)",
+        "explanation": "Burn away slime; Destroy items with additional damage:\n_1._ If Lv>=d20, destroy 33.3% of potions (+d6 dmg)\n_2._ Separate roll: If Lv>=d20, destroy 33.3% of scrolls (+1 dmg)\n_3._ Separate roll: If Lv>=d25, destroy 33.3% of, Spellbooks (+1 dmg)",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
       }
-    }	
+    }
   },
   "AD_SPEL_LIST": [
     {

@@ -46,8 +46,8 @@
       "type": "AT_HUGS",
       "caption": "Hug",
       "caption_short": "Hug",
-      "explanation": "50%: stick [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
-      "ad_list_name": "AT_COMMON"
+      "explanation": "tries to stick if two previous attacks succeded, else miss  [prevented by oilskin cloak or greased outermost body armor (cloak, body armor or shirt); cursed item: 33% fail]",
+      "ad_list_name": "AT_HUGS"
     },
     "AT_SPIT": {
       "type": "AT_SPIT",
@@ -88,7 +88,7 @@
       "type": "AT_GAZE",
       "caption": "Gaze",
       "caption_short": "Gz",
-      "explanation": "Activates when you see a monster [prevented by blindness]",
+      "explanation": "Activates when you see a monster [prevented by blindness and by hallucination (100% of time instead of 75% of time in vanilla]",
       "ad_list_name": "AT_GAZE"
     },
     "AT_TENT": {
@@ -234,7 +234,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. Damage->0. _Resistance item:_ green dragon scales/mail. Also, non-breathing monsters are immune",
+        "explanation": "Ordinary damage (can't be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail. Also, non-breathing monsters are immune",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": false
@@ -353,8 +353,8 @@
       },
       "AD_DRST": {
         "type": "AD_DRST",
-        "caption": "Poison -St",
-        "caption_short": "Poison -St",
+        "caption": "Poison -Dx",
+        "caption_short": "Poison -Dx",
         "explanation": "Poison with no additional damage: _(a)_ 6.7% of 6+4d6 damage, if still alive, then reduce max HP for 50% of damage received, -1 Co, -3 Dx. _(b)_ 60.0% of 5+d10 additional damage _(c)_ 33.3% of -1 Dx.",
         "resisted": true,
         "can_be_cancelled": true,
@@ -384,7 +384,7 @@
         "type": "AD_PHYS",
         "caption": "",
         "caption_short": "",
-        "explanation": "Ordinary physical. Damage->XdY if X!=0 and Lv d Y, if X==0",
+        "explanation": "Ordinary physical. Damage->XdY if X!=0 and Lv+1 d Y, if X==0",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -568,7 +568,7 @@
         "type": "AD_PLYS",
         "caption": "Paralyze",
         "caption_short": "Prlz",
-        "explanation": "If not helpless, set paralyze timer to d10 turns. _Resistance item:_ ring of free action. Only for ghost: ghost becomes visible and set paralyze timer to 3 turns. Can't be resisted",
+        "explanation": "Ordinary damage then 66.7% of nothing; 33.3%: if not helpless, set paralyze timer to d10 turns. _Resistance item:_ ring of free action. Only for ghost: ghost becomes visible and set paralyze timer to 3 turns. Can't be resisted",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -595,7 +595,7 @@
         "type": "AD_LEGS",
         "caption": "Legs",
         "caption_short": "Legs",
-        "explanation": "_1._ If levitating, flying or riding: nothing, but only if monster can't fly (xan *can* fly);\n_2._ If iron shoes or low boots: 60%: ordinary damage; 40%: nothing;\n_3._ Other cases: ordinary damage, then set wounded legs timeout for d(60-Dx) turns, but if current timeout is already greater, then just ordinary damage",
+        "explanation": "_1._ If levitating, flying or riding: nothing, but only if monster can't fly (xan *can* fly);\n_2._ If iron shoes (dwarvish boots) or low boots: 60%: ordinary damage; 40%: Damage->0;\n_3._ Other cases: ordinary damage.\nBoth 2 and 3 leads to wounded legs. Timeout is d(60-Dx) turns, but if current timeout is already greater, then nothing",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -622,7 +622,7 @@
         "type": "AD_SGLD",
         "caption": "Steal gold",
         "caption_short": "Steal gold",
-        "explanation": "If gold on the floor is greater than gold in open inventory, steal it completely; else **20%**: steal gold on the floor (or 0% if no gold no the floor); **80%** (or 100% if no gold on the floor): steal any gold object or 10%...100% of your gold in inventory, uniformly distributed; if you have more than 10k, than steal 5k+d(5k). All gold objects are equal targets, and all gold pieces are treated as one object. Then monster teleports away if he can, or flee if he can't",
+        "explanation": "If no gold in open inventory, leprechaun don't try to attack. If gold on the floor is greater than gold in open inventory, steal it completely; else **20%**: steal gold on the floor (or 0% if no gold no the floor); **80%** (or 100% if no gold on the floor): steal any gold object or 10%...100% of your gold in inventory, uniformly distributed; if you have more than 10k, than steal 5k+d(5k). All gold objects are equal targets, and all gold pieces are treated as one object. Then monster teleports away if he can, or flee if he can't",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -739,7 +739,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
+        "explanation": "Ordinary damage (can be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
         "resisted": true,
         "can_be_cancelled": false,
         "mc": false
@@ -757,7 +757,7 @@
         "type": "AD_SSEX",
         "caption": "Seduce",
         "caption_short": "Seduce",
-        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ Threshold=25+5\\*Lv+20 in Gehennom, otherwise Threshold=25+5\\*Lv. If d(Threshold)-1>Ch+Wi then you get one of negative effects: Pw->0 and -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 MAX Pw and Pw->MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp _3._ If d20-1>=Ch, demon will take your money, minimum 500, but if you have less, demon will take all the money",
+        "explanation": "_1._ Demon disrobes you. For every armor item you will be asked if d20-1<Ch. If cloak and body armor are absent, then _2._ Sex occurs: _(a)_ Threshold=25+5\\*Lv+20 in Gehennom, otherwise Threshold=25+5\\*Lv. If d(Threshold)-1>Ch+In then you get one of negative effects: Pw->0 and -d10 MAX Pw, -1 Wi, -1 Co, -1 xlvl or -(5+d10) Hp. _(b)_ Else you get one of positive effects: +d5 MAX Pw and Pw->MAX Pw, +1 Co, +1 Wi, +1 xlvl or Hp->MAX Hp _3._ If d20-1>=Ch, demon will take your money, minimum 500, but if you have less, demon will take all the money",
         "resisted": false,
         "can_be_cancelled": true,
         "mc": false
@@ -784,7 +784,7 @@
         "type": "AD_PEST",
         "caption": "Plus disease",
         "caption_short": "+disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
+        "explanation": "Ordinary damage (can't be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
         "resisted": true,
         "can_be_cancelled": false,
         "mc": false
@@ -793,7 +793,7 @@
         "type": "AD_FAMN",
         "caption": "Plus hunger",
         "caption_short": "+hunger",
-        "explanation": "If you are not fainted, lose 39+d40 nutrition",
+        "explanation": "Ordinary damagem then if you are not fainted, lose 39+d40 nutrition",
         "resisted": false,
         "can_be_cancelled": false,
         "mc": false
@@ -802,7 +802,7 @@
         "type": "AD_SLIM",
         "caption": "Slime",
         "caption_short": "Slime",
-        "explanation": "Set sliming timer to 10 turns. No effect if already sliming. _Resistance item:_ amulet of unchanging. If you got unchanging from polyinit mode, or from \"arising\" as vampire, mummy, wraith, ghoul, zombie or mummy, then you are not protected from sliming.",
+        "explanation": "Ordinary damage, then set sliming timer to 10 turns. No effect if already sliming. _Resistance item:_ amulet of unchanging. If you got unchanging from polyinit mode, or from \"arising\" as vampire, mummy, wraith, ghoul, zombie or mummy, then you are not protected from sliming.",
         "resisted": true,
         "can_be_cancelled": true,
         "mc": true
@@ -860,15 +860,6 @@
         "resisted": false,
         "can_be_cancelled": true,
         "mc": true
-      },
-      "AD_PITS": {
-        "type": "AD_PITS",
-        "caption": "Pits",
-        "caption_short": "Pits",
-        "explanation": "Create a pit under the player. If a pit already exists, then create a hole. After that, player falls in. If player got damage from falling, then Damage->0.",
-        "resisted": false,
-        "can_be_cancelled": true,
-        "mc": false
       }
     },
     "AT_ENGL": {
@@ -957,7 +948,7 @@
         "type": "AD_DISE",
         "caption": "Disease",
         "caption_short": "Disease",
-        "explanation": "Set Ill timer to 20+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
+        "explanation": "Ordinary damage (can be resisted), then set Ill timer to 19+d(Co) turns. If already ill, then timer->timer/3+1. _Resistance item:_ green dragon scales/mail",
         "resisted": true,
         "can_be_cancelled": false,
         "mc": false
@@ -1026,7 +1017,7 @@
         "caption_short": "Acid",
         "explanation": "Acid venom: Damage->2d6",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_DRST": {
@@ -1035,7 +1026,7 @@
         "caption_short": "Blind",
         "explanation": "Blinding venom: increase blindness timer by d25 turns. _Resistance item:_ worn blindfold. **Note:** This attack uses AD\\_DRST constant, but don't poison or drain St.",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       },
       "AD_BLND": {
@@ -1044,10 +1035,49 @@
         "caption_short": "Blind",
         "explanation": "Blinding venom: increase blindness timer by d25 turns. _Resistance item:_ worn blindfold",
         "resisted": true,
-        "can_be_cancelled": false,
+        "can_be_cancelled": true,
         "mc": false
       }
-    }
+    },
+    "AT_HUGS": {
+      "AD_PHYS": {
+        "type": "AD_PHYS",
+        "caption": "Physical",
+        "caption_short": "Physical",
+        "explanation": "Ordinary physical, but 50% chance to stick to the monster",
+        "resisted": true,
+        "can_be_cancelled": false,
+        "mc": false
+      },
+      "AD_WRAP": {
+        "type": "AD_WRAP",
+        "caption": "Drown",
+        "caption_short": "Drown",
+        "explanation": "If you are not stuck: **10%** of ordinary damage, then stick; **90%** of nothing. If _(a)_ you are stuck, and _(b)_ monster is on the water, and _(c)_ you can't breath in water, then ordinary damage, then *drown*. Other cases: ordinary damage. _Resistance item:_ initial stuck can be prevented by oilskin cloak or greased outermost body armor (cloak, body armor, shirt; cursed item: 33% fail), but if you are already stuck, this will not help.",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": false
+      },
+      "AD_FIRE": {
+        "type": "AD_FIRE",
+        "caption": "Fire",
+        "caption_short": "Fire",
+        "explanation": "Burn away slime; If Lv>=d20, destroy Damage/5 items with additional damage: Potions (d6), Scrolls (1), Spellbooks (1), Green slime globs ((Wt+19)/20)",
+        "resisted": true,
+        "can_be_cancelled": true,
+        "mc": true
+      },
+      "AD_PITS": {
+        "type": "AD_PITS",
+        "caption": "Pits",
+        "caption_short": "Pits",
+        "explanation": "Create a pit under the player. If a pit already exists, then create a hole. After that, player falls in. If player got damage from falling, then Damage->0.",
+        "resisted": false,
+        "can_be_cancelled": true,
+        "mc": false
+      }
+    }	
+	
   },
   "AD_SPEL_LIST": [
     {

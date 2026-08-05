@@ -1,0 +1,218 @@
+[
+ {
+  "name": "Bioluminiscent",
+  "colors_default": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "6",
+   "bk2": "0",
+   "fg_upper": "7",
+   "fg_upper_bold": "1",
+   "bk_upper": "4",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "6",
+   "bk2": "0",
+   "fg_upper": "7",
+   "fg_upper_bold": "1",
+   "bk_upper": "4",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "Neon",
+  "colors_default": {
+   "fg1": "6",
+   "bk1": "0",
+   "fg2": "5",
+   "bk2": "0",
+   "fg_upper": "2",
+   "fg_upper_bold": "1",
+   "bk_upper": "0",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "6",
+   "bk1": "0",
+   "fg2": "5",
+   "bk2": "0",
+   "fg_upper": "2",
+   "fg_upper_bold": "1",
+   "bk_upper": "0",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "BIOS",
+  "colors_default": {
+   "fg1": "4",
+   "bk1": "7",
+   "fg2": "7",
+   "bk2": "7",
+   "fg_upper": "7",
+   "fg_upper_bold": "0",
+   "bk_upper": "4",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "4"
+  },
+  "colors_current": {
+   "fg1": "4",
+   "bk1": "7",
+   "fg2": "7",
+   "bk2": "7",
+   "fg_upper": "7",
+   "fg_upper_bold": "0",
+   "bk_upper": "4",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "4"
+  }
+ },
+ {
+  "name": "The Matrix",
+  "colors_default": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "2",
+   "bk2": "0",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "2",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "2",
+   "bk2": "0",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "2",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "Peter Norton",
+  "colors_default": {
+   "fg1": "6",
+   "bk1": "4",
+   "fg2": "3",
+   "bk2": "4",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "6",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "6",
+   "bk1": "4",
+   "fg2": "3",
+   "bk2": "4",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "6",
+   "fg1_bold": "1",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "Monochrome",
+  "colors_default": {
+   "fg1": "7",
+   "bk1": "0",
+   "fg2": "7",
+   "bk2": "0",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "7",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "7",
+   "bk1": "0",
+   "fg2": "7",
+   "bk2": "0",
+   "fg_upper": "0",
+   "fg_upper_bold": "0",
+   "bk_upper": "7",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "Negative",
+  "colors_default": {
+   "fg1": "0",
+   "bk1": "7",
+   "fg2": "0",
+   "bk2": "7",
+   "fg_upper": "7",
+   "fg_upper_bold": "1",
+   "bk_upper": "0",
+   "fg1_bold": "1",
+   "fg2_bold": "0",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "0",
+   "bk1": "7",
+   "fg2": "0",
+   "bk2": "7",
+   "fg_upper": "7",
+   "fg_upper_bold": "1",
+   "bk_upper": "0",
+   "fg1_bold": "1",
+   "fg2_bold": "0",
+   "fg_separator": "7"
+  }
+ },
+ {
+  "name": "User",
+  "colors_default": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "6",
+   "bk2": "0",
+   "fg_upper": "7",
+   "fg_upper_bold": "0",
+   "bk_upper": "4",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  },
+  "colors_current": {
+   "fg1": "2",
+   "bk1": "0",
+   "fg2": "6",
+   "bk2": "0",
+   "fg_upper": "7",
+   "fg_upper_bold": "0",
+   "bk_upper": "4",
+   "fg1_bold": "0",
+   "fg2_bold": "1",
+   "fg_separator": "7"
+  }
+ }
+]

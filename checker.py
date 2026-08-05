@@ -196,7 +196,7 @@ def run_tests(s,table,ver_name):
             report.write(f"EXPLANATION DUMMY:{mon}\n")
             report.write(ln[:test_len]+"\n===\n")
         test_e=test_e.split("\n")
-        if len(test_e)>SCR_HEIGHT-2:
+        if len(test_e)>SCR_HEIGHT-4:
             failed_current_monster=True
             report.write(f"MANY LINES EXPLANATION ({len(test_e)}):{mon}\n")
             report.write(ln[:test_len]+"\n===\n")

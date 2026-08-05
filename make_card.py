@@ -82,7 +82,8 @@ def split_line3(line:str,width:int)-> str:
             cur_line=s
             space_counter=0
         else:
-            if len(cur_line+" "+s)>=width-1:
+            cur_len=len(cur_line+" "+s)
+            if cur_len>=width-1:
                 res_line+=cur_line+" \n^"
                 if s[0]==' ':
                     cur_line=s[1:]
@@ -225,7 +226,7 @@ def card_gen(mon,format_length):
 def spell_to_str(spell):
     spell_str=""
     spell_str+=spell["name"]
-    spell_str+="(Lv>="+str(spell["level"])+","
+    spell_str+="(Lv>="+str(spell["level"])+", "
     spell_str+=("Directed" if spell['dir']=="D" else "Undirected")+")"
     return spell_str
 
@@ -418,13 +419,21 @@ def card_atk(mon,format_length):
         if format_length==-1:
             at_actual=at_short
             ad_actual=ad_short
-            at_from_file=at_e[attack[0]]["caption_short"]
-            ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption_short"]
+            try:
+                at_from_file=at_e[attack[0]]["caption_short"]
+                ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption_short"]
+            except KeyError:
+                at_from_file="ABSENT"
+                ad_from_file="ABSENT"            
         else:
             at_actual=at
             ad_actual=ad
-            at_from_file=at_e[attack[0]]["caption"]
-            ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption"]
+            try:
+                at_from_file=at_e[attack[0]]["caption"]
+                ad_from_file=ad_e[at_e[attack[0]]["ad_list_name"]][attack[1]]["caption"]
+            except KeyError:
+                at_from_file="ABSENT"
+                ad_from_file="ABSENT"
         if len(ad_from_file)>0:
             space_separator=" "
         else:

@@ -1,5 +1,10 @@
-def search_mode(version):
-    return f"Quick help: Search mode\n\
+def search_mode(version,kiosk):
+    k=""
+    if kiosk:
+        k="[kiosk]"
+    else:
+        k="       "
+    return f"Quick help: Search mode {k:>34}\n\
 \n\
 _Ctrl+O_        Select NetHack variant to search\n\
 _[, ]_          Switch to next NetHack variant\n\
@@ -11,7 +16,7 @@ _Down_          Show more information\n\
 _Ctrl+A_        Show attacks analysis screen\n\
 _Tab_           Switch to **List** mode\n\
 _F10, Ctrl+Q_   Exit\n\
-_1...6_         Change colors\n\
+_Ctrl+T_        Change color theme\n\
 \n\
 Version {version}. (C) **zHz** 2022-2026. MIT License.\n\
 https://github.com/zHz00/nethack\\_external\\_pokedex"
@@ -62,3 +67,20 @@ _Up_             Nothing. Less information on main screen\n\
 _Down_           Nothing. More information on main screen\n\
 _Space_          Scroll screens if more than one available\n\
 _F10 or Ctrl+Q_  Exit"
+
+def edit_colors_mode():
+    return "Quick help: Color editor\n\
+\n\
+_Esc_         Return to search mode\n\
+\n\
+_S_           Switch to next theme\n\
+_R_           Reset current theme\n\
+_1..7_        Increase corresponding color\n\
+_Shift+1..7_  Decrease corresponding color\n\
+_Left, Right_ Move editor window for better observations\n\
+\n\
+**For developers**\n\
+_N_           Rename theme\n\
+_Shift+D_     Duplicate theme\n\
+_Ctrl+K_      Rewrite defaults\n\
+You can delete theme only by editing colors.json"
