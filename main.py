@@ -19,7 +19,7 @@ import utils
 import help
 import colors as cl
 
-version="2026-08-05"
+version="2026-08-06"
 
 colors_table={
     0:c.COLOR_WHITE,#it must be COLOR_BLACK, but certain monsters are marked as black, but they are actually white (gray)
